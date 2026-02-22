@@ -34,20 +34,24 @@ jobs:
             cd ${{ secrets.APP_DIR }}
 
             NEW_JAR=$(ls target/*.jar | head -n 1)
+            SERVICE=${{ secrets.SERVICE_NAME }}
+            JAR_FILE_NAME=${{ secrets.JAR_FILE_NAME }}
 
-            if [ -f app.jar ]; then
-              mv app.jar app-prev.jar
+            if [ -f $JAR_FILE_NAME ]; then
+              mv $JAR_FILE_NAME app-prev.jar
             fi
 
-            mv $NEW_JAR app.jar
+            mv $NEW_JAR $JAR_FILE_NAME
 
-            if ! sudo systemctl restart $SERVICE; then
+            if ! sudo systemctl restart $SERVICE; 
+            then
               echo "Deployment failed, rolling back..."
 
-              mv app-prev.jar app.jar
+              mv app-prev.jar $JAR_FILE_NAME
               sudo systemctl restart $SERVICE
 
               exit 1
             fi
 
+            sudo systemctl daemon-reload
             rm -rf ${{ secrets.APP_DIR }}/target
