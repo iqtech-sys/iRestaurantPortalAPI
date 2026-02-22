@@ -29,29 +29,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            set -e
-
-            cd ${{ secrets.APP_DIR }}
-
-            NEW_JAR=$(ls target/*.jar | head -n 1)
-            SERVICE=${{ secrets.SERVICE_NAME }}
-            JAR_FILE_NAME=${{ secrets.JAR_FILE_NAME }}
-
-            if [ -f $JAR_FILE_NAME ]; then
-              mv $JAR_FILE_NAME app-prev.jar
-            fi
-
-            mv $NEW_JAR $JAR_FILE_NAME
-
-            if ! sudo systemctl restart $SERVICE; 
-            then
-              echo "Deployment failed, rolling back..."
-
-              mv app-prev.jar $JAR_FILE_NAME
-              sudo systemctl restart $SERVICE
-
-              exit 1
-            fi
-
+            mv ${{ secrets.APP_DIR }}/target/*.jar ${{ secrets.APP_DIR }}/${{ secrets.JAR_FILE_NAME }}
+            sudo systemctl restart ${{ secrets.SERVICE_NAME }}
             sudo systemctl daemon-reload
             rm -rf ${{ secrets.APP_DIR }}/target
