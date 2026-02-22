@@ -23,36 +23,31 @@ jobs:
           target: ${{ secrets.APP_DIR }}
 
       - name: Activate release
-          uses: appleboy/ssh-action@v1.0.3
-          with:
+        uses: appleboy/ssh-action@v1.0.3
+        with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-               set -e
-               
-               cd ${{ secrets.APP_DIR }}
-               
-               NEW_JAR=$(ls target/*.jar | head -n 1)
-               
-               if [ -f app.jar ]; then
-               
-                 mv app.jar app-prev.jar
-                 
-               fi
-               
-               mv $NEW_JAR app.jar
-               
-               if ! sudo systemctl restart $SERVICE; then               
-               
-                   echo "Deployment failed, rolling back..."
-                   
-                   mv app-prev.jar app.jar
-                   
-                   sudo systemctl restart $SERVICE
-                   
-                   exit 1
-                   
-               fi
-               
-               rm -rf ${{ secrets.APP_DIR }}/target
+            set -e
+
+            cd ${{ secrets.APP_DIR }}
+
+            NEW_JAR=$(ls target/*.jar | head -n 1)
+
+            if [ -f app.jar ]; then
+              mv app.jar app-prev.jar
+            fi
+
+            mv $NEW_JAR app.jar
+
+            if ! sudo systemctl restart $SERVICE; then
+              echo "Deployment failed, rolling back..."
+
+              mv app-prev.jar app.jar
+              sudo systemctl restart $SERVICE
+
+              exit 1
+            fi
+
+            rm -rf ${{ secrets.APP_DIR }}/target
