@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.0</version>
+        <relativePath/>
+    </parent>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <start-class>com.irestaurant.iPortalAPI.IPortalApiApplication</start-class>
+        <java.version>17</java.version>
+    </properties>
+    
+    <groupId>com.irestaurant</groupId>
+    <artifactId>iPortalAPI</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>iPortalAPI</name>
+    <description>iPortalAPI with Spring Boot, WebSocket, Security, and MySQL</description>
+
+    <dependencies>
+        <!-- ObjectBox - High-performance NoSQL database -->
+        <dependency>
+            <groupId>io.objectbox</groupId>
+            <artifactId>objectbox-java</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.objectbox</groupId>
+            <artifactId>objectbox-windows</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.objectbox</groupId>
+            <artifactId>objectbox-linux</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.objectbox</groupId>
+            <artifactId>objectbox-processor</artifactId>
+            <version>3.8.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.greenrobot</groupId>
+            <artifactId>essentials</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <!-- Springwolf 1.0+ for Spring Boot 3.x -->
+        <dependency>
+            <groupId>io.github.springwolf</groupId>
+            <artifactId>springwolf-core</artifactId>
+            <version>1.21.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.springwolf</groupId>
+            <artifactId>springwolf-stomp</artifactId>
+            <version>1.21.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.springwolf</groupId>
+            <artifactId>springwolf-ui</artifactId>
+            <version>1.21.0</version>
+        </dependency>
+        <!-- Swagger models for Springwolf configuration -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-models-jakarta</artifactId>
+            <version>2.2.40</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+            <version>2.2.40</version>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-Aobjectbox.modelPath=${project.basedir}/objectbox-models/default.json</arg>
+                        <arg>-Aobjectbox.myObjectBoxPackage=generated</arg>
+                    </compilerArgs>
+                    <compilerArgument>-Aobjectbox.debug=false</compilerArgument>
+                    <generatedSourcesDirectory>${project.basedir}/src/main/java/com/irestaurant/iPortalAPI/</generatedSourcesDirectory>
+<!--                <generatedSourcesDirectory>${project.build.directory}/generated-sources/annotations</generatedSourcesDirectory>    -->
+                </configuration>
+            </plugin><!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version> <configuration>
+                    <source>17</source> <target>17</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>io.objectbox</groupId>
+                            <artifactId>objectbox-processor</artifactId>
+                            <version>${objectbox.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <generatedSourcesDirectory>${project.build.directory}/generated-sources/annotations</generatedSourcesDirectory>
+                </configuration>
+            </plugin>-->
+        </plugins>
+    </build>
+</project>

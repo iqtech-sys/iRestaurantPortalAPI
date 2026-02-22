@@ -1,0 +1,44 @@
+name: Deploy iPortal Spring Boot App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build application
+        run: |
+          ./mvnw clean package -DskipTests
+
+      - name: Copy JAR to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: "target/*.jar"
+          target: ${{ secrets.APP_DIR }}
+
+      - name: Restart service on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            sudo systemctl restart ${{ secrets.SERVICE_NAME }}
+            sudo systemctl daemon-reload
+            sudo systemctl status ${{ secrets.SERVICE_NAME }} --no-pager
