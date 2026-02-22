@@ -19,6 +19,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Make mvnw executable
+        run: chmod +x mvnw
+
       - name: Build application
         run: |
           ./mvnw clean package -DskipTests
