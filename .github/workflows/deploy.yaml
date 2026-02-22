@@ -19,6 +19,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Clean ObjectBox generated files
+        run: |
+          rm -rf target
+          rm -rf */target
+
       - name: Make mvnw executable
         run: chmod +x mvnw
 
