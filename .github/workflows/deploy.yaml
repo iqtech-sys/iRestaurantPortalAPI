@@ -22,13 +22,35 @@ jobs:
           source: "target/*.jar"
           target: ${{ secrets.APP_DIR }}
 
-      - name: Restart service on server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
+      - name: Activate release
+          uses: appleboy/ssh-action@v1.0.3
+          with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            sudo systemctl restart ${{ secrets.SERVICE_NAME }}
-            sudo systemctl daemon-reload
-            sudo systemctl status ${{ secrets.SERVICE_NAME }} --no-pager
+               set -e
+               
+               cd ${{ secrets.APP_DIR }}
+               
+               NEW_JAR=$(ls target/*.jar | head -n 1)
+               
+               if [ -f app.jar ]; then
+               
+                 mv app.jar app-prev.jar
+                 
+               fi
+               
+               mv $NEW_JAR app.jar
+               
+               if ! sudo systemctl restart $SERVICE; then               
+               
+                   echo "Deployment failed, rolling back..."
+                   
+                   mv app-prev.jar app.jar
+                   
+                   sudo systemctl restart $SERVICE
+                   
+                   exit 1
+                   
+               fi
