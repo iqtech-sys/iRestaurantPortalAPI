@@ -1,19 +1,20 @@
 package com.irestaurant.iPortalAPI.objectbox.model;
 
-import com.irestaurant.iPortalAPI.converter.LocalDateTimeConverter;
-import com.irestaurant.iPortalAPI.enumerators.MqttPaymentMethods;
-import com.irestaurant.iPortalAPI.enumerators.OrderStatuses;
-import com.irestaurant.iPortalAPI.enumerators.OrderTypes;
+import io.objectbox.annotation.Backlink;
 import io.objectbox.annotation.ConflictStrategy;
-import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.annotation.Unique;
 import io.objectbox.relation.ToMany;
 import io.objectbox.relation.ToOne;
-import java.time.LocalDateTime;
-import java.util.Objects;
+import com.irestaurant.iPortalAPI.enumerators.OrderTypes;
+import com.irestaurant.iPortalAPI.enumerators.OrderStatuses;
+import com.irestaurant.iPortalAPI.enumerators.MqttPaymentMethods;
+import io.objectbox.annotation.Sync;
+import java.util.Date;
+import java.util.List;
 
+@Sync
 @Entity
 public class Order {
 
@@ -23,42 +24,59 @@ public class Order {
     @Unique(onConflict = ConflictStrategy.REPLACE)
     String orderNumber;
 
-    @Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
-    LocalDateTime createdDate;
+    // @Convert(converter = DateConverter.class, dbType = Long.class)
+    Date createdDate;
 
-    @Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
-    LocalDateTime modifiedDate;
+    // @Convert(converter = DateConverter.class, dbType = Long.class)
+    Date modifiedDate;
 
-    @Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
-    LocalDateTime inPreparationDate;
+    // @Convert(converter = DateConverter.class, dbType = Long.class)
+    Date inPreparationDate;
 
-    @Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
-    LocalDateTime readyDate;
+    // @Convert(converter = DateConverter.class, dbType = Long.class)
+    Date readyDate;
 
-    @Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
-    LocalDateTime deliveredDate;
+    // @Convert(converter = DateConverter.class, dbType = Long.class)
+    Date deliveredDate;
 
-    @Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
-    LocalDateTime cancelledDate;
+    // @Convert(converter = DateConverter.class, dbType = Long.class)
+    Date cancelledDate;
 
-    int orderType = OrderTypes.DineIn.ordinal();// OrderTypes enum.
-    int orderStatus = OrderStatuses.Pending.ordinal();// OrderStatuses enum.
-    int paymentMethod = MqttPaymentMethods.Cash.ordinal();// Payment method enum.
+    long orderType = OrderTypes.DineIn.ordinal();
+    long orderStatus = OrderStatuses.Pending.ordinal();
+    long paymentMethod = MqttPaymentMethods.Cash.ordinal();
 
-    int preparationTime = 0;
+    long preparationTime = 0;
+    String notes = "";
+    String doneNotes = "";
+    String stopNote = "";
+    String branchId = "";
 
-    String notes;
-    String doneNotes;
-    String stopNote;
-    String branchId;
+    public ToOne<Customer> customer;
+    public ToOne<User> user;
+    public ToOne<Table> table;
+    public ToOne<Delivery> delivery;
 
-    ToOne<Customer> customer;
-    ToOne<User> user;
-    ToOne<Table> table;
-    ToOne<Delivery> delivery;
+    @Backlink(to = "order")
+    private ToMany<OrderItem> orderItems;
 
-    ToMany<OrderItem> orderItems;
-    ToMany<OrderEntry> orderEntries;
+    @Backlink(to = "order")
+    private ToMany<OrderEntry> orderEntries;
+
+    public Order() {
+        this.customer = new ToOne<>(this, Order_.customer);
+        this.user = new ToOne<>(this, Order_.user);
+        this.table = new ToOne<>(this, Order_.table);
+        this.delivery = new ToOne<>(this, Order_.delivery);
+        //
+        this.orderItems = new ToMany<>(this, Order_.orderItems);
+        this.orderEntries = new ToMany<>(this, Order_.orderEntries);
+    }
+    
+    public double getTaxRate() {
+        List<OrderItem> items = this.orderItems.getListFactory().createList();
+        return items.isEmpty() ? 0 : items.get(0).snapshot_taxRate;
+    }
 
     public long getId() {
         return id;
@@ -76,83 +94,83 @@ public class Order {
         this.orderNumber = orderNumber;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
-    public LocalDateTime getModifiedDate() {
+    public Date getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(LocalDateTime modifiedDate) {
+    public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 
-    public LocalDateTime getInPreparationDate() {
+    public Date getInPreparationDate() {
         return inPreparationDate;
     }
 
-    public void setInPreparationDate(LocalDateTime inPreparationDate) {
+    public void setInPreparationDate(Date inPreparationDate) {
         this.inPreparationDate = inPreparationDate;
     }
 
-    public LocalDateTime getReadyDate() {
+    public Date getReadyDate() {
         return readyDate;
     }
 
-    public void setReadyDate(LocalDateTime readyDate) {
+    public void setReadyDate(Date readyDate) {
         this.readyDate = readyDate;
     }
 
-    public LocalDateTime getDeliveredDate() {
+    public Date getDeliveredDate() {
         return deliveredDate;
     }
 
-    public void setDeliveredDate(LocalDateTime deliveredDate) {
+    public void setDeliveredDate(Date deliveredDate) {
         this.deliveredDate = deliveredDate;
     }
 
-    public LocalDateTime getCancelledDate() {
+    public Date getCancelledDate() {
         return cancelledDate;
     }
 
-    public void setCancelledDate(LocalDateTime cancelledDate) {
+    public void setCancelledDate(Date cancelledDate) {
         this.cancelledDate = cancelledDate;
     }
 
-    public int getOrderType() {
+    public long getOrderType() {
         return orderType;
     }
 
-    public void setOrderType(int orderType) {
+    public void setOrderType(long orderType) {
         this.orderType = orderType;
     }
 
-    public int getOrderStatus() {
+    public long getOrderStatus() {
         return orderStatus;
     }
 
-    public void setOrderStatus(int orderStatus) {
+    public void setOrderStatus(long orderStatus) {
         this.orderStatus = orderStatus;
     }
 
-    public int getPaymentMethod() {
+    public long getPaymentMethod() {
         return paymentMethod;
     }
 
-    public void setPaymentMethod(int paymentMethod) {
+    public void setPaymentMethod(long paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
 
-    public int getPreparationTime() {
+    public long getPreparationTime() {
         return preparationTime;
     }
 
-    public void setPreparationTime(int preparationTime) {
+    public void setPreparationTime(long preparationTime) {
         this.preparationTime = preparationTime;
     }
 
@@ -236,150 +254,4 @@ public class Order {
         this.orderEntries = orderEntries;
     }
 
-    public Order() {
-    }
-
-    public Order(long id, String orderNumber, LocalDateTime createdDate, LocalDateTime modifiedDate,
-            LocalDateTime inPreparationDate, LocalDateTime readyDate,
-            LocalDateTime deliveredDate, LocalDateTime cancelledDate, String notes, String doneNotes, String stopNote,
-            String branchId,
-            ToOne<Customer> customer, ToOne<User> user, ToOne<Table> table, ToOne<Delivery> delivery,
-            ToMany<OrderItem> orderItems,
-            ToMany<OrderEntry> orderEntries) {
-        this.id = id;
-        this.orderNumber = orderNumber;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-        this.inPreparationDate = inPreparationDate;
-        this.readyDate = readyDate;
-        this.deliveredDate = deliveredDate;
-        this.cancelledDate = cancelledDate;
-        this.notes = notes;
-        this.doneNotes = doneNotes;
-        this.stopNote = stopNote;
-        this.branchId = branchId;
-        this.customer = customer;
-        this.user = user;
-        this.table = table;
-        this.delivery = delivery;
-        this.orderItems = orderItems;
-        this.orderEntries = orderEntries;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 83 * hash + Objects.hashCode(this.orderNumber);
-        hash = 83 * hash + Objects.hashCode(this.createdDate);
-        hash = 83 * hash + Objects.hashCode(this.modifiedDate);
-        hash = 83 * hash + Objects.hashCode(this.inPreparationDate);
-        hash = 83 * hash + Objects.hashCode(this.readyDate);
-        hash = 83 * hash + Objects.hashCode(this.deliveredDate);
-        hash = 83 * hash + Objects.hashCode(this.cancelledDate);
-        hash = 83 * hash + this.orderType;
-        hash = 83 * hash + this.orderStatus;
-        hash = 83 * hash + this.paymentMethod;
-        hash = 83 * hash + this.preparationTime;
-        hash = 83 * hash + Objects.hashCode(this.notes);
-        hash = 83 * hash + Objects.hashCode(this.doneNotes);
-        hash = 83 * hash + Objects.hashCode(this.stopNote);
-        hash = 83 * hash + Objects.hashCode(this.branchId);
-        hash = 83 * hash + Objects.hashCode(this.customer);
-        hash = 83 * hash + Objects.hashCode(this.user);
-        hash = 83 * hash + Objects.hashCode(this.table);
-        hash = 83 * hash + Objects.hashCode(this.delivery);
-        hash = 83 * hash + Objects.hashCode(this.orderItems);
-        hash = 83 * hash + Objects.hashCode(this.orderEntries);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Order other = (Order) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        if (this.orderType != other.orderType) {
-            return false;
-        }
-        if (this.orderStatus != other.orderStatus) {
-            return false;
-        }
-        if (this.paymentMethod != other.paymentMethod) {
-            return false;
-        }
-        if (this.preparationTime != other.preparationTime) {
-            return false;
-        }
-        if (!Objects.equals(this.orderNumber, other.orderNumber)) {
-            return false;
-        }
-        if (!Objects.equals(this.notes, other.notes)) {
-            return false;
-        }
-        if (!Objects.equals(this.doneNotes, other.doneNotes)) {
-            return false;
-        }
-        if (!Objects.equals(this.stopNote, other.stopNote)) {
-            return false;
-        }
-        if (!Objects.equals(this.branchId, other.branchId)) {
-            return false;
-        }
-        if (!Objects.equals(this.createdDate, other.createdDate)) {
-            return false;
-        }
-        if (!Objects.equals(this.modifiedDate, other.modifiedDate)) {
-            return false;
-        }
-        if (!Objects.equals(this.inPreparationDate, other.inPreparationDate)) {
-            return false;
-        }
-        if (!Objects.equals(this.readyDate, other.readyDate)) {
-            return false;
-        }
-        if (!Objects.equals(this.deliveredDate, other.deliveredDate)) {
-            return false;
-        }
-        if (!Objects.equals(this.cancelledDate, other.cancelledDate)) {
-            return false;
-        }
-        if (!Objects.equals(this.customer, other.customer)) {
-            return false;
-        }
-        if (!Objects.equals(this.user, other.user)) {
-            return false;
-        }
-        if (!Objects.equals(this.table, other.table)) {
-            return false;
-        }
-        if (!Objects.equals(this.delivery, other.delivery)) {
-            return false;
-        }
-        if (!Objects.equals(this.orderItems, other.orderItems)) {
-            return false;
-        }
-        return Objects.equals(this.orderEntries, other.orderEntries);
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" + "id=" + id + ", orderNumber=" + orderNumber + ", createdDate=" + createdDate
-                + ", modifiedDate=" + modifiedDate + ", inPreparationDate=" + inPreparationDate + ", readyDate="
-                + readyDate + ", deliveredDate=" + deliveredDate + ", cancelledDate=" + cancelledDate + ", orderType="
-                + orderType + ", orderStatus=" + orderStatus + ", paymentMethod=" + paymentMethod + ", preparationTime="
-                + preparationTime + ", notes=" + notes + ", doneNotes=" + doneNotes + ", stopNote=" + stopNote
-                + ", branchId=" + branchId + ", customer=" + customer + ", user=" + user + ", table=" + table
-                + ", delivery=" + delivery + ", orderItems=" + orderItems + ", orderEntries=" + orderEntries + '}';
-    }
 }

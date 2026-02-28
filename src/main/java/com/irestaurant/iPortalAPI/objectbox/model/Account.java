@@ -1,78 +1,61 @@
 package com.irestaurant.iPortalAPI.objectbox.model;
 
+import io.objectbox.annotation.Backlink;
 import io.objectbox.annotation.ConflictStrategy;
-import com.irestaurant.iPortalAPI.converter.LocalDateTimeConverter;
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Sync;
 import io.objectbox.annotation.Unique;
+import io.objectbox.converter.PropertyConverter;
 import io.objectbox.relation.ToMany;
-import java.time.LocalDateTime;
-import java.util.Objects;
 
+import java.util.Date;
+
+@Sync
 @Entity
 public class Account {
-
     @Id(assignable = true)
-    long id;
-
+    public long id;
+    
+    public String title;
+    public String titleAr;
+    
     @Unique(onConflict = ConflictStrategy.REPLACE)
-    String accNumber;
+    public String accNumber;
+    
+    //@Convert(converter = DateConverter.class, dbType = Long.class)
+    public Date createdDate;
+    
+    public double balance;
+    public String branchId;
 
-    String title;
-
-    String titleAr;
-
-    @Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
-    LocalDateTime createdDate;
-
-    double balance;
-
-    String branchId;
-
-    private transient ToMany<Invoice> invoiceTos;
-    // @Backlink('accountFrom')
-    private transient ToMany<Invoice> invoiceFroms;
-    // @Backlink('account')
-    private transient ToMany<Entry> entries;
-
-    public ToMany<Invoice> getInvoiceTos() {
-        return invoiceTos;
-    }
-
-    public void setInvoiceTos(ToMany<Invoice> invoiceTos) {
-        this.invoiceTos = invoiceTos;
-    }
-
-    public ToMany<Invoice> getInvoiceFroms() {
-        return invoiceFroms;
-    }
-
-    public void setInvoiceFroms(ToMany<Invoice> invoiceFroms) {
-        this.invoiceFroms = invoiceFroms;
-    }
-
-    public ToMany<Entry> getEntries() {
-        return entries;
-    }
-
-    public void setEntries(ToMany<Entry> entries) {
-        this.entries = entries;
-    }
+    @Backlink(to = "account")
+    public ToMany<Entry> entries;
+    
+    @Backlink(to = "accountFrom")
+    public ToMany<Invoice> invoiceFrom;
+    
+    @Backlink(to = "accountTo")
+    public ToMany<Invoice> invoiceTo;
 
     public Account() {
+        this.entries = new ToMany<>(this, Account_.entries);
+        this.invoiceFrom = new ToMany<>(this, Account_.invoiceFrom);
+        this.invoiceTo = new ToMany<>(this, Account_.invoiceTo);
     }
 
-    public Account(long id, String title, String titleAr, String accNumber,
-            LocalDateTime createdDate, double balance, String branchId) {
-        this.id = id;
-        this.accNumber = accNumber;
-        this.title = title;
-        this.titleAr = titleAr;
-        this.createdDate = createdDate;
-        this.balance = balance;
-        this.branchId = branchId;
-    }
+//    public static class DateConverter implements PropertyConverter<Date, Long> {
+//        @Override
+//        public Long convertToDatabaseValue(Date entityProperty) {
+//            return entityProperty != null ? entityProperty.getTime() : null;
+//        }
+//
+//        @Override
+//        public Date convertToEntityProperty(Long databaseValue) {
+//            return databaseValue != null ? new Date(databaseValue) : null;
+//        }
+//    }
 
     public long getId() {
         return id;
@@ -106,11 +89,11 @@ public class Account {
         this.accNumber = accNumber;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -130,56 +113,29 @@ public class Account {
         this.branchId = branchId;
     }
 
-    @Override
-    public String toString() {
-        return "Account{" + "id=" + id + ", title=" + title + ", titleAr=" + titleAr + ", accNumber=" + accNumber
-                + ", createdDate=" + createdDate + ", balance=" + balance + ", branchId=" + branchId + '}';
+    public ToMany<Entry> getEntries() {
+        return entries;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 97 * hash + Objects.hashCode(this.id);
-        hash = 97 * hash + Objects.hashCode(this.title);
-        hash = 97 * hash + Objects.hashCode(this.titleAr);
-        hash = 97 * hash + Objects.hashCode(this.accNumber);
-        hash = 97 * hash + Objects.hashCode(this.createdDate);
-        hash = 97 * hash
-                + (int) (Double.doubleToLongBits(this.balance) ^ (Double.doubleToLongBits(this.balance) >>> 32));
-        hash = 97 * hash + Objects.hashCode(this.branchId);
-        return hash;
+    public void setEntries(ToMany<Entry> entries) {
+        this.entries = entries;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Account other = (Account) obj;
-        if (Double.doubleToLongBits(this.balance) != Double.doubleToLongBits(other.balance)) {
-            return false;
-        }
-        if (!Objects.equals(this.title, other.title)) {
-            return false;
-        }
-        if (!Objects.equals(this.titleAr, other.titleAr)) {
-            return false;
-        }
-        if (!Objects.equals(this.accNumber, other.accNumber)) {
-            return false;
-        }
-        if (!Objects.equals(this.branchId, other.branchId)) {
-            return false;
-        }
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return Objects.equals(this.createdDate, other.createdDate);
+    public ToMany<Invoice> getInvoiceFrom() {
+        return invoiceFrom;
     }
+
+    public void setInvoiceFrom(ToMany<Invoice> invoiceFrom) {
+        this.invoiceFrom = invoiceFrom;
+    }
+
+    public ToMany<Invoice> getInvoiceTo() {
+        return invoiceTo;
+    }
+
+    public void setInvoiceTo(ToMany<Invoice> invoiceTo) {
+        this.invoiceTo = invoiceTo;
+    }
+    
+    
 }

@@ -1,16 +1,18 @@
 package com.irestaurant.iPortalAPI.objectbox.model;
 
-import com.irestaurant.iPortalAPI.converter.LocalDateTimeConverter;
-import com.irestaurant.iPortalAPI.enumerators.NotificationTypes;
-import com.irestaurant.iPortalAPI.enumerators.Usecases;
+import io.objectbox.annotation.Backlink;
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.converter.PropertyConverter;
 import io.objectbox.relation.ToMany;
 import io.objectbox.relation.ToOne;
-import java.time.LocalDateTime;
-import java.util.Objects;
+import com.irestaurant.iPortalAPI.enumerators.NotificationTypes;
+import com.irestaurant.iPortalAPI.enumerators.Usecases;
+import io.objectbox.annotation.Sync;
+import java.util.Date;
 
+@Sync
 @Entity
 public class Notification {
 
@@ -19,21 +21,37 @@ public class Notification {
 
     String title;
     String subtitle;
-    String branchId;
-
-    int badgeCount;
+    long badgeCount;
+    long type = NotificationTypes.None.ordinal();
+    long usecase = Usecases.None.ordinal();
     boolean canReply;
 
-    @Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
-    LocalDateTime creationDate = LocalDateTime.now();
+    //@Convert(converter = DateConverter.class, dbType = Long.class)
+    Date creationDate;
 
-    int type = NotificationTypes.None.ordinal();
-    int usecase = Usecases.None.ordinal();
+    String branchId;
 
-    private transient ToOne<User> user;
-    // @Backlink('notification') // Links back from notification message to
-    // notification.
-    private transient ToMany<NotificationMessage> messages;
+    public ToOne<User> user;
+
+    @Backlink(to = "notification")
+    private ToMany<NotificationMessage> messages;
+
+    public Notification() {
+       this.user = new ToOne<>(this, Notification_.user);
+       this.messages = new ToMany<>(this, Notification_.messages);
+    }
+
+//    public static class DateConverter implements PropertyConverter<Date, Long> {
+//        @Override
+//        public Long convertToDatabaseValue(Date entityProperty) {
+//            return entityProperty != null ? entityProperty.getTime() : null;
+//        }
+//
+//        @Override
+//        public Date convertToEntityProperty(Long databaseValue) {
+//            return databaseValue != null ? new Date(databaseValue) : null;
+//        }
+//    }
 
     public long getId() {
         return id;
@@ -59,20 +77,28 @@ public class Notification {
         this.subtitle = subtitle;
     }
 
-    public String getBranchId() {
-        return branchId;
-    }
-
-    public void setBranchId(String branchId) {
-        this.branchId = branchId;
-    }
-
-    public int getBadgeCount() {
+    public long getBadgeCount() {
         return badgeCount;
     }
 
-    public void setBadgeCount(int badgeCount) {
+    public void setBadgeCount(long badgeCount) {
         this.badgeCount = badgeCount;
+    }
+
+    public long getType() {
+        return type;
+    }
+
+    public void setType(long type) {
+        this.type = type;
+    }
+
+    public long getUsecase() {
+        return usecase;
+    }
+
+    public void setUsecase(long usecase) {
+        this.usecase = usecase;
     }
 
     public boolean isCanReply() {
@@ -83,28 +109,20 @@ public class Notification {
         this.canReply = canReply;
     }
 
-    public LocalDateTime getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
-    public int getType() {
-        return type;
+    public String getBranchId() {
+        return branchId;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public int getUsecase() {
-        return usecase;
-    }
-
-    public void setUsecase(int usecase) {
-        this.usecase = usecase;
+    public void setBranchId(String branchId) {
+        this.branchId = branchId;
     }
 
     public ToOne<User> getUser() {
@@ -122,74 +140,6 @@ public class Notification {
     public void setMessages(ToMany<NotificationMessage> messages) {
         this.messages = messages;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 37 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 37 * hash + Objects.hashCode(this.title);
-        hash = 37 * hash + Objects.hashCode(this.subtitle);
-        hash = 37 * hash + Objects.hashCode(this.branchId);
-        hash = 37 * hash + this.badgeCount;
-        hash = 37 * hash + (this.canReply ? 1 : 0);
-        hash = 37 * hash + Objects.hashCode(this.creationDate);
-        hash = 37 * hash + this.type;
-        hash = 37 * hash + this.usecase;
-        hash = 37 * hash + Objects.hashCode(this.user);
-        hash = 37 * hash + Objects.hashCode(this.messages);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Notification other = (Notification) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        if (this.badgeCount != other.badgeCount) {
-            return false;
-        }
-        if (this.canReply != other.canReply) {
-            return false;
-        }
-        if (this.type != other.type) {
-            return false;
-        }
-        if (this.usecase != other.usecase) {
-            return false;
-        }
-        if (!Objects.equals(this.title, other.title)) {
-            return false;
-        }
-        if (!Objects.equals(this.subtitle, other.subtitle)) {
-            return false;
-        }
-        if (!Objects.equals(this.branchId, other.branchId)) {
-            return false;
-        }
-        if (!Objects.equals(this.creationDate, other.creationDate)) {
-            return false;
-        }
-        if (!Objects.equals(this.user, other.user)) {
-            return false;
-        }
-        return Objects.equals(this.messages, other.messages);
-    }
-
-    @Override
-    public String toString() {
-        return "Notification{" + "id=" + id + ", title=" + title + ", subtitle=" + subtitle + ", branchId=" + branchId
-                + ", badgeCount=" + badgeCount + ", canReply=" + canReply + ", creationDate=" + creationDate + ", type="
-                + type + ", usecase=" + usecase + ", user=" + user + ", messages=" + messages + '}';
-    }
-
+    
+    
 }

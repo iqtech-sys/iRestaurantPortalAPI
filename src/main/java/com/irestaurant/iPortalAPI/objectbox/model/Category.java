@@ -2,15 +2,18 @@ package com.irestaurant.iPortalAPI.objectbox.model;
 
 import io.objectbox.annotation.ConflictStrategy;
 import com.irestaurant.iPortalAPI.converter.LocalDateTimeConverter;
+import io.objectbox.annotation.Backlink;
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Sync;
 import io.objectbox.annotation.Unique;
+import io.objectbox.converter.PropertyConverter;
 import io.objectbox.relation.ToMany;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.Date;
 
+@Sync
 @Entity
 public class Category {
 
@@ -22,14 +25,30 @@ public class Category {
 
     String description;
 
-    @Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
-    LocalDateTime createdDate;
+    //@Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
+    Date createdDate;
 
     byte[] image;
     String branchId;
 
-    // @Backlink('category')
-    private transient ToMany<Product> products;
+    @Backlink(to = "category")
+    private ToMany<Product> products;
+
+    public Category() {
+        this.products = new ToMany<>(this, Category_.products);
+    }
+    
+//    public static class DateConverter implements PropertyConverter<Date, Long> {
+//        @Override
+//        public Long convertToDatabaseValue(Date entityProperty) {
+//            return entityProperty != null ? entityProperty.getTime() : null;
+//        }
+//
+//        @Override
+//        public Date convertToEntityProperty(Long databaseValue) {
+//            return databaseValue != null ? new Date(databaseValue) : null;
+//        }
+//    }
 
     public long getId() {
         return id;
@@ -55,11 +74,11 @@ public class Category {
         this.description = description;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -86,57 +105,6 @@ public class Category {
     public void setProducts(ToMany<Product> products) {
         this.products = products;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 97 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 97 * hash + Objects.hashCode(this.title);
-        hash = 97 * hash + Objects.hashCode(this.description);
-        hash = 97 * hash + Objects.hashCode(this.createdDate);
-        hash = 97 * hash + Arrays.hashCode(this.image);
-        hash = 97 * hash + Objects.hashCode(this.branchId);
-        hash = 97 * hash + Objects.hashCode(this.products);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Category other = (Category) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        if (!Objects.equals(this.title, other.title)) {
-            return false;
-        }
-        if (!Objects.equals(this.description, other.description)) {
-            return false;
-        }
-        if (!Objects.equals(this.branchId, other.branchId)) {
-            return false;
-        }
-        if (!Objects.equals(this.createdDate, other.createdDate)) {
-            return false;
-        }
-        if (!Arrays.equals(this.image, other.image)) {
-            return false;
-        }
-        return Objects.equals(this.products, other.products);
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" + "id=" + id + ", title=" + title + ", description=" + description + ", createdDate="
-                + createdDate + ", image=" + image + ", branchId=" + branchId + ", products=" + products + '}';
-    }
-
+    
+    
 }

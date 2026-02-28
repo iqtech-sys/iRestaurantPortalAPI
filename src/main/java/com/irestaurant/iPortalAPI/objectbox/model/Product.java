@@ -1,6 +1,6 @@
 package com.irestaurant.iPortalAPI.objectbox.model;
 
-import com.irestaurant.iPortalAPI.converter.LocalDateTimeConverter;
+import io.objectbox.annotation.Backlink;
 import io.objectbox.annotation.ConflictStrategy;
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
@@ -8,57 +8,47 @@ import io.objectbox.annotation.Id;
 import io.objectbox.annotation.Unique;
 import io.objectbox.relation.ToMany;
 import io.objectbox.relation.ToOne;
+import com.irestaurant.iPortalAPI.converter.LocalDateTimeConverter;
+import io.objectbox.annotation.Sync;
 import java.time.LocalDateTime;
+import java.util.Date;
 
+@Sync
 @Entity
 public class Product {
 
     @Id(assignable = true)
     long id;
+
     @Unique(onConflict = ConflictStrategy.REPLACE)
     String title;
-    String description;
-    String branchId;
 
     double price;
     double rating;
     byte[] image;
-    boolean isAvailable;
+    String description;
     double calories;
-    int preparationTime;
+    long preparationTime;
+    boolean isAvailable;
+    String branchId;
 
-    @Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
-    LocalDateTime createdDate;
+    //@Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
+    Date createdDate = new Date();
 
-    private transient ToOne<Category> category;
-    private transient ToMany<OrderItem> orderItems;// OrderItems
-    private transient ToMany<Kitchen> kitchens;// Kitchens
+    public ToOne<Category> category;
 
-    public ToOne<Category> getCategory() {
-        return category;
+    @Backlink(to = "product")
+    private ToMany<OrderItem> orderItems;
+
+    private ToMany<Kitchen> kitchens;
+
+    public Product() {
+        this.category = new ToOne<>(this, Product_.category);
+        //
+        this.orderItems = new ToMany<>(this, Product_.orderItems);
+        this.kitchens = new ToMany<>(this, Product_.kitchens);
     }
 
-    public void setCategory(ToOne<Category> category) {
-        this.category = category;
-    }
-
-    public ToMany<OrderItem> getOrderItems() {
-        return orderItems;
-    }
-
-    public void setOrderItems(ToMany<OrderItem> orderItems) {
-        this.orderItems = orderItems;
-    }
-
-    public ToMany<Kitchen> getKitchens() {
-        return kitchens;
-    }
-
-    public void setKitchens(ToMany<Kitchen> kitchens) {
-        this.kitchens = kitchens;
-    }
-
-    //
     public long getId() {
         return id;
     }
@@ -73,22 +63,6 @@ public class Product {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getBranchId() {
-        return branchId;
-    }
-
-    public void setBranchId(String branchId) {
-        this.branchId = branchId;
     }
 
     public double getPrice() {
@@ -115,12 +89,12 @@ public class Product {
         this.image = image;
     }
 
-    public boolean isIsAvailable() {
-        return isAvailable;
+    public String getDescription() {
+        return description;
     }
 
-    public void setIsAvailable(boolean isAvailable) {
-        this.isAvailable = isAvailable;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public double getCalories() {
@@ -131,19 +105,61 @@ public class Product {
         this.calories = calories;
     }
 
-    public int getPreparationTime() {
+    public long getPreparationTime() {
         return preparationTime;
     }
 
-    public void setPreparationTime(int preparationTime) {
+    public void setPreparationTime(long preparationTime) {
         this.preparationTime = preparationTime;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public boolean isIsAvailable() {
+        return isAvailable;
+    }
+
+    public void setIsAvailable(boolean isAvailable) {
+        this.isAvailable = isAvailable;
+    }
+
+    public String getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(String branchId) {
+        this.branchId = branchId;
+    }
+
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
+
+    public ToOne<Category> getCategory() {
+        return category;
+    }
+
+    public void setCategory(ToOne<Category> category) {
+        this.category = category;
+    }
+
+    public ToMany<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(ToMany<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public ToMany<Kitchen> getKitchens() {
+        return kitchens;
+    }
+
+    public void setKitchens(ToMany<Kitchen> kitchens) {
+        this.kitchens = kitchens;
+    }
+    
+    
 }

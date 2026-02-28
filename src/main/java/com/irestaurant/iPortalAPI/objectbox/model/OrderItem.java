@@ -2,170 +2,240 @@ package com.irestaurant.iPortalAPI.objectbox.model;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Sync;
 import io.objectbox.relation.ToOne;
-import java.util.Arrays;
-import java.util.Objects;
 
+@Sync
 @Entity
 public class OrderItem {
 
     @Id(assignable = true)
     long id;
-    int quantity;
+
+    long quantity;
     double discount;
     String notes;
     boolean isDone;
     String branchId;
 
-    private transient ToOne<Product> product;
-    private transient ToOne<Order> order;
+    public ToOne<Product> product;
+    public ToOne<Order> order;
 
-    // **** Snapshot properties ****
-    int snapshot_id = 0;
-    String snapshot_title;
+    //**** Snapshot properties ****
+    long snapshot_id = 0;
+    String snapshot_title = "";
     double snapshot_price = 0;
-    String snapshot_currency;
+    String snapshot_currency = "";
     double snapshot_discount = 0;
     double snapshot_taxRate = 0;
-    int snapshot_quantity = 0;
+    long snapshot_quantity = 0;
     double snapshot_rating = 0;
     byte[] snapshot_image;
-    String snapshot_description;
+    String snapshot_description = "";
     double snapshot_calories = 0;
-    int snapshot_preparationTime = 0;
+    long snapshot_preparationTime = 0;
     boolean snapshot_isAvailable = false;
-    String snapshot_notes;
-    String snapshot_branchId;
+    String snapshot_notes = "";
+    String snapshot_branchId = "";
     boolean snapshot_isDone = false;
-    // *****************************
+    //*****************************
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 89 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 89 * hash + this.quantity;
-        hash = 89 * hash + (int) (Double.doubleToLongBits(this.discount) ^ (Double.doubleToLongBits(this.discount) >>> 32));
-        hash = 89 * hash + Objects.hashCode(this.notes);
-        hash = 89 * hash + (this.isDone ? 1 : 0);
-        hash = 89 * hash + Objects.hashCode(this.branchId);
-        hash = 89 * hash + Objects.hashCode(this.product);
-        hash = 89 * hash + Objects.hashCode(this.order);
-        hash = 89 * hash + this.snapshot_id;
-        hash = 89 * hash + Objects.hashCode(this.snapshot_title);
-        hash = 89 * hash + (int) (Double.doubleToLongBits(this.snapshot_price) ^ (Double.doubleToLongBits(this.snapshot_price) >>> 32));
-        hash = 89 * hash + Objects.hashCode(this.snapshot_currency);
-        hash = 89 * hash + (int) (Double.doubleToLongBits(this.snapshot_discount) ^ (Double.doubleToLongBits(this.snapshot_discount) >>> 32));
-        hash = 89 * hash + (int) (Double.doubleToLongBits(this.snapshot_taxRate) ^ (Double.doubleToLongBits(this.snapshot_taxRate) >>> 32));
-        hash = 89 * hash + this.snapshot_quantity;
-        hash = 89 * hash + (int) (Double.doubleToLongBits(this.snapshot_rating) ^ (Double.doubleToLongBits(this.snapshot_rating) >>> 32));
-        hash = 89 * hash + Arrays.hashCode(this.snapshot_image);
-        hash = 89 * hash + Objects.hashCode(this.snapshot_description);
-        hash = 89 * hash + (int) (Double.doubleToLongBits(this.snapshot_calories) ^ (Double.doubleToLongBits(this.snapshot_calories) >>> 32));
-        hash = 89 * hash + this.snapshot_preparationTime;
-        hash = 89 * hash + (this.snapshot_isAvailable ? 1 : 0);
-        hash = 89 * hash + Objects.hashCode(this.snapshot_notes);
-        hash = 89 * hash + Objects.hashCode(this.snapshot_branchId);
-        hash = 89 * hash + (this.snapshot_isDone ? 1 : 0);
-        return hash;
+    public OrderItem() {
+        this.product = new ToOne<>(this, OrderItem_.product);
+        this.order = new ToOne<>(this, OrderItem_.order);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(long quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public boolean isIsDone() {
+        return isDone;
+    }
+
+    public void setIsDone(boolean isDone) {
+        this.isDone = isDone;
+    }
+
+    public String getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(String branchId) {
+        this.branchId = branchId;
+    }
+
+    public ToOne<Product> getProduct() {
+        return product;
+    }
+
+    public void setProduct(ToOne<Product> product) {
+        this.product = product;
+    }
+
+    public ToOne<Order> getOrder() {
+        return order;
+    }
+
+    public void setOrder(ToOne<Order> order) {
+        this.order = order;
+    }
+
+    public long getSnapshot_id() {
+        return snapshot_id;
+    }
+
+    public void setSnapshot_id(long snapshot_id) {
+        this.snapshot_id = snapshot_id;
+    }
+
+    public String getSnapshot_title() {
+        return snapshot_title;
+    }
+
+    public void setSnapshot_title(String snapshot_title) {
+        this.snapshot_title = snapshot_title;
+    }
+
+    public double getSnapshot_price() {
+        return snapshot_price;
+    }
+
+    public void setSnapshot_price(double snapshot_price) {
+        this.snapshot_price = snapshot_price;
+    }
+
+    public String getSnapshot_currency() {
+        return snapshot_currency;
+    }
+
+    public void setSnapshot_currency(String snapshot_currency) {
+        this.snapshot_currency = snapshot_currency;
+    }
+
+    public double getSnapshot_discount() {
+        return snapshot_discount;
+    }
+
+    public void setSnapshot_discount(double snapshot_discount) {
+        this.snapshot_discount = snapshot_discount;
+    }
+
+    public double getSnapshot_taxRate() {
+        return snapshot_taxRate;
+    }
+
+    public void setSnapshot_taxRate(double snapshot_taxRate) {
+        this.snapshot_taxRate = snapshot_taxRate;
+    }
+
+    public long getSnapshot_quantity() {
+        return snapshot_quantity;
+    }
+
+    public void setSnapshot_quantity(long snapshot_quantity) {
+        this.snapshot_quantity = snapshot_quantity;
+    }
+
+    public double getSnapshot_rating() {
+        return snapshot_rating;
+    }
+
+    public void setSnapshot_rating(double snapshot_rating) {
+        this.snapshot_rating = snapshot_rating;
+    }
+
+    public byte[] getSnapshot_image() {
+        return snapshot_image;
+    }
+
+    public void setSnapshot_image(byte[] snapshot_image) {
+        this.snapshot_image = snapshot_image;
+    }
+
+    public String getSnapshot_description() {
+        return snapshot_description;
+    }
+
+    public void setSnapshot_description(String snapshot_description) {
+        this.snapshot_description = snapshot_description;
+    }
+
+    public double getSnapshot_calories() {
+        return snapshot_calories;
+    }
+
+    public void setSnapshot_calories(double snapshot_calories) {
+        this.snapshot_calories = snapshot_calories;
+    }
+
+    public long getSnapshot_preparationTime() {
+        return snapshot_preparationTime;
+    }
+
+    public void setSnapshot_preparationTime(long snapshot_preparationTime) {
+        this.snapshot_preparationTime = snapshot_preparationTime;
+    }
+
+    public boolean isSnapshot_isAvailable() {
+        return snapshot_isAvailable;
+    }
+
+    public void setSnapshot_isAvailable(boolean snapshot_isAvailable) {
+        this.snapshot_isAvailable = snapshot_isAvailable;
+    }
+
+    public String getSnapshot_notes() {
+        return snapshot_notes;
+    }
+
+    public void setSnapshot_notes(String snapshot_notes) {
+        this.snapshot_notes = snapshot_notes;
+    }
+
+    public String getSnapshot_branchId() {
+        return snapshot_branchId;
+    }
+
+    public void setSnapshot_branchId(String snapshot_branchId) {
+        this.snapshot_branchId = snapshot_branchId;
+    }
+
+    public boolean isSnapshot_isDone() {
+        return snapshot_isDone;
+    }
+
+    public void setSnapshot_isDone(boolean snapshot_isDone) {
+        this.snapshot_isDone = snapshot_isDone;
     }
     
     
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final OrderItem other = (OrderItem) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        if (this.quantity != other.quantity) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.discount) != Double.doubleToLongBits(other.discount)) {
-            return false;
-        }
-        if (this.isDone != other.isDone) {
-            return false;
-        }
-        if (this.snapshot_id != other.snapshot_id) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.snapshot_price) != Double.doubleToLongBits(other.snapshot_price)) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.snapshot_discount) != Double.doubleToLongBits(other.snapshot_discount)) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.snapshot_taxRate) != Double.doubleToLongBits(other.snapshot_taxRate)) {
-            return false;
-        }
-        if (this.snapshot_quantity != other.snapshot_quantity) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.snapshot_rating) != Double.doubleToLongBits(other.snapshot_rating)) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.snapshot_calories) != Double.doubleToLongBits(other.snapshot_calories)) {
-            return false;
-        }
-        if (this.snapshot_preparationTime != other.snapshot_preparationTime) {
-            return false;
-        }
-        if (this.snapshot_isAvailable != other.snapshot_isAvailable) {
-            return false;
-        }
-        if (this.snapshot_isDone != other.snapshot_isDone) {
-            return false;
-        }
-        if (!Objects.equals(this.notes, other.notes)) {
-            return false;
-        }
-        if (!Objects.equals(this.branchId, other.branchId)) {
-            return false;
-        }
-        if (!Objects.equals(this.snapshot_title, other.snapshot_title)) {
-            return false;
-        }
-        if (!Objects.equals(this.snapshot_currency, other.snapshot_currency)) {
-            return false;
-        }
-        if (!Objects.equals(this.snapshot_description, other.snapshot_description)) {
-            return false;
-        }
-        if (!Objects.equals(this.snapshot_notes, other.snapshot_notes)) {
-            return false;
-        }
-        if (!Objects.equals(this.snapshot_branchId, other.snapshot_branchId)) {
-            return false;
-        }
-        if (!Objects.equals(this.product, other.product)) {
-            return false;
-        }
-        if (!Objects.equals(this.order, other.order)) {
-            return false;
-        }
-        return Arrays.equals(this.snapshot_image, other.snapshot_image);
-    }
-
-    @Override
-    public String toString() {
-        return "OrderItem{" + "id=" + id + ", quantity=" + quantity + ", discount=" + discount + ", notes=" + notes
-                + ", isDone=" + isDone + ", branchId=" + branchId + ", product=" + product + ", order=" + order
-                + ", snapshot_id=" + snapshot_id + ", snapshot_title=" + snapshot_title + ", snapshot_price="
-                + snapshot_price + ", snapshot_currency=" + snapshot_currency + ", snapshot_discount="
-                + snapshot_discount + ", snapshot_taxRate=" + snapshot_taxRate + ", snapshot_quantity="
-                + snapshot_quantity + ", snapshot_rating=" + snapshot_rating + ", snapshot_image=" + snapshot_image
-                + ", snapshot_description=" + snapshot_description + ", snapshot_calories=" + snapshot_calories
-                + ", snapshot_preparationTime=" + snapshot_preparationTime + ", snapshot_isAvailable="
-                + snapshot_isAvailable + ", snapshot_notes=" + snapshot_notes + ", snapshot_branchId="
-                + snapshot_branchId + ", snapshot_isDone=" + snapshot_isDone + '}';
-    }
 }

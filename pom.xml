@@ -26,27 +26,50 @@
 
     <dependencies>
         <!-- ObjectBox - High-performance NoSQL database -->
+        
         <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-java</artifactId>
-            <version>3.8.0</version>
+            <version>4.1.0</version>
         </dependency>
-        <dependency>
+        
+<!--        <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-windows</artifactId>
-            <version>3.8.0</version>
-        </dependency>
-        <dependency>
+            <version>4.1.0</version>
+        </dependency>-->
+        
+<!--        <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-linux</artifactId>
             <version>3.8.0</version>
-        </dependency>
+        </dependency>-->
+        
+        <!--*******************************************-->
+        
+        <!--************ ObjectBox - SYNC ************-->
+        
         <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-processor</artifactId>
-            <version>3.8.0</version>
+            <version>4.1.0</version>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>io.objectbox</groupId>
+            <artifactId>objectbox-sync-linux</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>io.objectbox</groupId>
+            <artifactId>objectbox-sync-windows</artifactId>
+            <version>4.1.0</version>
+        </dependency>
+        
+        <!--*******************************************-->
+        
         <dependency>
             <groupId>org.greenrobot</groupId>
             <artifactId>essentials</artifactId>
@@ -150,8 +173,7 @@
                         <arg>-Aobjectbox.myObjectBoxPackage=generated</arg>
                     </compilerArgs>
                     <compilerArgument>-Aobjectbox.debug=false</compilerArgument>
-                    <generatedSourcesDirectory>${project.basedir}/src/main/java/com/irestaurant/iPortalAPI/</generatedSourcesDirectory>
-<!--                <generatedSourcesDirectory>${project.build.directory}/generated-sources/annotations</generatedSourcesDirectory>    -->
+                    <generatedSourcesDirectory>${project.build.directory}/generated-sources/annotations</generatedSourcesDirectory>
                 </configuration>
             </plugin><!--
             <plugin>

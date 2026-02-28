@@ -1,122 +1,132 @@
 package com.irestaurant.iPortalAPI.objectbox.model;
 
-import com.irestaurant.iPortalAPI.enumerators.UserTypes;
+import io.objectbox.annotation.Backlink;
 import io.objectbox.annotation.ConflictStrategy;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.annotation.Unique;
 import io.objectbox.relation.ToMany;
 import io.objectbox.relation.ToOne;
-import java.util.Arrays;
-import java.util.Objects;
+import com.irestaurant.iPortalAPI.enumerators.UserTypes;
+import io.objectbox.annotation.Sync;
 
+@Sync
 @Entity
 public class User {
-    
-  @Id(assignable = true)
-  long id;
-  
-  @Unique(onConflict = ConflictStrategy.REPLACE)
-  String email;
-  
-  String userName;
-  
-  String password;
-  
-  String privileges;
-  
-  int userType = UserTypes.Cashier.ordinal();
-  
-  boolean isActive = true;
-  
-  byte[] image;
-  
-  String branchId;
 
-  //@Backlink('user') // Links back from order to user.
-  ToMany<Order> orders;
-  //@Backlink('user') // Links back from notification to user.
-  ToMany<Notification> notifications;
-  //@Backlink('user') // Links back from order to user.
-  ToMany<LogEvent> logs;
-  //@Backlink('sender') // Links back from notification message to sender user.
-  ToMany<NotificationMessage> notificationMessages;// = ToMany<NotificationMessage>();
+    @Id(assignable = true)
+    public long id;
 
-  ToOne<Waiter> waiter;
-  ToOne<Kitchen> kitchen;
-  ToOne<Delivery> delivery;
+    @Unique(onConflict = ConflictStrategy.REPLACE)
+    public String email;
 
-  public long getId() {
-    return id;
-  }
+    public String userName;
+    public String password;
+    public String privileges;
 
-  public void setId(long id) {
-    this.id = id;
-  }
+    public long userType = UserTypes.Cashier.ordinal();
+    public boolean isActive = true;
+    public byte[] image;
+    public String branchId;
 
-  public String getEmail() {
-    return email;
-  }
+    @Backlink(to = "user")
+    public ToMany<Order> orders;
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+    @Backlink(to = "user")
+    public ToMany<Notification> notifications;
 
-  public String getUserName() {
-    return userName;
-  }
+    @Backlink(to = "user")
+    public ToMany<LogEvent> logs;
 
-  public void setUserName(String userName) {
-    this.userName = userName;
-  }
+    @Backlink(to = "sender")
+    public ToMany<NotificationMessage> notificationMessages;
 
-  public String getPassword() {
-    return password;
-  }
+    public ToOne<Waiter> waiter;
+    public ToOne<Kitchen> kitchen;
+    public ToOne<Delivery> delivery;
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+    public User() {
+        this.orders = new ToMany<>(this, User_.orders);
+        this.notifications = new ToMany<>(this, User_.notifications);
+        this.logs = new ToMany<>(this, User_.logs);
+        this.notificationMessages = new ToMany<>(this, User_.notificationMessages);
+        //
+        this.waiter = new ToOne<>(this, User_.waiter);
+        this.kitchen = new ToOne<>(this, User_.kitchen);
+        this.delivery = new ToOne<>(this, User_.delivery);
+    }
 
-  public String getPrivileges() {
-    return privileges;
-  }
+    public long getId() {
+        return id;
+    }
 
-  public void setPrivileges(String privileges) {
-    this.privileges = privileges;
-  }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-  public int getUserType() {
-    return userType;
-  }
+    public String getEmail() {
+        return email;
+    }
 
-  public void setUserType(int userType) {
-    this.userType = userType;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-  public boolean isIsActive() {
-    return isActive;
-  }
+    public String getUserName() {
+        return userName;
+    }
 
-  public void setIsActive(boolean isActive) {
-    this.isActive = isActive;
-  }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-  public byte[] getImage() {
-    return image;
-  }
+    public String getPassword() {
+        return password;
+    }
 
-  public void setImage(byte[] image) {
-    this.image = image;
-  }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-  public String getBranchId() {
-    return branchId;
-  }
+    public String getPrivileges() {
+        return privileges;
+    }
 
-  public void setBranchId(String branchId) {
-    this.branchId = branchId;
-  }
+    public void setPrivileges(String privileges) {
+        this.privileges = privileges;
+    }
+
+    public long getUserType() {
+        return userType;
+    }
+
+    public void setUserType(long userType) {
+        this.userType = userType;
+    }
+
+    public boolean isIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public String getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(String branchId) {
+        this.branchId = branchId;
+    }
 
     public ToMany<Order> getOrders() {
         return orders;
@@ -173,93 +183,6 @@ public class User {
     public void setDelivery(ToOne<Delivery> delivery) {
         this.delivery = delivery;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 53 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 53 * hash + Objects.hashCode(this.email);
-        hash = 53 * hash + Objects.hashCode(this.userName);
-        hash = 53 * hash + Objects.hashCode(this.password);
-        hash = 53 * hash + Objects.hashCode(this.privileges);
-        hash = 53 * hash + this.userType;
-        hash = 53 * hash + (this.isActive ? 1 : 0);
-        hash = 53 * hash + Arrays.hashCode(this.image);
-        hash = 53 * hash + Objects.hashCode(this.branchId);
-        hash = 53 * hash + Objects.hashCode(this.orders);
-        hash = 53 * hash + Objects.hashCode(this.notifications);
-        hash = 53 * hash + Objects.hashCode(this.logs);
-        hash = 53 * hash + Objects.hashCode(this.notificationMessages);
-        hash = 53 * hash + Objects.hashCode(this.waiter);
-        hash = 53 * hash + Objects.hashCode(this.kitchen);
-        hash = 53 * hash + Objects.hashCode(this.delivery);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final User other = (User) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        if (this.userType != other.userType) {
-            return false;
-        }
-        if (this.isActive != other.isActive) {
-            return false;
-        }
-        if (!Objects.equals(this.email, other.email)) {
-            return false;
-        }
-        if (!Objects.equals(this.userName, other.userName)) {
-            return false;
-        }
-        if (!Objects.equals(this.password, other.password)) {
-            return false;
-        }
-        if (!Objects.equals(this.privileges, other.privileges)) {
-            return false;
-        }
-        if (!Objects.equals(this.branchId, other.branchId)) {
-            return false;
-        }
-        if (!Arrays.equals(this.image, other.image)) {
-            return false;
-        }
-        if (!Objects.equals(this.orders, other.orders)) {
-            return false;
-        }
-        if (!Objects.equals(this.notifications, other.notifications)) {
-            return false;
-        }
-        if (!Objects.equals(this.logs, other.logs)) {
-            return false;
-        }
-        if (!Objects.equals(this.notificationMessages, other.notificationMessages)) {
-            return false;
-        }
-        if (!Objects.equals(this.waiter, other.waiter)) {
-            return false;
-        }
-        if (!Objects.equals(this.kitchen, other.kitchen)) {
-            return false;
-        }
-        return Objects.equals(this.delivery, other.delivery);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" + "id=" + id + ", email=" + email + ", userName=" + userName + ", password=" + password + ", privileges=" + privileges + ", userType=" + userType + ", isActive=" + isActive + ", image=" + image + ", branchId=" + branchId + ", orders=" + orders + ", notifications=" + notifications + ", logs=" + logs + ", notificationMessages=" + notificationMessages + ", waiter=" + waiter + ", kitchen=" + kitchen + ", delivery=" + delivery + '}';
-    }
-  
-  
+    
+    
 }

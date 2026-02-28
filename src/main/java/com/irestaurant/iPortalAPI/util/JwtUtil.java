@@ -19,12 +19,24 @@ public class JwtUtil {
 
     @Value("${iPortalApi.jwtSecret}")
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    
+
     @Value("${iPortalApi.jwtExpirationMs}")
     private static final int JWT_EXPIRATION = 86400000; // 24 hours
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    /**
+     * Extracts the "email" custom claim from the JWT.
+     * Mirrors how {@link #generateToken} writes it:
+     * {@code claims.put("email", email)}.
+     *
+     * @param token the JWT string (without "Bearer " prefix)
+     * @return the email stored in the token, or {@code null} if the claim is absent
+     */
+    public String extractEmail(String token) {
+        return extractClaim(token, claims -> claims.get("email", String.class));
     }
 
     public Date extractExpiration(String token) {
@@ -44,8 +56,9 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, String email) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("email", email);
         return createToken(claims, userDetails.getUsername());
     }
 
@@ -57,5 +70,9 @@ public class JwtUtil {
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+    
+    public String pureJWT(String token) {
+        return token.substring(7);
     }
 }

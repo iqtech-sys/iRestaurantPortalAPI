@@ -1,0 +1,24 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.irestaurant:iPortalAPI >---------------------
+[INFO] Building iPortalAPI 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from objectbox: https://objectbox.net/maven/io/objectbox/objectbox-sync-java/3.8.0/objectbox-sync-java-3.8.0.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.286 s
+[INFO] Finished at: 2026-02-24T13:23:34+03:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal on project iPortalAPI: Could not collect dependencies for project com.irestaurant:iPortalAPI:jar:0.0.1-SNAPSHOT
+[ERROR] Failed to read artifact descriptor for io.objectbox:objectbox-sync-java:jar:3.8.0
+[ERROR] 	Caused by: The following artifacts could not be resolved: io.objectbox:objectbox-sync-java:pom:3.8.0 (absent): Could not transfer artifact io.objectbox:objectbox-sync-java:pom:3.8.0 from/to objectbox (https://objectbox.net/maven/): Certificate for <objectbox.net> doesn't match any of the subject alternative names: [*.kasserver.com, kasserver.com]
+[ERROR] 
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/DependencyResolutionException

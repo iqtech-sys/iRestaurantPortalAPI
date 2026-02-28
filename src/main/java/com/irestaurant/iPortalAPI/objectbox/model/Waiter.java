@@ -3,33 +3,33 @@ package com.irestaurant.iPortalAPI.objectbox.model;
 import io.objectbox.annotation.ConflictStrategy;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Sync;
 import io.objectbox.annotation.Unique;
 import io.objectbox.relation.ToMany;
-import java.util.Arrays;
-import java.util.Objects;
 
+@Sync
 @Entity
 public class Waiter {
 
     @Id(assignable = true)
-    long id;
+    public long id;
 
     @Unique(onConflict = ConflictStrategy.REPLACE)
-    String name;
+    public String name;
 
-    String phoneNumber;
+    public String phoneNumber;
+    public long totalOrders;
+    public byte[] image;
+    public boolean isActive;
+    public String branchId;
 
-    int totalOrders;
+    public ToMany<Kitchen> kitchens;
+    public ToMany<OrderEntry> orderEntries;
 
-    byte[] image;
-
-    boolean isActive;
-
-    String branchId;
-
-    private transient ToMany<Kitchen> kitchens;
-
-    private transient ToMany<OrderEntry> orderEntries;
+    public Waiter() {
+        this.kitchens = new ToMany<>(this, Waiter_.kitchens);
+        this.orderEntries = new ToMany<>(this, Waiter_.orderEntries);
+    }
 
     public long getId() {
         return id;
@@ -55,11 +55,11 @@ public class Waiter {
         this.phoneNumber = phoneNumber;
     }
 
-    public int getTotalOrders() {
+    public long getTotalOrders() {
         return totalOrders;
     }
 
-    public void setTotalOrders(int totalOrders) {
+    public void setTotalOrders(long totalOrders) {
         this.totalOrders = totalOrders;
     }
 
@@ -87,80 +87,21 @@ public class Waiter {
         this.branchId = branchId;
     }
 
-    public void setKitchens(ToMany<Kitchen> kitchens) {
-        this.kitchens = kitchens;
-    }
-
-    public void setOrderEntries(ToMany<OrderEntry> orderEntries) {
-        this.orderEntries = orderEntries;
-    }
-
     public ToMany<Kitchen> getKitchens() {
         return kitchens;
+    }
+
+    public void setKitchens(ToMany<Kitchen> kitchens) {
+        this.kitchens = kitchens;
     }
 
     public ToMany<OrderEntry> getOrderEntries() {
         return orderEntries;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 79 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 79 * hash + Objects.hashCode(this.name);
-        hash = 79 * hash + Objects.hashCode(this.phoneNumber);
-        hash = 79 * hash + this.totalOrders;
-        hash = 79 * hash + Arrays.hashCode(this.image);
-        hash = 79 * hash + (this.isActive ? 1 : 0);
-        hash = 79 * hash + Objects.hashCode(this.branchId);
-        hash = 79 * hash + Objects.hashCode(this.kitchens);
-        hash = 79 * hash + Objects.hashCode(this.orderEntries);
-        return hash;
+    public void setOrderEntries(ToMany<OrderEntry> orderEntries) {
+        this.orderEntries = orderEntries;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Waiter other = (Waiter) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        if (this.totalOrders != other.totalOrders) {
-            return false;
-        }
-        if (this.isActive != other.isActive) {
-            return false;
-        }
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (!Objects.equals(this.phoneNumber, other.phoneNumber)) {
-            return false;
-        }
-        if (!Objects.equals(this.branchId, other.branchId)) {
-            return false;
-        }
-        if (!Arrays.equals(this.image, other.image)) {
-            return false;
-        }
-        if (!Objects.equals(this.kitchens, other.kitchens)) {
-            return false;
-        }
-        return Objects.equals(this.orderEntries, other.orderEntries);
-    }
-
-    @Override
-    public String toString() {
-        return "Waiter{" + "id=" + id + ", name=" + name + ", phoneNumber=" + phoneNumber + ", totalOrders="
-                + totalOrders + ", image=" + image + ", isActive=" + isActive + ", branchId=" + branchId + ", kitchens="
-                + kitchens + ", orderEntries=" + orderEntries + '}';
-    }
+    
+    
 }

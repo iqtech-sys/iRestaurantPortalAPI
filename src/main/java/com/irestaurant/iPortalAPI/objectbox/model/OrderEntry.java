@@ -5,30 +5,36 @@ import com.irestaurant.iPortalAPI.enumerators.OrderTypes;
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Sync;
 import io.objectbox.relation.ToOne;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.Date;
 
+@Sync
 @Entity
 public class OrderEntry {
 
     @Id(assignable = true)
     long id;
 
-    int orderType = OrderTypes.DineIn.ordinal();
+    long orderType = OrderTypes.DineIn.ordinal();
 
-    @Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
-    LocalDateTime dateTime;
+    //@Convert(converter = LocalDateTimeConverter.class, dbType = Long.class)
+    Date dateTime;
 
     String orderNum;
 
     String branchId;
 
-    ToOne<Order> order;
+    public ToOne<Order> order;
+    public ToOne<Delivery> delivery;
+    public ToOne<Waiter> waiter;
 
-    ToOne<Delivery> delivery;
-
-    ToOne<Waiter> waiter;
+    public OrderEntry() {
+        this.order = new ToOne<>(this, OrderEntry_.order);
+        this.delivery = new ToOne<>(this, OrderEntry_.delivery);
+        this.waiter = new ToOne<>(this, OrderEntry_.waiter);
+    }
 
     public long getId() {
         return id;
@@ -38,19 +44,19 @@ public class OrderEntry {
         this.id = id;
     }
 
-    public int getOrderType() {
+    public long getOrderType() {
         return orderType;
     }
 
-    public void setOrderType(int orderType) {
+    public void setOrderType(long orderType) {
         this.orderType = orderType;
     }
 
-    public LocalDateTime getDateTime() {
+    public Date getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
     }
 
@@ -94,60 +100,5 @@ public class OrderEntry {
         this.waiter = waiter;
     }
     
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 79 * hash + this.orderType;
-        hash = 79 * hash + Objects.hashCode(this.dateTime);
-        hash = 79 * hash + Objects.hashCode(this.orderNum);
-        hash = 79 * hash + Objects.hashCode(this.branchId);
-        hash = 79 * hash + Objects.hashCode(this.order);
-        hash = 79 * hash + Objects.hashCode(this.delivery);
-        hash = 79 * hash + Objects.hashCode(this.waiter);
-        return hash;
-    }
     
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final OrderEntry other = (OrderEntry) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        if (this.orderType != other.orderType) {
-            return false;
-        }
-        if (!Objects.equals(this.orderNum, other.orderNum)) {
-            return false;
-        }
-        if (!Objects.equals(this.branchId, other.branchId)) {
-            return false;
-        }
-        if (!Objects.equals(this.dateTime, other.dateTime)) {
-            return false;
-        }
-        if (!Objects.equals(this.order, other.order)) {
-            return false;
-        }
-        if (!Objects.equals(this.delivery, other.delivery)) {
-            return false;
-        }
-        return Objects.equals(this.waiter, other.waiter);
-    }
-
-    @Override
-    public String toString() {
-        return "OrderEntry{" + "id=" + id + ", orderType=" + orderType + ", dateTime=" + dateTime + ", orderNum="
-                + orderNum + ", branchId=" + branchId + ", order=" + order + ", delivery=" + delivery + ", waiter="
-                + waiter + '}';
-    }
 }

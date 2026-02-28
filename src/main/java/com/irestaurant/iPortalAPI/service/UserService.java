@@ -90,7 +90,7 @@ public class UserService implements UserDetailsService {
         DbUser user = userRepository.findByEmail(email);
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             UserDetails userDetails = loadUserByUsername(user.getUsername());
-            return CompletableFuture.completedFuture(jwtUtil.generateToken(userDetails));
+            return CompletableFuture.completedFuture(jwtUtil.generateToken(userDetails, email));
         }
         throw new InvalidCredentials_1101("Invalid credentials");
     }
