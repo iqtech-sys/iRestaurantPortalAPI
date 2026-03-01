@@ -33,17 +33,17 @@
             <version>4.1.0</version>
         </dependency>
         
-<!--        <dependency>
+        <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-windows</artifactId>
             <version>4.1.0</version>
-        </dependency>-->
+        </dependency>
         
-<!--        <dependency>
+        <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-linux</artifactId>
             <version>3.8.0</version>
-        </dependency>-->
+        </dependency>
         
         <!--*******************************************-->
         
