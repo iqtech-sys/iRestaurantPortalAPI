@@ -96,9 +96,9 @@ public class MyObjectBox {
 
     private static byte[] getModel() {
         ModelBuilder modelBuilder = new ModelBuilder();
-        modelBuilder.lastEntityId(35, 8136058931985338648L);
-        modelBuilder.lastIndexId(64, 302109145051273492L);
-        modelBuilder.lastRelationId(18, 6643661459599461559L);
+        modelBuilder.lastEntityId(52, 7721148610935224138L);
+        modelBuilder.lastIndexId(96, 8774127300960177491L);
+        modelBuilder.lastRelationId(27, 2240284579869315223L);
 
         buildEntityAccount(modelBuilder);
         buildEntityCategory(modelBuilder);
@@ -124,18 +124,18 @@ public class MyObjectBox {
 
     private static void buildEntityAccount(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("Account");
-        entityBuilder.id(19, 1079716996332128180L).lastPropertyId(7, 8558396474174877355L);
+        entityBuilder.id(36, 9122829892101374084L).lastPropertyId(7, 162243803922816862L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 4735608950365405485L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 7911436926733558823L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("title", PropertyType.String).id(2, 4529332964968200301L);
-        entityBuilder.property("titleAr", PropertyType.String).id(3, 5793341798686100129L);
-        entityBuilder.property("accNumber", PropertyType.String).id(4, 8831760692686238922L)
-                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(33, 5158061473151572112L);
-        entityBuilder.property("createdDate", PropertyType.Date).id(5, 4179227674349142704L);
-        entityBuilder.property("balance", PropertyType.Double).id(6, 3498535581388627424L);
-        entityBuilder.property("branchId", PropertyType.String).id(7, 8558396474174877355L);
+        entityBuilder.property("title", PropertyType.String).id(2, 3660547356447036252L);
+        entityBuilder.property("titleAr", PropertyType.String).id(3, 9053383627372307743L);
+        entityBuilder.property("accNumber", PropertyType.String).id(4, 4319877484351649173L)
+                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(65, 5772564532602184545L);
+        entityBuilder.property("createdDate", PropertyType.Date).id(5, 8932548098023766938L);
+        entityBuilder.property("balance", PropertyType.Double).id(6, 7263191637186079598L);
+        entityBuilder.property("branchId", PropertyType.String).id(7, 162243803922816862L);
 
 
         entityBuilder.entityDone();
@@ -143,17 +143,17 @@ public class MyObjectBox {
 
     private static void buildEntityCategory(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("Category");
-        entityBuilder.id(20, 32529441036913873L).lastPropertyId(6, 9039077311663570888L);
+        entityBuilder.id(37, 7761988606678785534L).lastPropertyId(6, 1764366311666127086L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 1276643750560740018L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 5901935017413552739L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("title", PropertyType.String).id(2, 1061459548178109343L)
-                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(34, 54687916892985429L);
-        entityBuilder.property("description", PropertyType.String).id(3, 6240360099644442467L);
-        entityBuilder.property("createdDate", PropertyType.Date).id(4, 4227531776148066575L);
-        entityBuilder.property("image", PropertyType.ByteVector).id(5, 1666024748921556763L);
-        entityBuilder.property("branchId", PropertyType.String).id(6, 9039077311663570888L);
+        entityBuilder.property("title", PropertyType.String).id(2, 6625198606431142917L)
+                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(66, 2769722353355437697L);
+        entityBuilder.property("description", PropertyType.String).id(3, 7219118388138062337L);
+        entityBuilder.property("createdDate", PropertyType.Date).id(4, 6453258971428271612L);
+        entityBuilder.property("image", PropertyType.ByteVector).id(5, 2281084935757860211L);
+        entityBuilder.property("branchId", PropertyType.String).id(6, 1764366311666127086L);
 
 
         entityBuilder.entityDone();
@@ -161,22 +161,22 @@ public class MyObjectBox {
 
     private static void buildEntityCustomer(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("Customer");
-        entityBuilder.id(21, 8569852871594375803L).lastPropertyId(11, 4236983292261289453L);
+        entityBuilder.id(38, 4812671096944710813L).lastPropertyId(11, 4803573669052814649L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 3503018904329274673L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 6888534654367376824L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("name", PropertyType.String).id(2, 7386637348447335081L)
-                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(35, 8910216242789100276L);
-        entityBuilder.property("phoneNumber", PropertyType.String).id(3, 1284753720797228861L);
-        entityBuilder.property("address", PropertyType.String).id(4, 1897314741612968420L);
-        entityBuilder.property("totalOrders", PropertyType.Long).id(5, 2835781561993141913L);
-        entityBuilder.property("amountSpent", PropertyType.Double).id(6, 7794129020279915310L);
-        entityBuilder.property("image", PropertyType.ByteVector).id(7, 667611880216797443L);
-        entityBuilder.property("location", PropertyType.String).id(8, 5801337669675824772L);
-        entityBuilder.property("location_lat", PropertyType.Double).id(9, 4166618224403809717L);
-        entityBuilder.property("location_lon", PropertyType.Double).id(10, 1538364836008033579L);
-        entityBuilder.property("branchId", PropertyType.String).id(11, 4236983292261289453L);
+        entityBuilder.property("name", PropertyType.String).id(2, 8564200452962905222L)
+                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(67, 7078455538900786008L);
+        entityBuilder.property("phoneNumber", PropertyType.String).id(3, 8883155913889027859L);
+        entityBuilder.property("address", PropertyType.String).id(4, 4138151850300949089L);
+        entityBuilder.property("totalOrders", PropertyType.Long).id(5, 5899499573903702384L);
+        entityBuilder.property("amountSpent", PropertyType.Double).id(6, 8568192912341740624L);
+        entityBuilder.property("image", PropertyType.ByteVector).id(7, 8938671021950659293L);
+        entityBuilder.property("location", PropertyType.String).id(8, 799816726110352186L);
+        entityBuilder.property("location_lat", PropertyType.Double).id(9, 2260133719418229169L);
+        entityBuilder.property("location_lon", PropertyType.Double).id(10, 304022148482062566L);
+        entityBuilder.property("branchId", PropertyType.String).id(11, 4803573669052814649L);
 
 
         entityBuilder.entityDone();
@@ -184,43 +184,43 @@ public class MyObjectBox {
 
     private static void buildEntityDelivery(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("Delivery");
-        entityBuilder.id(22, 1827438973283683921L).lastPropertyId(9, 6564462077849554997L);
+        entityBuilder.id(39, 2759526259900477106L).lastPropertyId(9, 7128229638468918053L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 7573321158472160598L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 8816404013285277563L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("name", PropertyType.String).id(2, 4748450878041317368L)
-                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(36, 5388518651667756556L);
-        entityBuilder.property("phoneNumber", PropertyType.String).id(3, 6988681490396629151L);
-        entityBuilder.property("image", PropertyType.ByteVector).id(4, 37448030787426431L);
-        entityBuilder.property("location", PropertyType.String).id(5, 6812637686022251005L);
-        entityBuilder.property("deliveryBy", PropertyType.Long).id(6, 9051502398973930481L);
-        entityBuilder.property("priority", PropertyType.Long).id(7, 6514933358993401214L);
-        entityBuilder.property("isActive", PropertyType.Bool).id(8, 3303612668848752028L);
-        entityBuilder.property("branchId", PropertyType.String).id(9, 6564462077849554997L);
+        entityBuilder.property("name", PropertyType.String).id(2, 7978054374988833460L)
+                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(68, 1496354743272750824L);
+        entityBuilder.property("phoneNumber", PropertyType.String).id(3, 4440745999710765261L);
+        entityBuilder.property("image", PropertyType.ByteVector).id(4, 1470239316124059972L);
+        entityBuilder.property("location", PropertyType.String).id(5, 7668023956748834124L);
+        entityBuilder.property("deliveryBy", PropertyType.Long).id(6, 5275114725477863300L);
+        entityBuilder.property("priority", PropertyType.Long).id(7, 4245739224010463722L);
+        entityBuilder.property("isActive", PropertyType.Bool).id(8, 4152878946826525249L);
+        entityBuilder.property("branchId", PropertyType.String).id(9, 7128229638468918053L);
 
-        entityBuilder.relation("orders", 10, 6816398134213322786L, 29, 4439650734758437051L);
-        entityBuilder.relation("kitchens", 11, 3958613489122396358L, 25, 8837237565368198377L);
-        entityBuilder.relation("orderEntries", 12, 2201350615926988662L, 30, 2503910907272034881L);
+        entityBuilder.relation("orders", 19, 8270346412738158159L, 46, 2272553064273887722L);
+        entityBuilder.relation("kitchens", 20, 3395271521625653610L, 42, 7847073584181761707L);
+        entityBuilder.relation("orderEntries", 21, 9013748519655360709L, 47, 8322679281756304730L);
 
         entityBuilder.entityDone();
     }
 
     private static void buildEntityEntry(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("Entry");
-        entityBuilder.id(23, 2074089230067755095L).lastPropertyId(7, 5241749023694116355L);
+        entityBuilder.id(40, 7659138827341527489L).lastPropertyId(7, 5375065086459942463L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 2798184411199214655L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 1040959962040624008L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("entryAmount", PropertyType.Double).id(2, 4807457505890221162L);
-        entityBuilder.property("entryNote", PropertyType.String).id(3, 8625221141471670990L);
-        entityBuilder.property("branchId", PropertyType.String).id(4, 8204659313384324982L);
-        entityBuilder.property("createdDate", PropertyType.Date).id(5, 1889319641926371560L);
-        entityBuilder.property("invoiceId", "Invoice", "invoice", PropertyType.Relation).id(6, 7153295361667080779L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(37, 4938585872738395902L);
-        entityBuilder.property("accountId", "Account", "account", PropertyType.Relation).id(7, 5241749023694116355L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(38, 4749394007991939912L);
+        entityBuilder.property("entryAmount", PropertyType.Double).id(2, 865572104045263963L);
+        entityBuilder.property("entryNote", PropertyType.String).id(3, 2989098872570667650L);
+        entityBuilder.property("branchId", PropertyType.String).id(4, 2068263929356387830L);
+        entityBuilder.property("createdDate", PropertyType.Date).id(5, 3537096641085687511L);
+        entityBuilder.property("invoiceId", "Invoice", "invoice", PropertyType.Relation).id(6, 1610014432062136406L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(69, 3379838270586465280L);
+        entityBuilder.property("accountId", "Account", "account", PropertyType.Relation).id(7, 5375065086459942463L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(70, 1115112409934603567L);
 
 
         entityBuilder.entityDone();
@@ -228,25 +228,25 @@ public class MyObjectBox {
 
     private static void buildEntityInvoice(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("Invoice");
-        entityBuilder.id(24, 9189739042680406504L).lastPropertyId(11, 3252128421363838758L);
+        entityBuilder.id(41, 9009586828338216596L).lastPropertyId(11, 3378469772862215340L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 3474942297896238229L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 9163403454887828287L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("invNum", PropertyType.String).id(2, 2101113953425532277L)
-                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(39, 4989585249631631719L);
-        entityBuilder.property("amountFrom", PropertyType.Double).id(3, 5807908489823977013L);
-        entityBuilder.property("amountTo", PropertyType.Double).id(4, 2769322850072124980L);
-        entityBuilder.property("note", PropertyType.String).id(5, 6820811597649270893L);
-        entityBuilder.property("taxRate", PropertyType.Double).id(6, 4509320392993693266L);
-        entityBuilder.property("branchId", PropertyType.String).id(7, 5582705863988592948L);
-        entityBuilder.property("createdDate", PropertyType.Date).id(8, 7253431027632369552L);
-        entityBuilder.property("accountFromId", "Account", "accountFrom", PropertyType.Relation).id(9, 1038261344714335265L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(40, 6644645084443984806L);
-        entityBuilder.property("accountToId", "Account", "accountTo", PropertyType.Relation).id(10, 2121504449927588660L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(41, 3116853792358157843L);
-        entityBuilder.property("entryId", "Entry", "entry", PropertyType.Relation).id(11, 3252128421363838758L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(42, 1655224001496450856L);
+        entityBuilder.property("invNum", PropertyType.String).id(2, 797859705862236262L)
+                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(71, 2980875635618119462L);
+        entityBuilder.property("amountFrom", PropertyType.Double).id(3, 1602359398836128212L);
+        entityBuilder.property("amountTo", PropertyType.Double).id(4, 5900503525872348563L);
+        entityBuilder.property("note", PropertyType.String).id(5, 3656693905644797872L);
+        entityBuilder.property("taxRate", PropertyType.Double).id(6, 8981543422760214897L);
+        entityBuilder.property("branchId", PropertyType.String).id(7, 6927389365277763245L);
+        entityBuilder.property("createdDate", PropertyType.Date).id(8, 3564508626167339566L);
+        entityBuilder.property("accountFromId", "Account", "accountFrom", PropertyType.Relation).id(9, 2248623082635498111L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(72, 4427150052345511824L);
+        entityBuilder.property("accountToId", "Account", "accountTo", PropertyType.Relation).id(10, 4258989704255036627L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(73, 2215957619862404212L);
+        entityBuilder.property("entryId", "Entry", "entry", PropertyType.Relation).id(11, 3378469772862215340L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(74, 4703149934232313555L);
 
 
         entityBuilder.entityDone();
@@ -254,37 +254,37 @@ public class MyObjectBox {
 
     private static void buildEntityKitchen(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("Kitchen");
-        entityBuilder.id(25, 8837237565368198377L).lastPropertyId(5, 4598571115473677775L);
+        entityBuilder.id(42, 7847073584181761707L).lastPropertyId(5, 5278902262004819596L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 2621976885176663318L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 4332993129623519072L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("title", PropertyType.String).id(2, 8600997245776501684L)
-                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(43, 8136098722068761567L);
-        entityBuilder.property("description", PropertyType.String).id(3, 7515027469698522461L);
-        entityBuilder.property("image", PropertyType.ByteVector).id(4, 5743029254370527513L);
-        entityBuilder.property("branchId", PropertyType.String).id(5, 4598571115473677775L);
+        entityBuilder.property("title", PropertyType.String).id(2, 5284326980983023545L)
+                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(75, 2026336202363853657L);
+        entityBuilder.property("description", PropertyType.String).id(3, 1070232928170462684L);
+        entityBuilder.property("image", PropertyType.ByteVector).id(4, 2111450044742596966L);
+        entityBuilder.property("branchId", PropertyType.String).id(5, 5278902262004819596L);
 
-        entityBuilder.relation("waiters", 13, 6323639011037578461L, 35, 8136058931985338648L);
-        entityBuilder.relation("deliveries", 14, 6617770885605363205L, 22, 1827438973283683921L);
-        entityBuilder.relation("products", 15, 4762855635157909806L, 32, 4700835817145035688L);
+        entityBuilder.relation("waiters", 22, 4927612591275514502L, 52, 7721148610935224138L);
+        entityBuilder.relation("deliveries", 23, 4572619128564162446L, 39, 2759526259900477106L);
+        entityBuilder.relation("products", 24, 7306068415721158783L, 49, 5968471650722922784L);
 
         entityBuilder.entityDone();
     }
 
     private static void buildEntityLogEvent(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("LogEvent");
-        entityBuilder.id(26, 7288210466151309063L).lastPropertyId(6, 2821821022992529111L);
+        entityBuilder.id(43, 7050064808657846286L).lastPropertyId(6, 4782640724617774583L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 6538817212022374056L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 1173423667194539623L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("logEvent", PropertyType.Long).id(2, 1598326770537293548L);
-        entityBuilder.property("createdDate", PropertyType.Date).id(3, 6134782042583005083L);
-        entityBuilder.property("branchId", PropertyType.String).id(4, 9000003061958554258L);
-        entityBuilder.property("args", PropertyType.StringVector).id(5, 4441530364451594941L);
-        entityBuilder.property("userId", "User", "user", PropertyType.Relation).id(6, 2821821022992529111L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(44, 1405184520213009556L);
+        entityBuilder.property("logEvent", PropertyType.Long).id(2, 2981161977508083655L);
+        entityBuilder.property("createdDate", PropertyType.Date).id(3, 8266537628231531752L);
+        entityBuilder.property("branchId", PropertyType.String).id(4, 3190394873134052445L);
+        entityBuilder.property("args", PropertyType.StringVector).id(5, 3629864115809245353L);
+        entityBuilder.property("userId", "User", "user", PropertyType.Relation).id(6, 4782640724617774583L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(76, 9164657992809997357L);
 
 
         entityBuilder.entityDone();
@@ -292,21 +292,21 @@ public class MyObjectBox {
 
     private static void buildEntityNotification(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("Notification");
-        entityBuilder.id(27, 2124005585142821886L).lastPropertyId(10, 3626886310498865074L);
+        entityBuilder.id(44, 2850787987046910500L).lastPropertyId(10, 8714598318728421127L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 7074864235708413305L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 400447224992528430L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("title", PropertyType.String).id(2, 3783582696992882188L);
-        entityBuilder.property("subtitle", PropertyType.String).id(3, 8400584525838469513L);
-        entityBuilder.property("badgeCount", PropertyType.Long).id(4, 6228930175113321655L);
-        entityBuilder.property("type", PropertyType.Long).id(5, 4600612762979159392L);
-        entityBuilder.property("usecase", PropertyType.Long).id(6, 4326146084328428570L);
-        entityBuilder.property("canReply", PropertyType.Bool).id(7, 7108210265471271283L);
-        entityBuilder.property("creationDate", PropertyType.Date).id(8, 4991716371919512926L);
-        entityBuilder.property("branchId", PropertyType.String).id(9, 7029947574787046727L);
-        entityBuilder.property("userId", "User", "user", PropertyType.Relation).id(10, 3626886310498865074L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(45, 505552029082586113L);
+        entityBuilder.property("title", PropertyType.String).id(2, 648206789489585626L);
+        entityBuilder.property("subtitle", PropertyType.String).id(3, 2894993637959082179L);
+        entityBuilder.property("badgeCount", PropertyType.Long).id(4, 3862471879944976047L);
+        entityBuilder.property("type", PropertyType.Long).id(5, 3622457399597348947L);
+        entityBuilder.property("usecase", PropertyType.Long).id(6, 905238829094425794L);
+        entityBuilder.property("canReply", PropertyType.Bool).id(7, 8072119196707283511L);
+        entityBuilder.property("creationDate", PropertyType.Date).id(8, 3216512181245873492L);
+        entityBuilder.property("branchId", PropertyType.String).id(9, 274014334637780032L);
+        entityBuilder.property("userId", "User", "user", PropertyType.Relation).id(10, 8714598318728421127L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(77, 2119357947395665999L);
 
 
         entityBuilder.entityDone();
@@ -314,21 +314,21 @@ public class MyObjectBox {
 
     private static void buildEntityNotificationMessage(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("NotificationMessage");
-        entityBuilder.id(28, 5692431215793558034L).lastPropertyId(9, 2332754315743761256L);
+        entityBuilder.id(45, 8057052629505305480L).lastPropertyId(9, 8437004579469539851L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 7401706505689702735L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 6602363632720394771L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("title", PropertyType.String).id(2, 8659094370586352898L);
-        entityBuilder.property("message", PropertyType.String).id(3, 8848583704973624323L);
-        entityBuilder.property("creationDate", PropertyType.Date).id(4, 8054109891619325714L);
-        entityBuilder.property("usecase", PropertyType.Long).id(5, 4608250890214216926L);
-        entityBuilder.property("messageStatus", PropertyType.Long).id(6, 7408922047280151185L);
-        entityBuilder.property("branchId", PropertyType.String).id(7, 5332875921766286893L);
-        entityBuilder.property("notificationId", "Notification", "notification", PropertyType.Relation).id(8, 5259791267817487119L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(46, 4604677379338130264L);
-        entityBuilder.property("senderId", "User", "sender", PropertyType.Relation).id(9, 2332754315743761256L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(47, 4128512921912791011L);
+        entityBuilder.property("title", PropertyType.String).id(2, 4647346206919862520L);
+        entityBuilder.property("message", PropertyType.String).id(3, 1885120760079580414L);
+        entityBuilder.property("creationDate", PropertyType.Date).id(4, 8474295257352582304L);
+        entityBuilder.property("usecase", PropertyType.Long).id(5, 7682858737510042316L);
+        entityBuilder.property("messageStatus", PropertyType.Long).id(6, 6108240352076224500L);
+        entityBuilder.property("branchId", PropertyType.String).id(7, 1472487070625567331L);
+        entityBuilder.property("notificationId", "Notification", "notification", PropertyType.Relation).id(8, 6829202555692538479L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(78, 6883224254722075119L);
+        entityBuilder.property("senderId", "User", "sender", PropertyType.Relation).id(9, 8437004579469539851L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(79, 8558567059468428106L);
 
 
         entityBuilder.entityDone();
@@ -336,35 +336,35 @@ public class MyObjectBox {
 
     private static void buildEntityOrder(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("Order");
-        entityBuilder.id(29, 4439650734758437051L).lastPropertyId(20, 287059962713850068L);
+        entityBuilder.id(46, 2272553064273887722L).lastPropertyId(20, 6985844202651129949L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 6509941997603768629L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 4619291937415549059L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("orderNumber", PropertyType.String).id(2, 5218883364591524926L)
-                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(48, 6108566256283328834L);
-        entityBuilder.property("createdDate", PropertyType.Date).id(3, 7359343596439754553L);
-        entityBuilder.property("modifiedDate", PropertyType.Date).id(4, 4477746104793214839L);
-        entityBuilder.property("inPreparationDate", PropertyType.Date).id(5, 5449123655199046180L);
-        entityBuilder.property("readyDate", PropertyType.Date).id(6, 3649788177648202106L);
-        entityBuilder.property("deliveredDate", PropertyType.Date).id(7, 4627157190712356408L);
-        entityBuilder.property("cancelledDate", PropertyType.Date).id(8, 3980018608002876075L);
-        entityBuilder.property("orderType", PropertyType.Long).id(9, 7679759962340136169L);
-        entityBuilder.property("orderStatus", PropertyType.Long).id(10, 3374827140438564658L);
-        entityBuilder.property("paymentMethod", PropertyType.Long).id(11, 2685535910276424775L);
-        entityBuilder.property("preparationTime", PropertyType.Long).id(12, 6673657261241475509L);
-        entityBuilder.property("notes", PropertyType.String).id(13, 6571024518462651183L);
-        entityBuilder.property("doneNotes", PropertyType.String).id(14, 6152932377211529301L);
-        entityBuilder.property("stopNote", PropertyType.String).id(15, 5409877101679290936L);
-        entityBuilder.property("branchId", PropertyType.String).id(16, 1300653768673511796L);
-        entityBuilder.property("customerId", "Customer", "customer", PropertyType.Relation).id(17, 7246796341725784023L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(49, 5841234229901227176L);
-        entityBuilder.property("userId", "User", "user", PropertyType.Relation).id(18, 3946841275004747279L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(50, 4938299505413453841L);
-        entityBuilder.property("tableId", "Table", "table", PropertyType.Relation).id(19, 7291862469626245038L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(51, 1077334493934349442L);
-        entityBuilder.property("deliveryId", "Delivery", "delivery", PropertyType.Relation).id(20, 287059962713850068L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(52, 4097690717037588097L);
+        entityBuilder.property("orderNumber", PropertyType.String).id(2, 3867373211421657961L)
+                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(80, 7840807512030728508L);
+        entityBuilder.property("createdDate", PropertyType.Date).id(3, 8012148165413330647L);
+        entityBuilder.property("modifiedDate", PropertyType.Date).id(4, 5476542205283333550L);
+        entityBuilder.property("inPreparationDate", PropertyType.Date).id(5, 200915567178562854L);
+        entityBuilder.property("readyDate", PropertyType.Date).id(6, 853649956251699408L);
+        entityBuilder.property("deliveredDate", PropertyType.Date).id(7, 3516755884027934920L);
+        entityBuilder.property("cancelledDate", PropertyType.Date).id(8, 725219227159876266L);
+        entityBuilder.property("orderType", PropertyType.Long).id(9, 3865508420818386005L);
+        entityBuilder.property("orderStatus", PropertyType.Long).id(10, 440663137066471348L);
+        entityBuilder.property("paymentMethod", PropertyType.Long).id(11, 5394511294713918358L);
+        entityBuilder.property("preparationTime", PropertyType.Long).id(12, 1615242708589267540L);
+        entityBuilder.property("notes", PropertyType.String).id(13, 7757470287938753018L);
+        entityBuilder.property("doneNotes", PropertyType.String).id(14, 1281685212791338480L);
+        entityBuilder.property("stopNote", PropertyType.String).id(15, 666484334037455790L);
+        entityBuilder.property("branchId", PropertyType.String).id(16, 2686051738799780691L);
+        entityBuilder.property("customerId", "Customer", "customer", PropertyType.Relation).id(17, 3553650266491478013L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(81, 7561232085475171738L);
+        entityBuilder.property("userId", "User", "user", PropertyType.Relation).id(18, 3446795910584943637L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(82, 381617265451835315L);
+        entityBuilder.property("tableId", "Table", "table", PropertyType.Relation).id(19, 5544016754441814619L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(83, 2018765342625624509L);
+        entityBuilder.property("deliveryId", "Delivery", "delivery", PropertyType.Relation).id(20, 6985844202651129949L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(84, 8837664269647323936L);
 
 
         entityBuilder.entityDone();
@@ -372,21 +372,21 @@ public class MyObjectBox {
 
     private static void buildEntityOrderEntry(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("OrderEntry");
-        entityBuilder.id(30, 2503910907272034881L).lastPropertyId(8, 1550280678286304273L);
+        entityBuilder.id(47, 8322679281756304730L).lastPropertyId(8, 2518571169772097949L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 294308433727908053L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 793395475076794064L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("orderType", PropertyType.Long).id(2, 5140054793419284560L);
-        entityBuilder.property("dateTime", PropertyType.Date).id(3, 6045125257079358110L);
-        entityBuilder.property("orderNum", PropertyType.String).id(4, 3719579408371075857L);
-        entityBuilder.property("branchId", PropertyType.String).id(5, 1397297269785490953L);
-        entityBuilder.property("orderId", "Order", "order", PropertyType.Relation).id(6, 915793422940585433L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(53, 1388436802872023813L);
-        entityBuilder.property("deliveryId", "Delivery", "delivery", PropertyType.Relation).id(7, 112557267355835156L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(54, 3987613605144891358L);
-        entityBuilder.property("waiterId", "Waiter", "waiter", PropertyType.Relation).id(8, 1550280678286304273L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(55, 6088247713205004797L);
+        entityBuilder.property("orderType", PropertyType.Long).id(2, 878260894263201998L);
+        entityBuilder.property("dateTime", PropertyType.Date).id(3, 7328652633490575074L);
+        entityBuilder.property("orderNum", PropertyType.String).id(4, 2798002675136487299L);
+        entityBuilder.property("branchId", PropertyType.String).id(5, 5306224592592857528L);
+        entityBuilder.property("orderId", "Order", "order", PropertyType.Relation).id(6, 6466840984343744422L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(85, 5475526403418479221L);
+        entityBuilder.property("deliveryId", "Delivery", "delivery", PropertyType.Relation).id(7, 6042271728046522362L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(86, 3902059386827683710L);
+        entityBuilder.property("waiterId", "Waiter", "waiter", PropertyType.Relation).id(8, 2518571169772097949L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(87, 8061568167338451249L);
 
 
         entityBuilder.entityDone();
@@ -394,36 +394,36 @@ public class MyObjectBox {
 
     private static void buildEntityOrderItem(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("OrderItem");
-        entityBuilder.id(31, 5369782394620843903L).lastPropertyId(24, 6772350193579640998L);
+        entityBuilder.id(48, 7584980000779665462L).lastPropertyId(24, 6738562733758955205L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 4405535390801166218L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 9057292118234417511L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("quantity", PropertyType.Long).id(2, 5854529866307981125L);
-        entityBuilder.property("discount", PropertyType.Double).id(3, 5754556456301721168L);
-        entityBuilder.property("notes", PropertyType.String).id(4, 1725651144789619195L);
-        entityBuilder.property("isDone", PropertyType.Bool).id(5, 310902911645027481L);
-        entityBuilder.property("branchId", PropertyType.String).id(6, 4389828449989904804L);
-        entityBuilder.property("snapshot_id", PropertyType.Long).id(7, 6981720995436395458L);
-        entityBuilder.property("snapshot_title", PropertyType.String).id(8, 2353024907636175890L);
-        entityBuilder.property("snapshot_price", PropertyType.Double).id(9, 3865314534248121129L);
-        entityBuilder.property("snapshot_currency", PropertyType.String).id(10, 1493534183137233092L);
-        entityBuilder.property("snapshot_discount", PropertyType.Double).id(11, 6402350116653900636L);
-        entityBuilder.property("snapshot_taxRate", PropertyType.Double).id(12, 8286906890849832724L);
-        entityBuilder.property("snapshot_quantity", PropertyType.Long).id(13, 3127806334018984044L);
-        entityBuilder.property("snapshot_rating", PropertyType.Double).id(14, 6182434265657227557L);
-        entityBuilder.property("snapshot_image", PropertyType.ByteVector).id(15, 7288187722269852568L);
-        entityBuilder.property("snapshot_description", PropertyType.String).id(16, 8654276561369725063L);
-        entityBuilder.property("snapshot_calories", PropertyType.Double).id(17, 855071580266326306L);
-        entityBuilder.property("snapshot_preparationTime", PropertyType.Long).id(18, 7895919718657963721L);
-        entityBuilder.property("snapshot_isAvailable", PropertyType.Bool).id(19, 6396585313026942453L);
-        entityBuilder.property("snapshot_notes", PropertyType.String).id(20, 7992669726717305313L);
-        entityBuilder.property("snapshot_branchId", PropertyType.String).id(21, 5598278956706978998L);
-        entityBuilder.property("snapshot_isDone", PropertyType.Bool).id(22, 1490472924488213231L);
-        entityBuilder.property("productId", "Product", "product", PropertyType.Relation).id(23, 1548270138179614461L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(56, 1739457568669799108L);
-        entityBuilder.property("orderId", "Order", "order", PropertyType.Relation).id(24, 6772350193579640998L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(57, 487323264597039988L);
+        entityBuilder.property("quantity", PropertyType.Long).id(2, 144600347146044991L);
+        entityBuilder.property("discount", PropertyType.Double).id(3, 8807757545757094064L);
+        entityBuilder.property("notes", PropertyType.String).id(4, 747253201920095600L);
+        entityBuilder.property("isDone", PropertyType.Bool).id(5, 7801492525305098290L);
+        entityBuilder.property("branchId", PropertyType.String).id(6, 7127595294096256368L);
+        entityBuilder.property("snapshot_id", PropertyType.Long).id(7, 3509527905583174258L);
+        entityBuilder.property("snapshot_title", PropertyType.String).id(8, 4608475723328087404L);
+        entityBuilder.property("snapshot_price", PropertyType.Double).id(9, 1572399099982784833L);
+        entityBuilder.property("snapshot_currency", PropertyType.String).id(10, 1358568413571118500L);
+        entityBuilder.property("snapshot_discount", PropertyType.Double).id(11, 4657898109509869436L);
+        entityBuilder.property("snapshot_taxRate", PropertyType.Double).id(12, 3101086975845792275L);
+        entityBuilder.property("snapshot_quantity", PropertyType.Long).id(13, 3712591683303384973L);
+        entityBuilder.property("snapshot_rating", PropertyType.Double).id(14, 6300608821365884276L);
+        entityBuilder.property("snapshot_image", PropertyType.ByteVector).id(15, 2541279638003148046L);
+        entityBuilder.property("snapshot_description", PropertyType.String).id(16, 4525056559313915727L);
+        entityBuilder.property("snapshot_calories", PropertyType.Double).id(17, 3674405999226561028L);
+        entityBuilder.property("snapshot_preparationTime", PropertyType.Long).id(18, 6660591052336745391L);
+        entityBuilder.property("snapshot_isAvailable", PropertyType.Bool).id(19, 2361555039822108006L);
+        entityBuilder.property("snapshot_notes", PropertyType.String).id(20, 2040829769895945009L);
+        entityBuilder.property("snapshot_branchId", PropertyType.String).id(21, 2607833435385182604L);
+        entityBuilder.property("snapshot_isDone", PropertyType.Bool).id(22, 8241705414644296840L);
+        entityBuilder.property("productId", "Product", "product", PropertyType.Relation).id(23, 5132156231614251324L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(88, 5031923657838459857L);
+        entityBuilder.property("orderId", "Order", "order", PropertyType.Relation).id(24, 6738562733758955205L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(89, 5778647380643291684L);
 
 
         entityBuilder.entityDone();
@@ -431,26 +431,26 @@ public class MyObjectBox {
 
     private static void buildEntityProduct(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("Product");
-        entityBuilder.id(32, 4700835817145035688L).lastPropertyId(12, 405559449673148922L);
+        entityBuilder.id(49, 5968471650722922784L).lastPropertyId(12, 1148143305836649135L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 5023454168155093256L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 6251008882677760608L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("title", PropertyType.String).id(2, 6213929742708566313L)
-                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(58, 117641149323110503L);
-        entityBuilder.property("price", PropertyType.Double).id(3, 7750902848083837727L);
-        entityBuilder.property("rating", PropertyType.Double).id(4, 2168512861636887262L);
-        entityBuilder.property("image", PropertyType.ByteVector).id(5, 2798888220220410674L);
-        entityBuilder.property("description", PropertyType.String).id(6, 4333808473813975614L);
-        entityBuilder.property("calories", PropertyType.Double).id(7, 8336775430346952219L);
-        entityBuilder.property("preparationTime", PropertyType.Long).id(8, 9060787478166083492L);
-        entityBuilder.property("isAvailable", PropertyType.Bool).id(9, 2856004438769994501L);
-        entityBuilder.property("branchId", PropertyType.String).id(10, 6521131342552493162L);
-        entityBuilder.property("createdDate", PropertyType.Date).id(11, 5859255444075149494L);
-        entityBuilder.property("categoryId", "Category", "category", PropertyType.Relation).id(12, 405559449673148922L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(59, 7916608801132509305L);
+        entityBuilder.property("title", PropertyType.String).id(2, 7788759364659533601L)
+                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(90, 4335710912290183701L);
+        entityBuilder.property("price", PropertyType.Double).id(3, 182023644045529075L);
+        entityBuilder.property("rating", PropertyType.Double).id(4, 6349561451526987377L);
+        entityBuilder.property("image", PropertyType.ByteVector).id(5, 3767180376757602482L);
+        entityBuilder.property("description", PropertyType.String).id(6, 6168153566840664409L);
+        entityBuilder.property("calories", PropertyType.Double).id(7, 7152846331686488216L);
+        entityBuilder.property("preparationTime", PropertyType.Long).id(8, 3252171159156706787L);
+        entityBuilder.property("isAvailable", PropertyType.Bool).id(9, 5021345629793918557L);
+        entityBuilder.property("branchId", PropertyType.String).id(10, 1016514601750547179L);
+        entityBuilder.property("createdDate", PropertyType.Date).id(11, 4650600025250150167L);
+        entityBuilder.property("categoryId", "Category", "category", PropertyType.Relation).id(12, 1148143305836649135L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(91, 8909136193771452069L);
 
-        entityBuilder.relation("kitchens", 16, 6414067108593003075L, 25, 8837237565368198377L);
+        entityBuilder.relation("kitchens", 25, 3572001152676251287L, 42, 7847073584181761707L);
 
         entityBuilder.entityDone();
     }
@@ -472,17 +472,17 @@ public class MyObjectBox {
 
     private static void buildEntityTable(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("Table");
-        entityBuilder.id(33, 4071310286362586293L).lastPropertyId(7, 7361301208863906926L);
+        entityBuilder.id(50, 3593744215886236990L).lastPropertyId(7, 4863370747573721626L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 6885495281267287301L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 7954667363359719475L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("seats", PropertyType.Long).id(2, 2741243970312140490L);
-        entityBuilder.property("notes", PropertyType.String).id(3, 8685226727690709481L);
-        entityBuilder.property("tableNumber", PropertyType.String).id(4, 4331763960040293214L);
-        entityBuilder.property("branchId", PropertyType.String).id(5, 4964281063692470943L);
-        entityBuilder.property("status", PropertyType.Long).id(6, 2379733330596601915L);
-        entityBuilder.property("type", PropertyType.Long).id(7, 7361301208863906926L);
+        entityBuilder.property("seats", PropertyType.Long).id(2, 21077744056760106L);
+        entityBuilder.property("notes", PropertyType.String).id(3, 1748000225927117587L);
+        entityBuilder.property("tableNumber", PropertyType.String).id(4, 1296411677991097443L);
+        entityBuilder.property("branchId", PropertyType.String).id(5, 8654290464684608011L);
+        entityBuilder.property("status", PropertyType.Long).id(6, 3578969940944470351L);
+        entityBuilder.property("type", PropertyType.Long).id(7, 4863370747573721626L);
 
 
         entityBuilder.entityDone();
@@ -490,26 +490,26 @@ public class MyObjectBox {
 
     private static void buildEntityUser(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("User");
-        entityBuilder.id(34, 231074707260513168L).lastPropertyId(12, 4395070429416033107L);
+        entityBuilder.id(51, 5482814592990495986L).lastPropertyId(12, 7593176716479386642L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 1364461387769304926L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 2390007169005847214L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("email", PropertyType.String).id(2, 2480664421661842733L)
-                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(60, 5082700704266435008L);
-        entityBuilder.property("userName", PropertyType.String).id(3, 6288016286825594068L);
-        entityBuilder.property("password", PropertyType.String).id(4, 4483151975531677582L);
-        entityBuilder.property("privileges", PropertyType.String).id(5, 441220923119392739L);
-        entityBuilder.property("userType", PropertyType.Long).id(6, 3836090939088611992L);
-        entityBuilder.property("isActive", PropertyType.Bool).id(7, 4237534031219715322L);
-        entityBuilder.property("image", PropertyType.ByteVector).id(8, 7898985111447990921L);
-        entityBuilder.property("branchId", PropertyType.String).id(9, 5955499012967430969L);
-        entityBuilder.property("waiterId", "Waiter", "waiter", PropertyType.Relation).id(10, 6875623499208381823L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(61, 8355144434204899874L);
-        entityBuilder.property("kitchenId", "Kitchen", "kitchen", PropertyType.Relation).id(11, 6028040049455890428L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(62, 6363787541187336769L);
-        entityBuilder.property("deliveryId", "Delivery", "delivery", PropertyType.Relation).id(12, 4395070429416033107L)
-                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(63, 5782513665824892530L);
+        entityBuilder.property("email", PropertyType.String).id(2, 8897334933073101391L)
+                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(92, 1612827445240516315L);
+        entityBuilder.property("userName", PropertyType.String).id(3, 5869063740856867417L);
+        entityBuilder.property("password", PropertyType.String).id(4, 4244792864060114717L);
+        entityBuilder.property("privileges", PropertyType.String).id(5, 7862813255331214451L);
+        entityBuilder.property("userType", PropertyType.Long).id(6, 1356557722721587369L);
+        entityBuilder.property("isActive", PropertyType.Bool).id(7, 8642949612438039198L);
+        entityBuilder.property("image", PropertyType.ByteVector).id(8, 176103726620060342L);
+        entityBuilder.property("branchId", PropertyType.String).id(9, 6627071793125603156L);
+        entityBuilder.property("waiterId", "Waiter", "waiter", PropertyType.Relation).id(10, 40027611189978584L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(93, 5412150439795591296L);
+        entityBuilder.property("kitchenId", "Kitchen", "kitchen", PropertyType.Relation).id(11, 8948275103551708159L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(94, 9068438423423568453L);
+        entityBuilder.property("deliveryId", "Delivery", "delivery", PropertyType.Relation).id(12, 7593176716479386642L)
+                .flags(PropertyFlags.VIRTUAL | PropertyFlags.INDEXED | PropertyFlags.INDEX_PARTIAL_SKIP_ZERO).indexId(95, 7864044735203088407L);
 
 
         entityBuilder.entityDone();
@@ -517,21 +517,21 @@ public class MyObjectBox {
 
     private static void buildEntityWaiter(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("Waiter");
-        entityBuilder.id(35, 8136058931985338648L).lastPropertyId(7, 4211358507280519223L);
+        entityBuilder.id(52, 7721148610935224138L).lastPropertyId(7, 4667916131869954008L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
-        entityBuilder.property("id", PropertyType.Long).id(1, 6760932366441039811L)
+        entityBuilder.property("id", PropertyType.Long).id(1, 8467217934574035579L)
                 .flags(PropertyFlags.ID | PropertyFlags.ID_SELF_ASSIGNABLE);
-        entityBuilder.property("name", PropertyType.String).id(2, 9034077473072909241L)
-                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(64, 302109145051273492L);
-        entityBuilder.property("phoneNumber", PropertyType.String).id(3, 8767176776519909991L);
-        entityBuilder.property("totalOrders", PropertyType.Long).id(4, 5309377106207035356L);
-        entityBuilder.property("image", PropertyType.ByteVector).id(5, 2020464437019644504L);
-        entityBuilder.property("isActive", PropertyType.Bool).id(6, 8117939623952574076L);
-        entityBuilder.property("branchId", PropertyType.String).id(7, 4211358507280519223L);
+        entityBuilder.property("name", PropertyType.String).id(2, 508354987575149579L)
+                .flags(PropertyFlags.INDEX_HASH | PropertyFlags.UNIQUE | PropertyFlags.UNIQUE_ON_CONFLICT_REPLACE).indexId(96, 8774127300960177491L);
+        entityBuilder.property("phoneNumber", PropertyType.String).id(3, 2839034367531145677L);
+        entityBuilder.property("totalOrders", PropertyType.Long).id(4, 3425931460935756348L);
+        entityBuilder.property("image", PropertyType.ByteVector).id(5, 3436794042434425928L);
+        entityBuilder.property("isActive", PropertyType.Bool).id(6, 3355226335978700793L);
+        entityBuilder.property("branchId", PropertyType.String).id(7, 4667916131869954008L);
 
-        entityBuilder.relation("kitchens", 17, 8874381425050511299L, 25, 8837237565368198377L);
-        entityBuilder.relation("orderEntries", 18, 6643661459599461559L, 30, 2503910907272034881L);
+        entityBuilder.relation("kitchens", 26, 3086739983197391229L, 42, 7847073584181761707L);
+        entityBuilder.relation("orderEntries", 27, 2240284579869315223L, 47, 8322679281756304730L);
 
         entityBuilder.entityDone();
     }

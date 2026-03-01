@@ -23,7 +23,7 @@ public final class Notification_ implements EntityInfo<Notification> {
 
     public static final String __ENTITY_NAME = "Notification";
 
-    public static final int __ENTITY_ID = 27;
+    public static final int __ENTITY_ID = 44;
 
     public static final Class<Notification> __ENTITY_CLASS = Notification.class;
 

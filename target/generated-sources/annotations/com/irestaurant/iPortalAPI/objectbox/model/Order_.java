@@ -23,7 +23,7 @@ public final class Order_ implements EntityInfo<Order> {
 
     public static final String __ENTITY_NAME = "Order";
 
-    public static final int __ENTITY_ID = 29;
+    public static final int __ENTITY_ID = 46;
 
     public static final Class<Order> __ENTITY_CLASS = Order.class;
 

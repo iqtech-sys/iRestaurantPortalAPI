@@ -56,7 +56,7 @@ public class OrderController {
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/order-branches",
                                                    new AuthResponse<List<String>>("1", null, "", null, branchIds));
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            logger.error("Error retrieving the unique branches: {}", e.getMessage(), e);
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/order-branches",
                                                    new AuthResponse("-1", null, "Error retrieving branch IDs from orders", null, null));
         }

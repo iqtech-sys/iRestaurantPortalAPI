@@ -21,7 +21,7 @@ public final class OrderItem_ implements EntityInfo<OrderItem> {
 
     public static final String __ENTITY_NAME = "OrderItem";
 
-    public static final int __ENTITY_ID = 31;
+    public static final int __ENTITY_ID = 48;
 
     public static final Class<OrderItem> __ENTITY_CLASS = OrderItem.class;
 

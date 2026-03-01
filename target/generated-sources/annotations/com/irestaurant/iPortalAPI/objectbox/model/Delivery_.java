@@ -23,7 +23,7 @@ public final class Delivery_ implements EntityInfo<Delivery> {
 
     public static final String __ENTITY_NAME = "Delivery";
 
-    public static final int __ENTITY_ID = 22;
+    public static final int __ENTITY_ID = 39;
 
     public static final Class<Delivery> __ENTITY_CLASS = Delivery.class;
 
@@ -134,7 +134,7 @@ public final class Delivery_ implements EntityInfo<Delivery> {
                     return entity.getOrders();
                 }
             },
-             10);
+             19);
 
     /** To-many relation "kitchens" to target entity "Kitchen". */
     public static final RelationInfo<Delivery, Kitchen> kitchens = new RelationInfo<>(Delivery_.__INSTANCE, Kitchen_.__INSTANCE,
@@ -144,7 +144,7 @@ public final class Delivery_ implements EntityInfo<Delivery> {
                     return entity.getKitchens();
                 }
             },
-             11);
+             20);
 
     /** To-many relation "orderEntries" to target entity "OrderEntry". */
     public static final RelationInfo<Delivery, OrderEntry> orderEntries = new RelationInfo<>(Delivery_.__INSTANCE, OrderEntry_.__INSTANCE,
@@ -154,6 +154,6 @@ public final class Delivery_ implements EntityInfo<Delivery> {
                     return entity.getOrderEntries();
                 }
             },
-             12);
+             21);
 
 }

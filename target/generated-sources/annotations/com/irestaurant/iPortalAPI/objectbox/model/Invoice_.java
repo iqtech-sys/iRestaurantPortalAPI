@@ -21,7 +21,7 @@ public final class Invoice_ implements EntityInfo<Invoice> {
 
     public static final String __ENTITY_NAME = "Invoice";
 
-    public static final int __ENTITY_ID = 24;
+    public static final int __ENTITY_ID = 41;
 
     public static final Class<Invoice> __ENTITY_CLASS = Invoice.class;
 

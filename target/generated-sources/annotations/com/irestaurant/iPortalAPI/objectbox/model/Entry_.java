@@ -21,7 +21,7 @@ public final class Entry_ implements EntityInfo<Entry> {
 
     public static final String __ENTITY_NAME = "Entry";
 
-    public static final int __ENTITY_ID = 23;
+    public static final int __ENTITY_ID = 40;
 
     public static final Class<Entry> __ENTITY_CLASS = Entry.class;
 

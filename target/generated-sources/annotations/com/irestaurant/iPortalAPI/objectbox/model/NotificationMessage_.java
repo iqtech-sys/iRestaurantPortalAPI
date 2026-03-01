@@ -21,7 +21,7 @@ public final class NotificationMessage_ implements EntityInfo<NotificationMessag
 
     public static final String __ENTITY_NAME = "NotificationMessage";
 
-    public static final int __ENTITY_ID = 28;
+    public static final int __ENTITY_ID = 45;
 
     public static final Class<NotificationMessage> __ENTITY_CLASS = NotificationMessage.class;
 

@@ -23,7 +23,7 @@ public final class User_ implements EntityInfo<User> {
 
     public static final String __ENTITY_NAME = "User";
 
-    public static final int __ENTITY_ID = 34;
+    public static final int __ENTITY_ID = 51;
 
     public static final Class<User> __ENTITY_CLASS = User.class;
 
