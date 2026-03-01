@@ -23,7 +23,7 @@ public final class Category_ implements EntityInfo<Category> {
 
     public static final String __ENTITY_NAME = "Category";
 
-    public static final int __ENTITY_ID = 37;
+    public static final int __ENTITY_ID = 2;
 
     public static final Class<Category> __ENTITY_CLASS = Category.class;
 

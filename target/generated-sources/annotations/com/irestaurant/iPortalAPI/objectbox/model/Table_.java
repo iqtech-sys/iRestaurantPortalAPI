@@ -23,7 +23,7 @@ public final class Table_ implements EntityInfo<Table> {
 
     public static final String __ENTITY_NAME = "Table";
 
-    public static final int __ENTITY_ID = 50;
+    public static final int __ENTITY_ID = 16;
 
     public static final Class<Table> __ENTITY_CLASS = Table.class;
 

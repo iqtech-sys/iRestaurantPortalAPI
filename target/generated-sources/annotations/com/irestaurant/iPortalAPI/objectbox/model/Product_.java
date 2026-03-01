@@ -23,7 +23,7 @@ public final class Product_ implements EntityInfo<Product> {
 
     public static final String __ENTITY_NAME = "Product";
 
-    public static final int __ENTITY_ID = 49;
+    public static final int __ENTITY_ID = 14;
 
     public static final Class<Product> __ENTITY_CLASS = Product.class;
 
@@ -155,7 +155,7 @@ public final class Product_ implements EntityInfo<Product> {
                     return entity.getKitchens();
                 }
             },
-             25);
+             7);
 
     /** To-many relation "orderItems" to target entity "OrderItem". */
     public static final RelationInfo<Product, OrderItem> orderItems = new RelationInfo<>(Product_.__INSTANCE, OrderItem_.__INSTANCE,

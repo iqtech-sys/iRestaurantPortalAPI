@@ -23,7 +23,7 @@ public final class Account_ implements EntityInfo<Account> {
 
     public static final String __ENTITY_NAME = "Account";
 
-    public static final int __ENTITY_ID = 36;
+    public static final int __ENTITY_ID = 1;
 
     public static final Class<Account> __ENTITY_CLASS = Account.class;
 

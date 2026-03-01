@@ -23,7 +23,7 @@ public final class Kitchen_ implements EntityInfo<Kitchen> {
 
     public static final String __ENTITY_NAME = "Kitchen";
 
-    public static final int __ENTITY_ID = 42;
+    public static final int __ENTITY_ID = 7;
 
     public static final Class<Kitchen> __ENTITY_CLASS = Kitchen.class;
 
@@ -118,7 +118,7 @@ public final class Kitchen_ implements EntityInfo<Kitchen> {
                     return entity.getWaiters();
                 }
             },
-             22);
+             4);
 
     /** To-many relation "deliveries" to target entity "Delivery". */
     public static final RelationInfo<Kitchen, Delivery> deliveries = new RelationInfo<>(Kitchen_.__INSTANCE, Delivery_.__INSTANCE,
@@ -128,7 +128,7 @@ public final class Kitchen_ implements EntityInfo<Kitchen> {
                     return entity.getDeliveries();
                 }
             },
-             23);
+             5);
 
     /** To-many relation "products" to target entity "Product". */
     public static final RelationInfo<Kitchen, Product> products = new RelationInfo<>(Kitchen_.__INSTANCE, Product_.__INSTANCE,
@@ -138,6 +138,6 @@ public final class Kitchen_ implements EntityInfo<Kitchen> {
                     return entity.getProducts();
                 }
             },
-             24);
+             6);
 
 }

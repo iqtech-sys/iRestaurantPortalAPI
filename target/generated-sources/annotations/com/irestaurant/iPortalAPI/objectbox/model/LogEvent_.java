@@ -21,7 +21,7 @@ public final class LogEvent_ implements EntityInfo<LogEvent> {
 
     public static final String __ENTITY_NAME = "LogEvent";
 
-    public static final int __ENTITY_ID = 43;
+    public static final int __ENTITY_ID = 8;
 
     public static final Class<LogEvent> __ENTITY_CLASS = LogEvent.class;
 

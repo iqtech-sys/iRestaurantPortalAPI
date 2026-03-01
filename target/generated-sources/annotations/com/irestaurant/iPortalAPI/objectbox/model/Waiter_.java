@@ -23,7 +23,7 @@ public final class Waiter_ implements EntityInfo<Waiter> {
 
     public static final String __ENTITY_NAME = "Waiter";
 
-    public static final int __ENTITY_ID = 52;
+    public static final int __ENTITY_ID = 18;
 
     public static final Class<Waiter> __ENTITY_CLASS = Waiter.class;
 
@@ -126,7 +126,7 @@ public final class Waiter_ implements EntityInfo<Waiter> {
                     return entity.kitchens;
                 }
             },
-             26);
+             8);
 
     /** To-many relation "orderEntries" to target entity "OrderEntry". */
     public static final RelationInfo<Waiter, OrderEntry> orderEntries = new RelationInfo<>(Waiter_.__INSTANCE, OrderEntry_.__INSTANCE,
@@ -136,6 +136,6 @@ public final class Waiter_ implements EntityInfo<Waiter> {
                     return entity.orderEntries;
                 }
             },
-             27);
+             9);
 
 }

@@ -35,7 +35,7 @@ public class JwtSecurityAspect {
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -43,11 +43,11 @@ public class JwtSecurityAspect {
     public void authorize(JoinPoint joinPoint, RequireJwt requireJwt) {
         StompHeaderAccessor accessor = findAccessor(joinPoint);
 
-
         try {
             if (accessor == null) {
                 logger.error("No accessor found in method arguments for @RequireJwt");
-                throw new AccessDeniedException("Method secured with @RequireJwt must include a SimpMessageHeaderAccessor parameter.");
+                throw new AccessDeniedException(
+                        "Method secured with @RequireJwt must include a SimpMessageHeaderAccessor parameter.");
             }
 
             String token = accessor.getFirstNativeHeader("Authorization");
@@ -56,9 +56,9 @@ public class JwtSecurityAspect {
                 throw new AccessDeniedException("JWT token is missing from the Authorization header.");
             }
             String jwt = token.substring(7);
-            
+
             String username = jwtUtil.extractUsername(jwt);
-            
+
             UserDetails userDetails = userService.loadUserByUsername(username);
 
             if (!jwtUtil.validateToken(jwt, userDetails)) {
@@ -86,7 +86,11 @@ public class JwtSecurityAspect {
             SecurityContextHolder.getContext().setAuthentication(auth);
 
             // 2. Set in the accessor so Principal param in controller is updated
-            accessor.setUser(auth);
+            if (accessor.isMutable()) {
+                accessor.setUser(auth);
+            } else {
+                logger.debug("Accessor is immutable, skipping accessor.setUser().");
+            }
 
         } catch (Exception e) {
             logger.error("Security validation failed: {}", e.getMessage());
@@ -94,7 +98,8 @@ public class JwtSecurityAspect {
                 String sessionId = accessor.getSessionId();
                 if (sessionId != null) {
                     messagingTemplate.convertAndSendToUser(sessionId, "/queue/access-denied",
-                            new AuthResponse(String.valueOf(HttpStatus.UNAUTHORIZED.value()), null, "Access Denied: " + e.getMessage(), null, null));
+                            new AuthResponse(String.valueOf(HttpStatus.UNAUTHORIZED.value()), null,
+                                    "Access Denied: " + e.getMessage(), null, null));
                 }
             }
         }
