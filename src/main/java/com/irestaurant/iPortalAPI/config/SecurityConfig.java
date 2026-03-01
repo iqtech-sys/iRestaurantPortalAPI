@@ -25,6 +25,7 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import java.util.HashMap;
 import java.util.Map;
+import jakarta.annotation.PostConstruct;
 
 @Configuration
 @EnableWebSecurity
@@ -35,25 +36,28 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
 
     @Autowired
     private JwtUtil jwtUtil;
-    
+
+    @PostConstruct
+    public void enableContextInheritance() {
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(authz -> authz
-                .requestMatchers(
-                    "/ws/**",
-                    "/springwolf/**",
-                    "/asyncapi-docs/**",
-                    "/webjars/**",
-                    "/springwolf/stomp/publish"
-                ).permitAll()
-                .requestMatchers("/error").permitAll() 
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .formLogin(form -> form.permitAll());
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers(
+                                "/ws/**",
+                                "/springwolf/**",
+                                "/asyncapi-docs/**",
+                                "/webjars/**",
+                                "/springwolf/stomp/publish")
+                        .permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .anyRequest().authenticated())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .formLogin(form -> form.permitAll());
 
         return http.build();
     }
@@ -65,10 +69,10 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
                 StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
                 if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-                    
+
                     // Extract JWT token from Authorization header
                     String token = accessor.getFirstNativeHeader("Authorization");
-                    
+
                     // Try to validate JWT and set authentication
                     if (token != null && token.startsWith("Bearer ")) {
                         Authentication auth = validateToken(token.substring(7));
@@ -78,19 +82,19 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
                             return message;
                         }
                     }
-                    
+
                     // No JWT - create a temporary user based on session ID
-                    // This allows @SendToUser to work for unauthenticated users (e.g., during registration)
+                    // This allows @SendToUser to work for unauthenticated users (e.g., during
+                    // registration)
                     String sessionId = accessor.getSessionId();
                     if (sessionId != null) {
                         // Create a temporary principal using session ID
                         Authentication tempAuth = new UsernamePasswordAuthenticationToken(
-                            sessionId,  // Use sessionId as the user identifier
-                            null, 
-                            null
-                        );
+                                sessionId, // Use sessionId as the user identifier
+                                null,
+                                null);
                         accessor.setUser(tempAuth);
-                        
+
                         // Store session ID in session attributes for later retrieval
                         Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
                         if (sessionAttributes == null) {
@@ -98,7 +102,7 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
                             accessor.setSessionAttributes(sessionAttributes);
                         }
                         sessionAttributes.put("stompSessionId", sessionId);
-                        
+
                         System.out.println("Registered temporary user for session: " + sessionId);
                     }
                 }
@@ -106,13 +110,13 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
             }
         });
     }
-    
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
         registry.addEndpoint("/ws").setAllowedOrigins("*");
     }
-    
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("/ws/**");
