@@ -136,6 +136,7 @@ public class SyncManager {
                              .buildAndStart();
             logger.info("SyncClient started for server: {}", serverUrl);
         } catch (Exception e) {
+            logger.error("Failed to start sync: {}", e.getMessage(), e);
             // Log the error but do NOT crash — the BoxStore still works without sync
             logger.warn("⚠️ ObjectBox Sync could not start (server may be unavailable): {}", e.getMessage());
         }

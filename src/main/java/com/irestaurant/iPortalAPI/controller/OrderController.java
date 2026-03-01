@@ -56,6 +56,7 @@ public class OrderController {
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/order-branches",
                                                    new AuthResponse<List<String>>("1", null, "", null, branchIds));
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/order-branches",
                                                    new AuthResponse("-1", null, "Error retrieving branch IDs from orders", null, null));
         }
@@ -78,7 +79,7 @@ public class OrderController {
      *   "limit":      20
      * }
      * </pre>
-     * @param request        the STOMP payload containing branchName and limit
+     * @param request the STOMP payload containing branchName and limit
      * @param headerAccessor provides the session ID and Authorization header
      */
     @MessageMapping("/order.getRecentOrders")

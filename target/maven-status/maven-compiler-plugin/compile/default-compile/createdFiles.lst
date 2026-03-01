@@ -55,6 +55,7 @@ com\irestaurant\iPortalAPI\objectbox\model\Order_.class
 com\irestaurant\iPortalAPI\converter\LocalDateTimeConverter.class
 com\irestaurant\iPortalAPI\objectbox\model\NotificationCursor$Factory.class
 com\irestaurant\iPortalAPI\objectbox\model\Setting.class
+com\irestaurant\iPortalAPI\service\SyncJobService.class
 com\irestaurant\iPortalAPI\objectbox\model\TableCursor$Factory.class
 com\irestaurant\iPortalAPI\dto\ForgotPasswordRequest.class
 com\irestaurant\iPortalAPI\exception\BaseException.class

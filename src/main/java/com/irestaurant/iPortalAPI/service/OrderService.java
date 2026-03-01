@@ -16,15 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
-import java.util.Map;
-
-import java.util.stream.Collectors;
-
-import com.irestaurant.iPortalAPI.dto.TopItemDTO;
-import com.irestaurant.iPortalAPI.objectbox.model.Product;
-import com.irestaurant.iPortalAPI.objectbox.model.Category;
-import io.objectbox.query.QueryBuilder;
 
 
 @Service
@@ -32,8 +23,8 @@ public class OrderService {
 
     private double round(double value) {
         return BigDecimal.valueOf(value)
-                .setScale(2, RoundingMode.HALF_UP)
-                .doubleValue();
+                         .setScale(2, RoundingMode.HALF_UP)
+                         .doubleValue();
     }
 
     public double calculateSubtotal(List<OrderItem> orderItems) {
