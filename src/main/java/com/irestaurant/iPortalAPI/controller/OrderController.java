@@ -46,8 +46,9 @@ public class OrderController {
     @RequireJwt(role = "User")
     @Async(value = "backgroundTaskExecutor")
     public void getUniqueBranchIds(@Valid @Payload DbRequest request, SimpMessageHeaderAccessor headerAccessor) {
+        logger.error("***************** getUniqueBranchIds started *****************");
         String sessionId = headerAccessor.getSessionId();
-        try {
+        try {    
             // Extract email from the JWT "email" claim — same token the aspect already
             String token = headerAccessor.getFirstNativeHeader("Authorization");
             String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));// strip "Bearer "

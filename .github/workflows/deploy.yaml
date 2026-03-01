@@ -33,3 +33,4 @@ jobs:
             sudo systemctl restart ${{ secrets.SERVICE_NAME }}
             sudo systemctl daemon-reload
             rm -rf ${{ secrets.APP_DIR }}/target
+            sudo chmod -R 755 ${{ secrets.APP_DIR }}
