@@ -172,7 +172,7 @@
                         <arg>-Aobjectbox.modelPath=${project.basedir}/objectbox-models/default.json</arg>
                         <arg>-Aobjectbox.myObjectBoxPackage=generated</arg>
                     </compilerArgs>
-                    <compilerArgument>-Aobjectbox.debug=false</compilerArgument>
+                    <compilerArgument>-Aobjectbox.debug=true</compilerArgument>
                     <generatedSourcesDirectory>${project.build.directory}/generated-sources/annotations</generatedSourcesDirectory>
                 </configuration>
             </plugin><!--

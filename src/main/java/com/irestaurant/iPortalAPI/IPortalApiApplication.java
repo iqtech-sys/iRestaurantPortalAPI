@@ -12,6 +12,7 @@ public class IPortalApiApplication {
 
     public static void main(String[] args) {
         //Objectbox.init("iRestaurant-db");
+        System.setProperty("objectbox.debug", "true");
         SpringApplication.run(IPortalApiApplication.class, args);
     }
 
