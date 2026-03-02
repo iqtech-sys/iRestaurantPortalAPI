@@ -33,7 +33,7 @@
             <version>5.0.1</version>
         </dependency>
         
-        <dependency>
+ <!--   <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-windows</artifactId>
             <version>5.0.1</version>
@@ -43,7 +43,7 @@
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-linux</artifactId>
             <version>5.0.1</version>
-        </dependency>
+        </dependency>-->
         
         <!--*******************************************-->
         
@@ -56,7 +56,7 @@
             <scope>provided</scope>
         </dependency>
         
-        <dependency>
+<!--    <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-sync-linux</artifactId>
             <version>5.0.1</version>
@@ -66,8 +66,7 @@
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-sync-windows</artifactId>
             <version>5.0.1</version>
-        </dependency>
-        
+        </dependency> -->
         <!--*******************************************-->
         
         <dependency>
