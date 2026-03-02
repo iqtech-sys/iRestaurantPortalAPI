@@ -189,7 +189,6 @@ com\irestaurant\iPortalAPI\repository\UserRepository.class
 com\irestaurant\iPortalAPI\objectbox\model\OrderEntry_$3.class
 com\irestaurant\iPortalAPI\objectbox\model\DeliveryCursor.class
 com\irestaurant\iPortalAPI\objectbox\model\OrderItem_$1.class
-com\irestaurant\iPortalAPI\objectbox\model\User_$4.class
 com\irestaurant\iPortalAPI\dto\ResetPasswordRequest.class
 com\irestaurant\iPortalAPI\enumerators\MqttPaymentMethods.class
 com\irestaurant\iPortalAPI\objectbox\model\ProductCursor$Factory.class
