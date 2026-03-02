@@ -30,19 +30,19 @@
         <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-java</artifactId>
-            <version>4.1.0</version>
+            <version>5.0.1</version>
         </dependency>
         
         <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-windows</artifactId>
-            <version>4.1.0</version>
+            <version>5.0.1</version>
         </dependency>
         
         <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-linux</artifactId>
-            <version>4.1.0</version>
+            <version>5.0.1</version>
         </dependency>
         
         <!--*******************************************-->
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-processor</artifactId>
-            <version>4.1.0</version>
+            <version>5.0.1</version>
             <scope>provided</scope>
         </dependency>
         

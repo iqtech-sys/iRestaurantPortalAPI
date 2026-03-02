@@ -101,7 +101,6 @@ public class OrderController {
         } catch (Exception e) {
             logger.error("Error retrieving recent orders for branch '{}': {}",
                          request.getBranchName(), e.getMessage(), e);
-
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/recent-orders",
                                                    new AuthResponse<>("-1", null, "Error retrieving recent orders", null, null));
         }

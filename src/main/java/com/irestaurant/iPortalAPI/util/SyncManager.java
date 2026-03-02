@@ -2,10 +2,7 @@ package com.irestaurant.iPortalAPI.util;
 
 import generated.MyObjectBox;
 import io.objectbox.BoxStore;
-import io.objectbox.sync.Sync;
-import io.objectbox.sync.SyncClient;
-import io.objectbox.sync.SyncCredentials;
-import io.objectbox.sync.listener.AbstractSyncListener;
+import io.objectbox.config.DebugFlags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.File;
@@ -91,6 +88,7 @@ public class SyncManager {
             }
             boxStore = MyObjectBox.builder()
                                   .directory(dbDirectory)
+                                  .debugFlags(DebugFlags.LOG_QUERIES | DebugFlags.LOG_QUERY_PARAMETERS)
                                   .build();
             logger.info("BoxStore initialized at: {}", dbPath);
         } catch (Exception e) {
