@@ -56,17 +56,17 @@
             <scope>provided</scope>
         </dependency>
         
-<!--        <dependency>
+        <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-sync-linux</artifactId>
-            <version>4.1.0</version>
+            <version>5.0.1</version>
         </dependency>
         
         <dependency>
             <groupId>io.objectbox</groupId>
             <artifactId>objectbox-sync-windows</artifactId>
-            <version>4.1.0</version>
-        </dependency>-->
+            <version>5.0.1</version>
+        </dependency>
         
         <!--*******************************************-->
         
