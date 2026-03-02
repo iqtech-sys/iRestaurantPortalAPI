@@ -39,7 +39,7 @@ public class SyncManager {
     private static final Logger logger = LoggerFactory.getLogger(SyncManager.class);
     private static SyncManager instance;
     private BoxStore boxStore;
-    private SyncClient syncClient;
+    //private SyncClient syncClient;
 
     private SyncManager() {
     }
@@ -54,9 +54,9 @@ public class SyncManager {
             // Always initialize the BoxStore (database)
             syncManager.initBoxStore(effectivePath);
             // Optionally start sync if a server URL is configured
-            if (syncServerUrl != null && !syncServerUrl.isEmpty()) {
-                syncManager.startSync(syncServerUrl);
-            }
+//            if (syncServerUrl != null && !syncServerUrl.isEmpty()) {
+//                syncManager.startSync(syncServerUrl);
+//            }
         }
         return syncManager.getBoxStore();
     }
@@ -106,69 +106,69 @@ public class SyncManager {
      * 
      * @param serverUrl URL of the ObjectBox Sync server (e.g., ws://1.2.3.4:9999).
      */
-    public synchronized void startSync(String serverUrl) {
-        if (boxStore == null) {
-            logger.error("Cannot start sync: BoxStore is not initialized. Call initBoxStore() first.");
-            return;
-        }
-        try {
-            // Stop existing client if any
-            if (syncClient != null) {
-                syncClient.stop();
-            }
-            syncClient = Sync.client(boxStore, serverUrl, SyncCredentials.none())
-                             .listener(new AbstractSyncListener() {
-                                @Override
-                                public void onLoggedIn() {
-                                    logger.info("✅ Sync Logged in successfully: {}", serverUrl);
-                                }
-
-                                @Override
-                                public void onLoginFailed(long code) {
-                                    logger.error("❌ Sync Login failed with code: {}. Check credentials and server URL.", code);
-                                }
-
-                                @Override
-                                public void onDisconnected() {
-                                    logger.warn("⚠️ Sync disconnected from server.");
-                                }
-                              })
-                             .buildAndStart();
-            logger.info("SyncClient started for server: {}", serverUrl);
-        } catch (Exception e) {
-            logger.error("Failed to start sync: {}", e.getMessage(), e);
-            // Log the error but do NOT crash — the BoxStore still works without sync
-            logger.warn("⚠️ ObjectBox Sync could not start (server may be unavailable): {}", e.getMessage());
-        }
-    }
+//    public synchronized void startSync(String serverUrl) {
+//        if (boxStore == null) {
+//            logger.error("Cannot start sync: BoxStore is not initialized. Call initBoxStore() first.");
+//            return;
+//        }
+//        try {
+//            // Stop existing client if any
+//            if (syncClient != null) {
+//                syncClient.stop();
+//            }
+//            syncClient = Sync.client(boxStore, serverUrl, SyncCredentials.none())
+//                             .listener(new AbstractSyncListener() {
+//                                @Override
+//                                public void onLoggedIn() {
+//                                    logger.info("✅ Sync Logged in successfully: {}", serverUrl);
+//                                }
+//
+//                                @Override
+//                                public void onLoginFailed(long code) {
+//                                    logger.error("❌ Sync Login failed with code: {}. Check credentials and server URL.", code);
+//                                }
+//
+//                                @Override
+//                                public void onDisconnected() {
+//                                    logger.warn("⚠️ Sync disconnected from server.");
+//                                }
+//                              })
+//                             .buildAndStart();
+//            logger.info("SyncClient started for server: {}", serverUrl);
+//        } catch (Exception e) {
+//            logger.error("Failed to start sync: {}", e.getMessage(), e);
+//            // Log the error but do NOT crash — the BoxStore still works without sync
+//            logger.warn("⚠️ ObjectBox Sync could not start (server may be unavailable): {}", e.getMessage());
+//        }
+//    }
 
     /**
      * Starts the synchronization process.
      */
-    public synchronized void start() {
-        if (syncClient != null) {
-            syncClient.start();
-            logger.info("ObjectBox Sync process started.");
-        } else {
-            logger.error("SyncClient is not initialized. Call initialize() first.");
-        }
-    }
+//    public synchronized void start() {
+//        if (syncClient != null) {
+//            syncClient.start();
+//            logger.info("ObjectBox Sync process started.");
+//        } else {
+//            logger.error("SyncClient is not initialized. Call initialize() first.");
+//        }
+//    }
 
     /**
      * Stops the synchronization process and closes the BoxStore.
      */
-    public synchronized void stop() {
-        if (syncClient != null) {
-            syncClient.stop();
-            syncClient = null;
-            logger.info("ObjectBox Sync process stopped.");
-        }
-        if (boxStore != null) {
-            boxStore.close();
-            boxStore = null;
-            logger.info("BoxStore closed.");
-        }
-    }
+//    public synchronized void stop() {
+//        if (syncClient != null) {
+//            syncClient.stop();
+//            syncClient = null;
+//            logger.info("ObjectBox Sync process stopped.");
+//        }
+//        if (boxStore != null) {
+//            boxStore.close();
+//            boxStore = null;
+//            logger.info("BoxStore closed.");
+//        }
+//    }
 
     /**
      * Provides access to the BoxStore for other services.
@@ -180,7 +180,7 @@ public class SyncManager {
     /**
      * Checks if the SyncClient is currently active.
      */
-    public boolean isSyncing() {
-        return syncClient != null && syncClient.isStarted();
-    }
+//    public boolean isSyncing() {
+//        return syncClient != null && syncClient.isStarted();
+//    }
 }

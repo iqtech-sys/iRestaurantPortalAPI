@@ -60,7 +60,6 @@ com\irestaurant\iPortalAPI\objectbox\model\TableCursor$Factory.class
 com\irestaurant\iPortalAPI\dto\ForgotPasswordRequest.class
 com\irestaurant\iPortalAPI\exception\BaseException.class
 com\irestaurant\iPortalAPI\objectbox\model\OrderEntry_.class
-com\irestaurant\iPortalAPI\util\SyncManager$1.class
 com\irestaurant\iPortalAPI\objectbox\model\Entry.class
 com\irestaurant\iPortalAPI\objectbox\model\User_$10.class
 com\irestaurant\iPortalAPI\objectbox\model\Customer_$CustomerIdGetter.class
