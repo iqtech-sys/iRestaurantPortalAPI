@@ -19,8 +19,11 @@
     <!-- FILE APPENDER (For ERROR only)                 -->
     <!-- ============================================== -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/var/objectbox-sync/logs/error-%d{yyyyMMdd_HHmmssSSS}.log</file>
+        <file>/var/objectbox-sync/logs/error.log</file>
         
+        <!-- Create the error.log file when it does not exist, otherwise append to it -->
+        <append>true</append>
+
         <!-- Ensure missing parent directories are created automatically -->
         <createMissingDirectories>true</createMissingDirectories>
 
