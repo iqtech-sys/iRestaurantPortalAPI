@@ -1,30 +1,43 @@
 package com.irestaurant.iPortalAPI.service;
 
+import com.irestaurant.iPortalAPI.converter.OrderStatusesConverter;
 import com.irestaurant.iPortalAPI.dto.RecentOrderDTO;
+import com.irestaurant.iPortalAPI.dto.TopItemDTO;
+import com.irestaurant.iPortalAPI.enumerators.OrderStatuses;
+import com.irestaurant.iPortalAPI.objectbox.model.Category;
 import com.irestaurant.iPortalAPI.objectbox.model.Order;
 import com.irestaurant.iPortalAPI.objectbox.model.Order_;
 import com.irestaurant.iPortalAPI.objectbox.model.OrderItem;
 import com.irestaurant.iPortalAPI.objectbox.model.Customer;
 import com.irestaurant.iPortalAPI.objectbox.model.OrderItem_;
+import com.irestaurant.iPortalAPI.objectbox.model.Product;
 import com.irestaurant.iPortalAPI.util.SyncManager;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
+import io.objectbox.query.OrderFlags;
 import io.objectbox.query.Query;
+import io.objectbox.query.QueryBuilder;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class OrderService {
+    
+    @Autowired
+    OrderStatusesConverter orderStatusesConverter;
 
     private double round(double value) {
         return BigDecimal.valueOf(value)
-                         .setScale(2, RoundingMode.HALF_UP)
-                         .doubleValue();
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 
     public double calculateSubtotal(List<OrderItem> orderItems) {
@@ -85,9 +98,9 @@ public class OrderService {
         // Build query: optionally filter by branchId, always sort newest first,
         // paginate
         Query<Order> query = (filterByBranch ? orderBox.query(Order_.branchId.equal(branchName)) // filter: specific
-                                             : orderBox.query()) // no filter: all branches
-                                                       .orderDesc(Order_.createdDate) // sort: newest first
-                                                       .build();
+                : orderBox.query()) // no filter: all branches
+                .orderDesc(Order_.createdDate) // sort: newest first
+                .build();
         List<Order> orders = query.find(0, limit); // offset=0, count=limit
         List<RecentOrderDTO> result = new ArrayList<>(orders.size());
         //
@@ -115,87 +128,96 @@ public class OrderService {
             double totalAmount = calculateTotal(subTotal, tax);
             //
             result.add(new RecentOrderDTO(order.getId(),
-                                          order.getOrderNumber(),
-                                          order.getBranchId(),
-                                          customerName, totalAmount,
-                                          order.getOrderStatus(),
-                                          order.getCreatedDate()));
+                    order.getOrderNumber(),
+                    order.getBranchId(),
+                    customerName, totalAmount,
+                    orderStatusesConverter.convertToEntityAttribute((int)order.getOrderStatus()).name(),// order.getOrderStatus(),
+                    order.getCreatedDate()));
         }
         //
         return result;
 
     }
 
-//    public List<TopItemDTO> getTopItems(String email, String branch, Date startDate, Date endDate, int topX) {
-//        BoxStore store = SyncManager.init(email);
-//        Box<Order> orderBox = store.boxFor(Order.class);
-//        Box<OrderItem> orderItemBox = store.boxFor(OrderItem.class);
-//        Box<Product> productBox = store.boxFor(Product.class);
-//        Box<Category> categoryBox = store.boxFor(Category.class);
-//        //
-//        // Extract filtered items based on linked matched Order conditions directly in
-//        // DB!
-//        QueryBuilder<OrderItem> itemQb = orderItemBox.query().order(OrderItem_.quantity, 1);
-//        QueryBuilder<Order> orderQb = itemQb.link(OrderItem_.order);
+    public List<TopItemDTO> getTopItems(String email, String branch, Date startDate, Date endDate, int topX) {
+        BoxStore store = SyncManager.init(email);
+        // Box<Order> orderBox = store.boxFor(Order.class);
+        Box<OrderItem> orderItemBox = store.boxFor(OrderItem.class);
+        Box<Product> productBox = store.boxFor(Product.class);
+        Box<Category> categoryBox = store.boxFor(Category.class);
+        //
+        // Extract filtered items based on linked matched Order conditions directly in
+        // DB!
+        QueryBuilder<OrderItem> itemQb = orderItemBox.query().order(OrderItem_.quantity, 1);
+        QueryBuilder<Order> orderQb = itemQb.link(OrderItem_.order);
+
+        if (branch != null && !branch.isBlank()) {
+            orderQb.equal(Order_.branchId, branch, io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
+        }
+        if (startDate != null && endDate != null) {
+            orderQb.between(Order_.createdDate, startDate, endDate);
+        }
+        //
+        List<OrderItem> allItems = itemQb.build().find(0, topX);
+        Map<String, List<OrderItem>> groupedItems = allItems.stream()
+                                                            .filter(item -> item.getSnapshot_title() != null && !item.getSnapshot_title().isBlank())
+                                                            .collect(Collectors.groupingBy(OrderItem::getSnapshot_title));
+        //
+        //   List<OrderItem> orderItemsInOrderQb = itemQb.build().find(0, topX);
+        //   List<OrderItem> intersectedOrderItems = orderItemsInOrderQb.stream()
+        //                                                              .filter(item -> allItems.stream().anyMatch(a -> a.getId() == item.getId()))
+        //                                                              .collect(Collectors.toList());
+
+//        Get the result properties required from all orders items.
+//        Map<String, List<OrderItem>> groupedItems = intersectedOrderItems.stream()
+//                                                                         .filter(item -> item.getSnapshot_title() != null && !item.getSnapshot_title().isBlank())
+//                                                                         .collect(Collectors.groupingBy(OrderItem::getSnapshot_title));
 //
-//        if (branch != null && !branch.isBlank()) {
-//            orderQb.equal(Order_.branchId, branch, io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
-//        }
-//        if (startDate != null && endDate != null) {
-//            orderQb.between(Order_.createdDate, startDate, endDate);
-//        }
-//
-//        List<OrderItem> allItems = itemQb.build().find();
-//        // Get the result properties required from all orders items.
-//        Map<String, List<OrderItem>> groupedItems = allItems.stream()
-//                .filter(item -> item.getSnapshot_title() != null && !item.getSnapshot_title().isBlank())
-//                .collect(Collectors.groupingBy(OrderItem::getSnapshot_title));
-//
-//        List<TopItemDTO> result = groupedItems.entrySet().stream().map(entry -> {
-//            String name = entry.getKey();
-//            List<OrderItem> items = entry.getValue();
-//
-//            // Sum quantity sold
-//            long qtySold = items.stream().mapToLong(OrderItem::getSnapshot_quantity).sum();
-//
-//            // Calculate total revenue (price * quantity - discounts), using the existing
-//            // written function
-//            double taxRate = items.isEmpty() ? 0.0 : items.get(0).getSnapshot_taxRate();
-//            double revenueSubTotal = calculateSubtotal(items);
-//            double tax = calculateTax(revenueSubTotal, taxRate);
-//            double totalAmount = calculateTotal(revenueSubTotal, tax);
-//
-//            String categoryName = "N/A";
-//            double price = 0.0;
-//
-//            // Get price, category.
-//            if (!items.isEmpty()) {
-//                OrderItem firstItem = items.get(0);
-//                price = firstItem.getSnapshot_price(); // Reference price from first item
-//
-//                // Read Category through Product via direct Box logic to avoid ToOne lazy
-//                // loading issues
-//                long productId = firstItem.getProduct().getTargetId();
-//                if (productId > 0) {
-//                    Product product = productBox.get(productId);
-//                    if (product != null) {
-//                        long categoryId = product.getCategory().getTargetId();
-//                        if (categoryId > 0) {
-//                            Category category = categoryBox.get(categoryId);
-//                            if (category != null && category.getTitle() != null) {
-//                                categoryName = category.getTitle();
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//            return new TopItemDTO(name, categoryName, price, qtySold, revenueSubTotal, totalAmount);
-//        })
-//                .sorted((a, b) -> Long.compare(b.getQtySold(), a.getQtySold()))
-//                .limit(topX)
-//                .collect(Collectors.toList());
-//
-//        return result;
-//    }
+        List<TopItemDTO> result = groupedItems.entrySet().stream().map(entry -> {
+            String name = entry.getKey();
+            List<OrderItem> items = entry.getValue();
+
+            // Sum quantity sold
+            long qtySold = items.stream().mapToLong(OrderItem::getSnapshot_quantity).sum();
+
+            // Calculate total revenue (price * quantity - discounts), using the existing
+            // written function
+            double taxRate = items.isEmpty() ? 0.0 : items.get(0).getSnapshot_taxRate();
+            double revenueSubTotal = calculateSubtotal(items);
+            double tax = calculateTax(revenueSubTotal, taxRate);
+            double totalAmount = calculateTotal(revenueSubTotal, tax);
+
+            String categoryName = "N/A";
+            double price = 0.0;
+
+            // Get price, category.
+            if (!items.isEmpty()) {
+                OrderItem firstItem = items.get(0);
+                price = firstItem.getSnapshot_price(); // Reference price from first item
+
+                // Read Category through Product via direct Box logic to avoid ToOne lazy
+                // loading issues
+                long productId = firstItem.getProduct().getTargetId();
+                if (productId > 0) {
+                    Product product = productBox.get(productId);
+                    if (product != null) {
+                        long categoryId = product.getCategory().getTargetId();
+                        if (categoryId > 0) {
+                            Category category = categoryBox.get(categoryId);
+                            if (category != null && category.getTitle() != null) {
+                                categoryName = category.getTitle();
+                            }
+                        }
+                    }
+                }
+            }
+
+            return new TopItemDTO(name, categoryName, price, qtySold, revenueSubTotal, totalAmount);
+        })
+                .sorted((a, b) -> Long.compare(b.getQtySold(), a.getQtySold()))
+                .limit(topX)
+                .collect(Collectors.toList());
+
+        return result;
+    }
 }

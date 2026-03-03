@@ -88,6 +88,7 @@ com\irestaurant\iPortalAPI\objectbox\model\Product_$1.class
 com\irestaurant\iPortalAPI\config\SpringwolfConfig.class
 com\irestaurant\iPortalAPI\objectbox\model\KitchenCursor$Factory.class
 com\irestaurant\iPortalAPI\security\RequireJwt.class
+com\irestaurant\iPortalAPI\dto\TopItemsRequest.class
 com\irestaurant\iPortalAPI\objectbox\model\Notification_.class
 com\irestaurant\iPortalAPI\objectbox\model\User_.class
 com\irestaurant\iPortalAPI\objectbox\model\LogEvent_$LogEventIdGetter.class
@@ -142,6 +143,7 @@ com\irestaurant\iPortalAPI\objectbox\model\Product_$2.class
 com\irestaurant\iPortalAPI\IPortalApiApplication.class
 com\irestaurant\iPortalAPI\objectbox\model\Order_$1.class
 com\irestaurant\iPortalAPI\controller\StompEventController.class
+com\irestaurant\iPortalAPI\converter\OrderStatusesConverter.class
 com\irestaurant\iPortalAPI\objectbox\model\Order_$8.class
 com\irestaurant\iPortalAPI\dto\RecentOrdersRequest.class
 com\irestaurant\iPortalAPI\config\AsyncConfig.class

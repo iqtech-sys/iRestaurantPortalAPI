@@ -14,7 +14,7 @@ public class RecentOrderDTO {
     private String branchId;
     private String customerName;
     private double amount; // Computed: sum of (snapshot_price * snapshot_quantity) across all OrderItems
-    private long orderStatus; // Raw ordinal from OrderStatuses enum
+    private String orderStatus; // Raw ordinal from OrderStatuses enum
     private Date createdDate;
 
     public RecentOrderDTO() {
@@ -25,7 +25,7 @@ public class RecentOrderDTO {
             String branchId,
             String customerName,
             double amount,
-            long orderStatus,
+            String orderStatus,
             Date createdDate) {
         this.id = id;
         this.orderNumber = orderNumber;
@@ -78,11 +78,11 @@ public class RecentOrderDTO {
         this.amount = amount;
     }
 
-    public long getOrderStatus() {
+    public String getOrderStatus() {
         return orderStatus;
     }
 
-    public void setOrderStatus(long orderStatus) {
+    public void setOrderStatus(String orderStatus) {
         this.orderStatus = orderStatus;
     }
 

@@ -1,5 +1,6 @@
 package com.irestaurant.iPortalAPI.controller;
 
+import com.irestaurant.iPortalAPI.converter.OrderStatusesConverter;
 import java.util.List;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -9,6 +10,8 @@ import com.irestaurant.iPortalAPI.dto.AuthResponse;
 import com.irestaurant.iPortalAPI.dto.DbRequest;
 import com.irestaurant.iPortalAPI.dto.RecentOrderDTO;
 import com.irestaurant.iPortalAPI.dto.RecentOrdersRequest;
+import com.irestaurant.iPortalAPI.dto.TopItemDTO;
+import com.irestaurant.iPortalAPI.dto.TopItemsRequest;
 import com.irestaurant.iPortalAPI.security.RequireJwt;
 import com.irestaurant.iPortalAPI.service.OrderService;
 import com.irestaurant.iPortalAPI.util.JwtUtil;
@@ -48,18 +51,18 @@ public class OrderController {
     public void getUniqueBranchIds(@Valid @Payload DbRequest request, SimpMessageHeaderAccessor headerAccessor) {
         logger.error("***************** getUniqueBranchIds started *****************");
         String sessionId = headerAccessor.getSessionId();
-        try {    
+        try {
             // Extract email from the JWT "email" claim — same token the aspect already
             String token = headerAccessor.getFirstNativeHeader("Authorization");
             String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));// strip "Bearer "
             //
             List<String> branchIds = orderService.getUniqueBranchIds(email);
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/order-branches",
-                                                   new AuthResponse<List<String>>("1", null, "", null, branchIds));
+                    new AuthResponse<List<String>>("1", null, "", null, branchIds));
         } catch (Exception e) {
             logger.error("Error retrieving the unique branches: {}", e.getMessage(), e);
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/order-branches",
-                                                   new AuthResponse("-1", null, "Error retrieving branch IDs from orders", null, null));
+                    new AuthResponse("-1", null, "Error retrieving branch IDs from orders", null, null));
         }
     }
 
@@ -74,13 +77,15 @@ public class OrderController {
      * <p>
      * Request payload ({@link RecentOrdersRequest}):
      * </p>
+     * 
      * <pre>
      * {
      *   "branchName": "branch-id-001",
      *   "limit":      20
      * }
      * </pre>
-     * @param request the STOMP payload containing branchName and limit
+     * 
+     * @param request        the STOMP payload containing branchName and limit
      * @param headerAccessor provides the session ID and Authorization header
      */
     @MessageMapping("/order.getRecentOrders")
@@ -93,16 +98,40 @@ public class OrderController {
             String token = headerAccessor.getFirstNativeHeader("Authorization");
             String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));// strip "Bearer "
             //
-            List<RecentOrderDTO> recentOrders = orderService.getRecentOrders(email, request.getBranchName(), request.getLimit());
+            List<RecentOrderDTO> recentOrders = orderService.getRecentOrders(email, request.getBranchName(),
+                    request.getLimit());
             //
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/recent-orders",
-                                                   new AuthResponse<>("1", null, "", null, recentOrders));
+                    new AuthResponse<>("1", null, "", null, recentOrders));
 
         } catch (Exception e) {
             logger.error("Error retrieving recent orders for branch '{}': {}",
-                         request.getBranchName(), e.getMessage(), e);
+                    request.getBranchName(), e.getMessage(), e);
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/recent-orders",
-                                                   new AuthResponse<>("-1", null, "Error retrieving recent orders", null, null));
+                    new AuthResponse<>("-1", null, "Error retrieving recent orders", null, null));
+        }
+    }
+
+    @MessageMapping("/order.getTopItems")
+    @RequireJwt(role = "User")
+    @Async(value = "backgroundTaskExecutor")
+    public void getTopItems(@Valid @Payload TopItemsRequest request, SimpMessageHeaderAccessor headerAccessor) {
+        String sessionId = headerAccessor.getSessionId();
+        try {
+            // Extract email from the JWT "email" claim
+            String token = headerAccessor.getFirstNativeHeader("Authorization");
+            String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));
+
+            List<TopItemDTO> topItems = orderService.getTopItems(email, request.getBranchName(), request.getStartDate(), request.getEndDate(), request.getTopX());
+
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/top-items",
+                    new AuthResponse<>("1", null, "", null, topItems));
+
+        } catch (Exception e) {
+            logger.error("Error retrieving top items for branch '{}': {}",
+                    request.getBranchName(), e.getMessage(), e);
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/top-items",
+                    new AuthResponse<>("-1", null, "Error retrieving top items", null, null));
         }
     }
 }
