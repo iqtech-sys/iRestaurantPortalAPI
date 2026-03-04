@@ -3,7 +3,7 @@ package com.irestaurant.iPortalAPI.service;
 import com.irestaurant.iPortalAPI.converter.OrderStatusesConverter;
 import com.irestaurant.iPortalAPI.dto.RecentOrderDTO;
 import com.irestaurant.iPortalAPI.dto.TopItemDTO;
-import com.irestaurant.iPortalAPI.enumerators.OrderStatuses;
+//import com.irestaurant.iPortalAPI.enumerators.OrderStatuses;
 import com.irestaurant.iPortalAPI.objectbox.model.Category;
 import com.irestaurant.iPortalAPI.objectbox.model.Order;
 import com.irestaurant.iPortalAPI.objectbox.model.Order_;
@@ -12,13 +12,12 @@ import com.irestaurant.iPortalAPI.objectbox.model.Customer;
 import com.irestaurant.iPortalAPI.objectbox.model.OrderItem_;
 import com.irestaurant.iPortalAPI.objectbox.model.Product;
 import com.irestaurant.iPortalAPI.util.SyncManager;
+import com.irestaurant.iPortalAPI.util.AccountUtil;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
-import io.objectbox.query.OrderFlags;
+//import io.objectbox.query.OrderFlags;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,12 +33,6 @@ public class OrderService {
     @Autowired
     OrderStatusesConverter orderStatusesConverter;
 
-    private double round(double value) {
-        return BigDecimal.valueOf(value)
-                .setScale(2, RoundingMode.HALF_UP)
-                .doubleValue();
-    }
-
     public double calculateSubtotal(List<OrderItem> orderItems) {
         if (orderItems == null || orderItems.isEmpty()) {
             return 0.0;
@@ -53,23 +46,7 @@ public class OrderService {
             subtotal += lineTotal;
         }
 
-        return round(subtotal);
-    }
-
-    public double calculateTax(double subtotal, double taxRate) {
-        if (subtotal <= 0.0 || taxRate < 0.0) {
-            return 0.0;
-        }
-
-        // taxRate is a decimal (e.g. 0.05 = 5%) — multiply directly, no /100 needed.
-        // Mirrors Flutter: return subtotal * Constants.taxRate;
-        double tax = subtotal * taxRate;
-
-        return round(tax);
-    }
-
-    public double calculateTotal(double subtotal, double tax) {
-        return round(subtotal + tax);
+        return AccountUtil.round(subtotal);
     }
 
     public List<String> getUniqueBranchIds(String email) {
@@ -124,15 +101,15 @@ public class OrderService {
             // taxRate: read snapshot_taxRate from the first item (same logic as //
             // getTaxRate())
             double taxRate = orderItems.isEmpty() ? 0.0 : orderItems.get(0).getSnapshot_taxRate();
-            double tax = calculateTax(subTotal, taxRate);
-            double totalAmount = calculateTotal(subTotal, tax);
+            double tax = AccountUtil.calculateTax(subTotal, taxRate);
+            double totalAmount = AccountUtil.calculateTotal(subTotal, tax);
             //
             result.add(new RecentOrderDTO(order.getId(),
-                    order.getOrderNumber(),
-                    order.getBranchId(),
-                    customerName, totalAmount,
-                    orderStatusesConverter.convertToEntityAttribute((int)order.getOrderStatus()).name(),// order.getOrderStatus(),
-                    order.getCreatedDate()));
+                                          order.getOrderNumber(),
+                                          order.getBranchId(),
+                                          customerName, totalAmount,
+                                          orderStatusesConverter.convertToEntityAttribute((int)order.getOrderStatus()).name(),// order.getOrderStatus(),
+                                          order.getCreatedDate()));
         }
         //
         return result;
@@ -184,8 +161,8 @@ public class OrderService {
             // written function
             double taxRate = items.isEmpty() ? 0.0 : items.get(0).getSnapshot_taxRate();
             double revenueSubTotal = calculateSubtotal(items);
-            double tax = calculateTax(revenueSubTotal, taxRate);
-            double totalAmount = calculateTotal(revenueSubTotal, tax);
+            double tax =  AccountUtil.calculateTax(revenueSubTotal, taxRate);
+            double totalAmount =  AccountUtil.calculateTotal(revenueSubTotal, tax);
 
             String categoryName = "N/A";
             double price = 0.0;

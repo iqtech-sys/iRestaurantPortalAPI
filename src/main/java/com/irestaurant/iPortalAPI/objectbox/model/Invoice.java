@@ -1,12 +1,11 @@
 package com.irestaurant.iPortalAPI.objectbox.model;
 
+import com.irestaurant.iPortalAPI.util.Constants;
 import io.objectbox.annotation.ConflictStrategy;
-import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.annotation.Sync;
 import io.objectbox.annotation.Unique;
-import io.objectbox.converter.PropertyConverter;
 import io.objectbox.relation.ToOne;
 import java.util.Date;
 
@@ -26,7 +25,6 @@ public class Invoice {
     double taxRate;
     String branchId;
 
-    //@Convert(converter = DateConverter.class, dbType = Long.class)
     Date createdDate;
 
     public ToOne<Account> accountFrom;
@@ -138,6 +136,4 @@ public class Invoice {
     public void setEntry(ToOne<Entry> entry) {
         this.entry = entry;
     }
-    
-    
 }
