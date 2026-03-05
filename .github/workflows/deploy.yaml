@@ -21,6 +21,15 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           source: "target/*.jar"
           target: ${{ secrets.APP_DIR }}
+          
+      - name: Copy DB to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: "src/main/resources/iRestaurant-db/*.mdb"
+          target: ${{ secrets.DB_DIR }}
 
       - name: Activate release
         uses: appleboy/ssh-action@v1.0.3
@@ -30,9 +39,12 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             mv ${{ secrets.APP_DIR }}/target/*.jar ${{ secrets.APP_DIR }}/${{ secrets.JAR_FILE_NAME }}
+            mv ${{ secrets.DB_DIR }}/src/main/resources/iRestaurant-db/*.mdb ${{ secrets.DB_DIR }}
             sudo systemctl restart ${{ secrets.SERVICE_NAME }}
             sudo systemctl daemon-reload
             rm -rf ${{ secrets.APP_DIR }}/target
+            rm -rf ${{ secrets.DB_DIR }}/src
             sudo chown -R $(whoami):$(whoami) ${{ secrets.APP_DIR }}
             sudo chmod -R 777 ${{ secrets.APP_DIR }}
             sudo chmod -R 777 ${{ secrets.APP_PARENT_DIR }}
+            sudo chmod -R 777 ${{ secrets.DB_DIR }}

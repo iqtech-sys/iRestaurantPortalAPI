@@ -37,12 +37,40 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @PostConstruct
+    /*
+     * By default, Spring Security uses a ThreadLocal strategy. This means the
+     * security context is private to the specific thread handling the request.
+     * If you start a new background thread within that request, the new thread will
+     * be "unauthenticated" (null context).
+     */
+    @PostConstruct // This annotation ensures the method runs exactly once, immediately after the
+                   // Spring bean is initialized. This "sets the stage" before the application
+                   // starts processing logic.
     public void enableContextInheritance() {
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
     }
 
     @Bean
+    @org.springframework.core.annotation.Order(1)
+    public SecurityFilterChain actuatorFilterChain(HttpSecurity http) throws Exception {
+        UserDetails actuatorUser = org.springframework.security.core.userdetails.User.withUsername("admin")
+                .password("{noop}admin123")
+                .roles("ACTUATOR")
+                .build();
+        org.springframework.security.provisioning.InMemoryUserDetailsManager userDetailsService = new org.springframework.security.provisioning.InMemoryUserDetailsManager(
+                actuatorUser);
+
+        http.securityMatcher("/actuator/**")
+                .authorizeHttpRequests(authz -> authz.anyRequest().authenticated())
+                .httpBasic(org.springframework.security.config.Customizer.withDefaults())
+                .userDetailsService(userDetailsService)
+                .csrf(csrf -> csrf.disable());
+
+        return http.build();
+    }
+
+    @Bean
+    @org.springframework.core.annotation.Order(2)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz

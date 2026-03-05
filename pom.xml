@@ -24,6 +24,7 @@
     <name>iPortalAPI</name>
     <description>iPortalAPI with Spring Boot, WebSocket, Security, and MySQL</description>
 
+
     <dependencies>
         <!-- ObjectBox - High-performance NoSQL database -->
         
@@ -128,6 +129,7 @@
             <scope>runtime</scope>
         </dependency>
         
+
         <!-- Springwolf 1.0+ for Spring Boot 3.x -->
         <dependency>
             <groupId>io.github.springwolf</groupId>
@@ -154,6 +156,33 @@
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations-jakarta</artifactId>
             <version>2.2.40</version>
+        </dependency>
+
+        <!-- Spring Boot Actuator for monitoring and tracing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- Micrometer Registry for Prometheus -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+        <!-- Micrometer Tracing for distributed tracing (OpenTelemetry) -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-otel</artifactId>
+        </dependency>
+        <!-- OpenTelemetry Zipkin Exporter for exporting traces to Zipkin -->
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-exporter-zipkin</artifactId>
+        </dependency>
+        
+        <!-- Provide Kotlin Standard library for annotation processor compatibility (OkHttp / ObjectBox) -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
         </dependency>
     </dependencies>
     
