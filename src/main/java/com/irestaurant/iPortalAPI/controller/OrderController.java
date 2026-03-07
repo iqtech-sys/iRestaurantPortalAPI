@@ -14,6 +14,8 @@ import com.irestaurant.iPortalAPI.dto.TopItemsRequest;
 import com.irestaurant.iPortalAPI.security.RequireJwt;
 import com.irestaurant.iPortalAPI.service.OrderService;
 import com.irestaurant.iPortalAPI.util.JwtUtil;
+import io.github.springwolf.core.asyncapi.annotations.AsyncPublisher;
+import io.github.springwolf.core.asyncapi.annotations.AsyncOperation;
 
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -47,6 +49,7 @@ public class OrderController {
     @MessageMapping("/order.branches")
     @RequireJwt(role = "User")
     @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/order-branches", description = "Response channel for unique branch IDs"))
     public void getUniqueBranchIds(@Valid @Payload DbRequest request, SimpMessageHeaderAccessor headerAccessor) {
         logger.error("***************** getUniqueBranchIds started *****************");
         String sessionId = headerAccessor.getSessionId();
@@ -90,6 +93,7 @@ public class OrderController {
     @MessageMapping("/order.getRecentOrders")
     @RequireJwt(role = "User")
     @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/recent-orders", description = "Response channel for recent orders"))
     public void getRecentOrders(@Valid @Payload RecentOrdersRequest request, SimpMessageHeaderAccessor headerAccessor) {
         String sessionId = headerAccessor.getSessionId();
         try {
@@ -114,6 +118,7 @@ public class OrderController {
     @MessageMapping("/order.getTopItems")
     @RequireJwt(role = "User")
     @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/top-items", description = "Response channel for top items"))
     public void getTopItems(@Valid @Payload TopItemsRequest request, SimpMessageHeaderAccessor headerAccessor) {
         String sessionId = headerAccessor.getSessionId();
         try {
@@ -121,7 +126,8 @@ public class OrderController {
             String token = headerAccessor.getFirstNativeHeader("Authorization");
             String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));
 
-            List<TopItemDTO> topItems = orderService.getTopItems(email, request.getBranchName(), request.getStartDate(), request.getEndDate(), request.getTopX());
+            List<TopItemDTO> topItems = orderService.getTopItems(email, request.getBranchName(), request.getStartDate(),
+                    request.getEndDate(), request.getTopX());
 
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/top-items",
                     new AuthResponse<>("1", null, "", null, topItems));

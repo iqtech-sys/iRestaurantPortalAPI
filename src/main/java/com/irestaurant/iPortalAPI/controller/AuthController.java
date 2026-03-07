@@ -27,6 +27,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
+import io.github.springwolf.core.asyncapi.annotations.AsyncPublisher;
+import io.github.springwolf.core.asyncapi.annotations.AsyncOperation;
 
 /**
  * Controller for handling authentication via STOMP/WebSocket messages.
@@ -53,15 +55,17 @@ public class AuthController {
     @MessageMapping("/auth.register")
     @RequireJwt(role = "User")
     @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/register", description = "Response channel for registration via STOMP"))
     public void register(@Valid @Payload RegisterRequest request, SimpMessageHeaderAccessor headerAccessor,
             Principal principal) {
         String sessionId = headerAccessor.getSessionId();
         logger.info("Secured registration by user: {}", principal != null ? principal.getName() : "anonymous");
         try {
-            DbUser user = userService.registerUser(request.getUsername(), request.getEmail(), request.getPassword()).get();
+            DbUser user = userService.registerUser(request.getUsername(), request.getEmail(), request.getPassword())
+                    .get();
             Set<String> roleNames = user.getRoles().stream()
-                                                   .map(DbRole::getName)
-                                                   .collect(Collectors.toSet());
+                    .map(DbRole::getName)
+                    .collect(Collectors.toSet());
             messagingTemplate.convertAndSend("/queue/register",
                     new AuthResponse("1", null, "Registration successful", roleNames, null));
         } catch (Exception e) {
@@ -84,6 +88,7 @@ public class AuthController {
      */
     @MessageMapping("/auth.login")
     @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/login", description = "Response channel for login via STOMP"))
     public void login(@Valid @Payload LoginRequest request, SimpMessageHeaderAccessor headerAccessor) {
         String sessionId = headerAccessor.getSessionId();
         try {
@@ -115,6 +120,7 @@ public class AuthController {
      */
     @MessageMapping("/auth.forgot-password")
     @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/forgot-password", description = "Response channel for forgot password result"))
     public void forgotPassword(@Valid @Payload ForgotPasswordRequest request,
             SimpMessageHeaderAccessor headerAccessor) {
         String sessionId = headerAccessor.getSessionId();
@@ -137,6 +143,7 @@ public class AuthController {
      */
     @MessageMapping("/auth.reset-password")
     @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/reset-password", description = "Response channel for reset password result"))
     public void resetPassword(@Valid @Payload ResetPasswordRequest request,
             SimpMessageHeaderAccessor headerAccessor) {
         String sessionId = headerAccessor.getSessionId();
