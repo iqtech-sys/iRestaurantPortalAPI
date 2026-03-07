@@ -98,7 +98,7 @@ public class JwtSecurityAspect {
                 String sessionId = accessor.getSessionId();
                 if (sessionId != null) {
                     messagingTemplate.convertAndSendToUser(sessionId, "/queue/access-denied",
-                            new AuthResponse(String.valueOf(HttpStatus.UNAUTHORIZED.value()), null,
+                            new AuthResponse<>(String.valueOf(HttpStatus.UNAUTHORIZED.value()), null,
                                     "Access Denied: " + e.getMessage(), null, null));
                 }
             }

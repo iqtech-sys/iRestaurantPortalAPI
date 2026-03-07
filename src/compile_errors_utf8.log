@@ -1,0 +1,101 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.irestaurant:iPortalAPI >---------------------
+[INFO] Building iPortalAPI 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ iPortalAPI ---
+[INFO] Deleting C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ iPortalAPI ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 4 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ iPortalAPI ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 71 source files with javac [debug release 17] to target\classes
+[ObjectBox] ID model file unchanged: default.json
+[ObjectBox] ObjectBox Generator
+[ObjectBox] Copyright 2017-2024 ObjectBox Ltd, objectbox.io. Licensed under GNU Affero General Public License, Version 3.
+[ObjectBox] This program comes with ABSOLUTELY NO WARRANTY
+[ObjectBox] Processing schema version 1...
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.AccountCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.Account_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.CategoryCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.Category_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.CustomerCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.Customer_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.DeliveryCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.Delivery_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.EntryCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.Entry_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.InvoiceCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.Invoice_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.KitchenCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.Kitchen_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.LogEventCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.LogEvent_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.NotificationCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.Notification_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.NotificationMessageCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.NotificationMessage_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.OrderCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.Order_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.OrderEntryCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.OrderEntry_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.OrderItemCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.OrderItem_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.ProductCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.Product_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.SettingCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.Setting_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.TableCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.Table_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.UserCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.User_.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.WaiterCursor.java
+[ObjectBox] Written com.irestaurant.iPortalAPI.objectbox.model.Waiter_.java
+[ObjectBox] Written generated.MyObjectBox.java
+[ObjectBox] Processed 18 entities in 849ms
+[INFO] /C:/Data/Freelancing/iRestaurant/App/Prod/iPortalAPI-Prod/iPortalAPI/src/main/java/com/irestaurant/iPortalAPI/security/JwtSecurityAspect.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Data/Freelancing/iRestaurant/App/Prod/iPortalAPI-Prod/iPortalAPI/src/main/java/com/irestaurant/iPortalAPI/security/JwtSecurityAspect.java: Recompile with -Xlint:unchecked for details.
+[INFO] Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/Data/Freelancing/iRestaurant/App/Prod/iPortalAPI-Prod/iPortalAPI/src/main/java/com/irestaurant/iPortalAPI/service/OrderService.java:[148,15] no suitable method found for equal(io.objectbox.Property<com.irestaurant.iPortalAPI.objectbox.model.Order>,java.lang.String)
+    method io.objectbox.query.QueryBuilder.equal(io.objectbox.Property<com.irestaurant.iPortalAPI.objectbox.model.Order>,long) is not applicable
+      (argument mismatch; java.lang.String cannot be converted to long)
+    method io.objectbox.query.QueryBuilder.equal(io.objectbox.Property<com.irestaurant.iPortalAPI.objectbox.model.Order>,boolean) is not applicable
+      (argument mismatch; java.lang.String cannot be converted to boolean)
+    method io.objectbox.query.QueryBuilder.equal(io.objectbox.Property<com.irestaurant.iPortalAPI.objectbox.model.Order>,java.util.Date) is not applicable
+      (argument mismatch; java.lang.String cannot be converted to java.util.Date)
+    method io.objectbox.query.QueryBuilder.equal(io.objectbox.Property<com.irestaurant.iPortalAPI.objectbox.model.Order>,byte[]) is not applicable
+      (argument mismatch; java.lang.String cannot be converted to byte[])
+[INFO] 1 error
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  11.025 s
+[INFO] Finished at: 2026-02-26T11:40:53+03:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project iPortalAPI: Compilation failure
+[ERROR] /C:/Data/Freelancing/iRestaurant/App/Prod/iPortalAPI-Prod/iPortalAPI/src/main/java/com/irestaurant/iPortalAPI/service/OrderService.java:[148,15] no suitable method found for equal(io.objectbox.Property<com.irestaurant.iPortalAPI.objectbox.model.Order>,java.lang.String)
+[ERROR]     method io.objectbox.query.QueryBuilder.equal(io.objectbox.Property<com.irestaurant.iPortalAPI.objectbox.model.Order>,long) is not applicable
+[ERROR]       (argument mismatch; java.lang.String cannot be converted to long)
+[ERROR]     method io.objectbox.query.QueryBuilder.equal(io.objectbox.Property<com.irestaurant.iPortalAPI.objectbox.model.Order>,boolean) is not applicable
+[ERROR]       (argument mismatch; java.lang.String cannot be converted to boolean)
+[ERROR]     method io.objectbox.query.QueryBuilder.equal(io.objectbox.Property<com.irestaurant.iPortalAPI.objectbox.model.Order>,java.util.Date) is not applicable
+[ERROR]       (argument mismatch; java.lang.String cannot be converted to java.util.Date)
+[ERROR]     method io.objectbox.query.QueryBuilder.equal(io.objectbox.Property<com.irestaurant.iPortalAPI.objectbox.model.Order>,byte[]) is not applicable
+[ERROR]       (argument mismatch; java.lang.String cannot be converted to byte[])
+[ERROR] 
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
