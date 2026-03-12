@@ -176,7 +176,9 @@ com\irestaurant\iPortalAPI\objectbox\model\Account_.class
 com\irestaurant\iPortalAPI\objectbox\model\NotificationMessage_$2.class
 com\irestaurant\iPortalAPI\objectbox\model\OrderItem_.class
 com\irestaurant\iPortalAPI\controller\OrderController.class
+com\irestaurant\iPortalAPI\dto\BestPerformingBranchDTO.class
 com\irestaurant\iPortalAPI\objectbox\model\Waiter_$2.class
+com\irestaurant\iPortalAPI\dto\BestPerformingBranchRequest.class
 com\irestaurant\iPortalAPI\dto\PerformanceHeatmapRequest.class
 com\irestaurant\iPortalAPI\config\DataInitializer.class
 com\irestaurant\iPortalAPI\objectbox\model\Table_$1.class
