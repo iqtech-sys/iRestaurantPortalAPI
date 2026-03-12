@@ -6,6 +6,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import com.irestaurant.iPortalAPI.dto.AuthResponse;
+import com.irestaurant.iPortalAPI.dto.BranchComparisonDTO;
+import com.irestaurant.iPortalAPI.dto.BranchComparisonRequest;
 import com.irestaurant.iPortalAPI.dto.DbRequest;
 import com.irestaurant.iPortalAPI.dto.RecentOrderDTO;
 import com.irestaurant.iPortalAPI.dto.RecentOrdersRequest;
@@ -137,6 +139,28 @@ public class OrderController {
                     request.getBranchName(), e.getMessage(), e);
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/top-items",
                     new AuthResponse<>("-1", null, "Error retrieving top items", null, null));
+        }
+    }
+
+    @MessageMapping("/order.getBranchComparison")
+    @RequireJwt(role = "User")
+    @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/branch-comparison", description = "Response channel for branch comparison"))
+    public void getBranchComparison(@Valid @Payload BranchComparisonRequest request, SimpMessageHeaderAccessor headerAccessor) {
+        String sessionId = headerAccessor.getSessionId();
+        try {
+            // Extract email from the JWT "email" claim
+            String token = headerAccessor.getFirstNativeHeader("Authorization");
+            String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));
+            List<BranchComparisonDTO> comparison = orderService.getBranchComparison(email, request.getBranchName(), request.getStartDate(), request.getEndDate());
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/branch-comparison",
+                                                   new AuthResponse<>("1", null, "", null, comparison));
+
+        } catch (Exception e) {
+            logger.error("Error retrieving branch comparison for branch '{}': {}",
+                    request.getBranchName(), e.getMessage(), e);
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/branch-comparison",
+                                                   new AuthResponse<>("-1", null, "Error retrieving branch comparison", null, null));
         }
     }
 }

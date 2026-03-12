@@ -10,6 +10,7 @@ C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\jav
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\dto\RecentOrderDTO.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\config\AsyncConfig.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\converter\LocalDateTimeConverter.java
+C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\dto\BranchComparisonDTO.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\controller\OrderController.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\dto\TopItemsRequest.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\enumerators\TableTypes.java
@@ -34,6 +35,7 @@ C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\jav
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\exception\TokenExpired_1301.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\dto\SalesGadgetsDTO.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\dto\TopItemDTO.java
+C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\dto\BranchComparisonRequest.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\dto\LoginRequest.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\objectbox\model\Account.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\repository\UserRepository.java

@@ -24,12 +24,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.HashMap;
 import java.util.stream.Collectors;
+import com.irestaurant.iPortalAPI.dto.BranchComparisonDTO;
+import com.irestaurant.iPortalAPI.objectbox.model.Invoice;
+import com.irestaurant.iPortalAPI.objectbox.model.Invoice_;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class OrderService {
-    
+
     @Autowired
     OrderStatusesConverter orderStatusesConverter;
 
@@ -105,11 +111,11 @@ public class OrderService {
             double totalAmount = AccountUtil.calculateTotal(subTotal, tax);
             //
             result.add(new RecentOrderDTO(order.getId(),
-                                          order.getOrderNumber(),
-                                          order.getBranchId(),
-                                          customerName, totalAmount,
-                                          orderStatusesConverter.convertToEntityAttribute((int)order.getOrderStatus()).name(),// order.getOrderStatus(),
-                                          order.getCreatedDate()));
+                    order.getOrderNumber(),
+                    order.getBranchId(),
+                    customerName, totalAmount,
+                    orderStatusesConverter.convertToEntityAttribute((int) order.getOrderStatus()).name(), // order.getOrderStatus(),
+                    order.getCreatedDate()));
         }
         //
         return result;
@@ -137,19 +143,20 @@ public class OrderService {
         //
         List<OrderItem> allItems = itemQb.build().find(0, topX);
         Map<String, List<OrderItem>> groupedItems = allItems.stream()
-                                                            .filter(item -> item.getSnapshot_title() != null && !item.getSnapshot_title().isBlank())
-                                                            .collect(Collectors.groupingBy(OrderItem::getSnapshot_title));
+                .filter(item -> item.getSnapshot_title() != null && !item.getSnapshot_title().isBlank())
+                .collect(Collectors.groupingBy(OrderItem::getSnapshot_title));
         //
-        //   List<OrderItem> orderItemsInOrderQb = itemQb.build().find(0, topX);
-        //   List<OrderItem> intersectedOrderItems = orderItemsInOrderQb.stream()
-        //                                                              .filter(item -> allItems.stream().anyMatch(a -> a.getId() == item.getId()))
-        //                                                              .collect(Collectors.toList());
+        // List<OrderItem> orderItemsInOrderQb = itemQb.build().find(0, topX);
+        // List<OrderItem> intersectedOrderItems = orderItemsInOrderQb.stream()
+        // .filter(item -> allItems.stream().anyMatch(a -> a.getId() == item.getId()))
+        // .collect(Collectors.toList());
 
-//        Get the result properties required from all orders items.
-//        Map<String, List<OrderItem>> groupedItems = intersectedOrderItems.stream()
-//                                                                         .filter(item -> item.getSnapshot_title() != null && !item.getSnapshot_title().isBlank())
-//                                                                         .collect(Collectors.groupingBy(OrderItem::getSnapshot_title));
-//
+        // Get the result properties required from all orders items.
+        // Map<String, List<OrderItem>> groupedItems = intersectedOrderItems.stream()
+        // .filter(item -> item.getSnapshot_title() != null &&
+        // !item.getSnapshot_title().isBlank())
+        // .collect(Collectors.groupingBy(OrderItem::getSnapshot_title));
+        //
         List<TopItemDTO> result = groupedItems.entrySet().stream().map(entry -> {
             String name = entry.getKey();
             List<OrderItem> items = entry.getValue();
@@ -161,8 +168,8 @@ public class OrderService {
             // written function
             double taxRate = items.isEmpty() ? 0.0 : items.get(0).getSnapshot_taxRate();
             double revenueSubTotal = calculateSubtotal(items);
-            double tax =  AccountUtil.calculateTax(revenueSubTotal, taxRate);
-            double totalAmount =  AccountUtil.calculateTotal(revenueSubTotal, tax);
+            double tax = AccountUtil.calculateTax(revenueSubTotal, taxRate);
+            double totalAmount = AccountUtil.calculateTotal(revenueSubTotal, tax);
 
             String categoryName = "N/A";
             double price = 0.0;
@@ -194,6 +201,88 @@ public class OrderService {
                 .sorted((a, b) -> Long.compare(b.getQtySold(), a.getQtySold()))
                 .limit(topX)
                 .collect(Collectors.toList());
+
+        return result;
+    }
+
+    public List<BranchComparisonDTO> getBranchComparison(String email, String branchName, Date startDate, Date endDate) {
+        BoxStore store = SyncManager.init(email);
+        Box<Order> orderBox = store.boxFor(Order.class);
+        Box<Invoice> invoiceBox = store.boxFor(Invoice.class);
+        Box<OrderItem> orderItemBox = store.boxFor(OrderItem.class);
+        // Filter Orders
+        QueryBuilder<Order> orderQb = orderBox.query();
+        if (startDate != null && endDate != null) {
+            orderQb = orderQb.between(Order_.createdDate, startDate, endDate);
+        }
+        if (branchName != null && !branchName.isBlank()) {
+            orderQb = orderQb.equal(Order_.branchId, branchName, io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
+        }
+        List<Order> allOrders = orderQb.build().find();
+        
+        // Calculate count of Orders per branch
+        Map<String, Long> branchOrderCount = allOrders.stream()
+                                                      .filter(o -> o.getBranchId() != null && !o.getBranchId().isBlank())
+                                                      .collect(Collectors.groupingBy(Order::getBranchId, Collectors.counting()));
+        
+        // We also need currency per branch. We can take it from one OrderItem per branch.
+        Map<String, String> branchCurrency = new HashMap<>();
+        for (Order o : allOrders) {
+            String bId = o.getBranchId();
+            if (bId != null && !bId.isBlank() && !branchCurrency.containsKey(bId)) {
+                // Find first OrderItem to extract currency
+                List<OrderItem> items = orderItemBox.query(OrderItem_.orderId.equal(o.getId())).build().find(0, 1);
+                if (!items.isEmpty()) {
+                    String currency = items.get(0).getSnapshot_currency();
+                    if (currency != null && !currency.isBlank()) {
+                        branchCurrency.put(bId, currency);
+                    }
+                }
+            }
+        }
+
+        // Filter Invoices
+        QueryBuilder<Invoice> invoiceQb = invoiceBox.query();
+        if (startDate != null && endDate != null) {
+            invoiceQb = invoiceQb.between(Invoice_.createdDate, startDate, endDate);
+        }
+        if (branchName != null && !branchName.isBlank()) {
+            invoiceQb = invoiceQb.equal(Invoice_.branchId, branchName, io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
+        }
+        List<Invoice> allInvoices = invoiceQb.build().find();
+
+        Map<String, Double> branchRevenue = new HashMap<>();
+        Map<String, Double> branchExpenses = new HashMap<>();
+
+        for (Invoice invoice : allInvoices) {
+            String bId = invoice.getBranchId();
+            if (bId == null || bId.isBlank())
+                continue;
+
+            double amount = invoice.getAmountTo();
+            String invNum = invoice.getInvNum() != null ? invoice.getInvNum() : "";
+            boolean isExpense = AccountUtil.isAddedInvoice(invNum);
+
+            branchRevenue.merge(bId, amount, Double::sum);
+            if (isExpense) {
+                branchExpenses.merge(bId, amount, Double::sum);
+            }
+        }
+
+        Set<String> uniqueBranches = new HashSet<>();
+        uniqueBranches.addAll(branchOrderCount.keySet());
+        uniqueBranches.addAll(branchRevenue.keySet());
+        //
+        List<BranchComparisonDTO> result = new ArrayList<>();
+        for (String bId : uniqueBranches) {
+            double revenue = AccountUtil.round(branchRevenue.getOrDefault(bId, 0.0));
+            double expenses = branchExpenses.getOrDefault(bId, 0.0);
+            double profit = AccountUtil.round(revenue - expenses);
+            String currency = branchCurrency.getOrDefault(bId, "");
+            long ordersCount = branchOrderCount.getOrDefault(bId, 0L);
+
+            result.add(new BranchComparisonDTO(bId, revenue, profit, currency, ordersCount));
+        }
 
         return result;
     }
