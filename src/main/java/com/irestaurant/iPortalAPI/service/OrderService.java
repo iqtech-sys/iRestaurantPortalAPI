@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import com.irestaurant.iPortalAPI.dto.BranchComparisonDTO;
+import com.irestaurant.iPortalAPI.dto.BestPerformingBranchDTO;
 import com.irestaurant.iPortalAPI.objectbox.model.Invoice;
 import com.irestaurant.iPortalAPI.objectbox.model.Invoice_;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -205,7 +206,8 @@ public class OrderService {
         return result;
     }
 
-    public List<BranchComparisonDTO> getBranchComparison(String email, String branchName, Date startDate, Date endDate) {
+    public List<BranchComparisonDTO> getBranchComparison(String email, String branchName, Date startDate,
+            Date endDate) {
         BoxStore store = SyncManager.init(email);
         Box<Order> orderBox = store.boxFor(Order.class);
         Box<Invoice> invoiceBox = store.boxFor(Invoice.class);
@@ -216,16 +218,18 @@ public class OrderService {
             orderQb = orderQb.between(Order_.createdDate, startDate, endDate);
         }
         if (branchName != null && !branchName.isBlank()) {
-            orderQb = orderQb.equal(Order_.branchId, branchName, io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
+            orderQb = orderQb.equal(Order_.branchId, branchName,
+                    io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
         }
         List<Order> allOrders = orderQb.build().find();
-        
+
         // Calculate count of Orders per branch
         Map<String, Long> branchOrderCount = allOrders.stream()
-                                                      .filter(o -> o.getBranchId() != null && !o.getBranchId().isBlank())
-                                                      .collect(Collectors.groupingBy(Order::getBranchId, Collectors.counting()));
-        
-        // We also need currency per branch. We can take it from one OrderItem per branch.
+                .filter(o -> o.getBranchId() != null && !o.getBranchId().isBlank())
+                .collect(Collectors.groupingBy(Order::getBranchId, Collectors.counting()));
+
+        // We also need currency per branch. We can take it from one OrderItem per
+        // branch.
         Map<String, String> branchCurrency = new HashMap<>();
         for (Order o : allOrders) {
             String bId = o.getBranchId();
@@ -247,7 +251,8 @@ public class OrderService {
             invoiceQb = invoiceQb.between(Invoice_.createdDate, startDate, endDate);
         }
         if (branchName != null && !branchName.isBlank()) {
-            invoiceQb = invoiceQb.equal(Invoice_.branchId, branchName, io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
+            invoiceQb = invoiceQb.equal(Invoice_.branchId, branchName,
+                    io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
         }
         List<Invoice> allInvoices = invoiceQb.build().find();
 
@@ -283,6 +288,138 @@ public class OrderService {
 
             result.add(new BranchComparisonDTO(bId, revenue, profit, currency, ordersCount));
         }
+
+        return result;
+    }
+
+    public List<BestPerformingBranchDTO> getBestPerformingBranch(String email, String branchName, Date startDate, Date endDate) {
+        BoxStore store = SyncManager.init(email);
+        Box<Order> orderBox = store.boxFor(Order.class);
+        Box<Invoice> invoiceBox = store.boxFor(Invoice.class);
+        Box<OrderItem> orderItemBox = store.boxFor(OrderItem.class);
+
+        // Filter Orders for current period
+        QueryBuilder<Order> orderQb = orderBox.query();
+        if (startDate != null && endDate != null) {
+            orderQb = orderQb.between(Order_.createdDate, startDate, endDate);
+        }
+        if (branchName != null && !branchName.isBlank()) {
+            orderQb = orderQb.equal(Order_.branchId, branchName, io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
+        }
+        List<Order> currentOrders = orderQb.build().find();
+
+        // Unique Customers per branch (Current Period)
+        Map<String, Set<Long>> branchCustomers = new HashMap<>();
+        Map<String, String> branchCurrency = new HashMap<>();
+
+        for (Order o : currentOrders) {
+            String bId = o.getBranchId();
+            if (bId == null || bId.isBlank())
+                continue;
+
+            branchCustomers.computeIfAbsent(bId, k -> new HashSet<>());
+            long customerId = o.getCustomer().getTargetId();
+            if (customerId > 0) {
+                branchCustomers.get(bId).add(customerId);
+            } else {
+                branchCustomers.get(bId).add(-o.getId()); // each walkin is a unique customer for count purpose
+            }
+
+            if (!branchCurrency.containsKey(bId)) {
+                List<OrderItem> items = orderItemBox.query(OrderItem_.orderId.equal(o.getId())).build().find(0, 1);
+                if (!items.isEmpty()) {
+                    String currency = items.get(0).getSnapshot_currency();
+                    if (currency != null && !currency.isBlank()) {
+                        branchCurrency.put(bId, currency);
+                    }
+                }
+            }
+        }
+
+        // Current period Invoices
+        QueryBuilder<Invoice> invoiceQb = invoiceBox.query();
+        if (startDate != null && endDate != null) {
+            invoiceQb = invoiceQb.between(Invoice_.createdDate, startDate, endDate);
+        }
+        if (branchName != null && !branchName.isBlank()) {
+            invoiceQb = invoiceQb.equal(Invoice_.branchId, branchName,
+                    io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
+        }
+        List<Invoice> currentInvoices = invoiceQb.build().find();
+
+        Map<String, Double> currentRevenue = new HashMap<>();
+        Map<String, Double> currentExpenses = new HashMap<>();
+
+        for (Invoice invoice : currentInvoices) {
+            String bId = invoice.getBranchId();
+            if (bId == null || bId.isBlank())
+                continue;
+
+            double amount = invoice.getAmountTo();
+            String invNum = invoice.getInvNum() != null ? invoice.getInvNum() : "";
+            boolean isExpense = AccountUtil.isAddedInvoice(invNum);
+
+            currentRevenue.merge(bId, amount, Double::sum);
+            if (isExpense) {
+                currentExpenses.merge(bId, amount, Double::sum);
+            }
+        }
+
+        // Previous period calc
+        Map<String, Double> previousRevenue = new HashMap<>();
+        if (startDate != null && endDate != null) {
+            long duration = endDate.getTime() - startDate.getTime(); // in milliseconds
+            long durationPlusDay = duration + 86400000L;
+            Date prevStartDate = new Date(startDate.getTime() - durationPlusDay);
+            Date prevEndDate = new Date(startDate.getTime() - 1000L); // 1 sec before
+
+            QueryBuilder<Invoice> prevInvoiceQb = invoiceBox.query().between(Invoice_.createdDate, prevStartDate,
+                    prevEndDate);
+            if (branchName != null && !branchName.isBlank()) {
+                prevInvoiceQb = prevInvoiceQb.equal(Invoice_.branchId, branchName,
+                        io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
+            }
+            List<Invoice> prevInvoices = prevInvoiceQb.build().find();
+
+            for (Invoice invoice : prevInvoices) {
+                String bId = invoice.getBranchId();
+                if (bId == null || bId.isBlank())
+                    continue;
+
+                previousRevenue.merge(bId, invoice.getAmountTo(), Double::sum);
+            }
+        }
+
+        Set<String> uniqueBranches = new HashSet<>();
+        uniqueBranches.addAll(branchCustomers.keySet());
+        uniqueBranches.addAll(currentRevenue.keySet());
+
+        List<BestPerformingBranchDTO> result = new ArrayList<>();
+        for (String bId : uniqueBranches) {
+            double revenue = AccountUtil.round(currentRevenue.getOrDefault(bId, 0.0));
+            double expenses = currentExpenses.getOrDefault(bId, 0.0);
+            double profit = AccountUtil.round(revenue - expenses);
+
+            long customerCount = 0;
+            if (branchCustomers.containsKey(bId)) {
+                customerCount = branchCustomers.get(bId).size();
+            }
+
+            String currency = branchCurrency.getOrDefault(bId, "");
+
+            double prevRev = previousRevenue.getOrDefault(bId, 0.0);
+            double growthRate = 0.0;
+            if (prevRev > 0) {
+                growthRate = AccountUtil.round(((revenue - prevRev) / prevRev) * 100);
+            } else if (prevRev <= 0 && revenue > 0) {
+                growthRate = 100.0;
+            }
+
+            result.add(new BestPerformingBranchDTO(bId, revenue, profit, currency, customerCount, growthRate));
+        }
+
+        // Sort descending by highest profit
+        result.sort((b1, b2) -> Double.compare(b2.getProfit(), b1.getProfit()));
 
         return result;
     }

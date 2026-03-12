@@ -6,6 +6,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import com.irestaurant.iPortalAPI.dto.AuthResponse;
+import com.irestaurant.iPortalAPI.dto.BestPerformingBranchDTO;
+import com.irestaurant.iPortalAPI.dto.BestPerformingBranchRequest;
 import com.irestaurant.iPortalAPI.dto.BranchComparisonDTO;
 import com.irestaurant.iPortalAPI.dto.BranchComparisonRequest;
 import com.irestaurant.iPortalAPI.dto.DbRequest;
@@ -152,15 +154,38 @@ public class OrderController {
             // Extract email from the JWT "email" claim
             String token = headerAccessor.getFirstNativeHeader("Authorization");
             String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));
-            List<BranchComparisonDTO> comparison = orderService.getBranchComparison(email, request.getBranchName(), request.getStartDate(), request.getEndDate());
+            List<BranchComparisonDTO> comparison = orderService.getBranchComparison(email, request.getBranchName(),
+                    request.getStartDate(), request.getEndDate());
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/branch-comparison",
-                                                   new AuthResponse<>("1", null, "", null, comparison));
+                    new AuthResponse<>("1", null, "", null, comparison));
 
         } catch (Exception e) {
             logger.error("Error retrieving branch comparison for branch '{}': {}",
                     request.getBranchName(), e.getMessage(), e);
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/branch-comparison",
-                                                   new AuthResponse<>("-1", null, "Error retrieving branch comparison", null, null));
+                    new AuthResponse<>("-1", null, "Error retrieving branch comparison", null, null));
+        }
+    }
+
+    @MessageMapping("/order.getBestPerformingBranch")
+    @RequireJwt(role = "User")
+    @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/best-performing-branch", description = "Response channel for best performing branch"))
+    public void getBestPerformingBranch(@Valid @Payload BestPerformingBranchRequest request, SimpMessageHeaderAccessor headerAccessor) {
+        String sessionId = headerAccessor.getSessionId();
+        try {
+            // Extract email from the JWT "email" claim
+            String token = headerAccessor.getFirstNativeHeader("Authorization");
+            String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));
+            List<BestPerformingBranchDTO> result = orderService.getBestPerformingBranch(email, request.getBranchName(), request.getStartDate(), request.getEndDate());
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/best-performing-branch",
+                                                   new AuthResponse<>("1", null, "", null, result));
+
+        } catch (Exception e) {
+            logger.error("Error retrieving best performing branch for branch '{}': {}",
+                    request.getBranchName(), e.getMessage(), e);
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/best-performing-branch",
+                                                   new AuthResponse<>("-1", null, "Error retrieving best performing branch", null, null));
         }
     }
 }
