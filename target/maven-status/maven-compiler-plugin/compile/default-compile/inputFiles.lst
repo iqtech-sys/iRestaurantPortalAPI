@@ -52,7 +52,6 @@ C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\jav
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\exception\InvalidToken_1201.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\objectbox\model\OrderItem.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\service\EmailService.java
-C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\service\SyncJobService.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\dto\StandardComplianceMetricsDTO.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\enumerators\OrderTypes.java
 C:\Data\Freelancing\iRestaurant\App\Prod\iPortalAPI-Prod\iPortalAPI\src\main\java\com\irestaurant\iPortalAPI\dto\SalesGadgetsRequest.java
