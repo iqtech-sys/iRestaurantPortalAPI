@@ -6,6 +6,7 @@ import com.irestaurant.iPortalAPI.dto.PerformanceHeatmapRequest;
 import com.irestaurant.iPortalAPI.dto.SalesGadgetsDTO;
 import com.irestaurant.iPortalAPI.dto.SalesGadgetsRequest;
 import com.irestaurant.iPortalAPI.security.RequireJwt;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import com.irestaurant.iPortalAPI.service.AccountService;
 import com.irestaurant.iPortalAPI.util.JwtUtil;
 import java.util.List;
@@ -37,12 +38,12 @@ public class AccountController {
         @Autowired
         private SimpMessagingTemplate messagingTemplate;
 
-        @MessageMapping("/account.getSalesGadgets")
+        @MessageMapping("/account.salesGadgets")
         @RequireJwt(role = "User")
+        @RateLimiter(name = "account")
         @Async(value = "backgroundTaskExecutor")
         @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/sales-gadgets", description = "Response channel for sales gadgets"))
-        public void getSalesGadgets(@Valid @Payload SalesGadgetsRequest request,
-                        SimpMessageHeaderAccessor headerAccessor) {
+        public void getSalesGadgets(@Valid @Payload SalesGadgetsRequest request, SimpMessageHeaderAccessor headerAccessor) {
                 String sessionId = headerAccessor.getSessionId();
                 try {
                         // Extract email from the JWT "email" claim
@@ -71,12 +72,12 @@ public class AccountController {
                 }
         }
 
-        @MessageMapping("/account.getPerformanceHeatmap")
+        @MessageMapping("/account.performanceHeatmap")
         @RequireJwt(role = "User")
+        @RateLimiter(name = "account")
         @Async(value = "backgroundTaskExecutor")
         @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/performance-heatmap", description = "Response channel for performance heatmap"))
-        public void getPerformanceHeatmap(@Valid @Payload PerformanceHeatmapRequest request,
-                        SimpMessageHeaderAccessor headerAccessor) {
+        public void getPerformanceHeatmap(@Valid @Payload PerformanceHeatmapRequest request, SimpMessageHeaderAccessor headerAccessor) {
                 String sessionId = headerAccessor.getSessionId();
                 try {
                         // Extract email from the JWT "email" claim

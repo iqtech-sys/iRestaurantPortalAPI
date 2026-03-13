@@ -18,6 +18,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
 import com.irestaurant.iPortalAPI.security.RequireJwt;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import java.security.Principal;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -54,10 +55,10 @@ public class AuthController {
      */
     @MessageMapping("/auth.register")
     @RequireJwt(role = "User")
+    @RateLimiter(name = "authenticate")
     @Async(value = "backgroundTaskExecutor")
     @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/register", description = "Response channel for registration via STOMP"))
-    public void register(@Valid @Payload RegisterRequest request, SimpMessageHeaderAccessor headerAccessor,
-            Principal principal) {
+    public void register(@Valid @Payload RegisterRequest request, SimpMessageHeaderAccessor headerAccessor, Principal principal) {
         String sessionId = headerAccessor.getSessionId();
         logger.info("Secured registration by user: {}", principal != null ? principal.getName() : "anonymous");
         try {
@@ -87,6 +88,7 @@ public class AuthController {
      * @param headerAccessor
      */
     @MessageMapping("/auth.login")
+    @RateLimiter(name = "authenticate")
     @Async(value = "backgroundTaskExecutor")
     @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/login", description = "Response channel for login via STOMP"))
     public void login(@Valid @Payload LoginRequest request, SimpMessageHeaderAccessor headerAccessor) {
@@ -119,10 +121,10 @@ public class AuthController {
      * @param headerAccessor
      */
     @MessageMapping("/auth.forgot-password")
+    @RateLimiter(name = "authenticate")
     @Async(value = "backgroundTaskExecutor")
     @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/forgot-password", description = "Response channel for forgot password result"))
-    public void forgotPassword(@Valid @Payload ForgotPasswordRequest request,
-            SimpMessageHeaderAccessor headerAccessor) {
+    public void forgotPassword(@Valid @Payload ForgotPasswordRequest request, SimpMessageHeaderAccessor headerAccessor) {
         String sessionId = headerAccessor.getSessionId();
         try {
             userService.processForgotPassword(request.getEmail(), request.getLanguage());
@@ -142,10 +144,10 @@ public class AuthController {
      * @param headerAccessor
      */
     @MessageMapping("/auth.reset-password")
+    @RateLimiter(name = "authenticate")
     @Async(value = "backgroundTaskExecutor")
     @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/reset-password", description = "Response channel for reset password result"))
-    public void resetPassword(@Valid @Payload ResetPasswordRequest request,
-            SimpMessageHeaderAccessor headerAccessor) {
+    public void resetPassword(@Valid @Payload ResetPasswordRequest request, SimpMessageHeaderAccessor headerAccessor) {
         String sessionId = headerAccessor.getSessionId();
         try {
             userService.processResetPassword(request.getToken(), request.getNewPassword());

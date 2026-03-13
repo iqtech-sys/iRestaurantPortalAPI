@@ -9,6 +9,7 @@ com\irestaurant\iPortalAPI\objectbox\model\User_$6.class
 com\irestaurant\iPortalAPI\config\WebSocketConfig.class
 com\irestaurant\iPortalAPI\objectbox\model\SettingCursor$Factory.class
 com\irestaurant\iPortalAPI\objectbox\model\LogEvent.class
+com\irestaurant\iPortalAPI\dto\CentralizedMenuPerformanceDTO.class
 com\irestaurant\iPortalAPI\enumerators\DeliveryBys.class
 com\irestaurant\iPortalAPI\objectbox\model\Order_$4.class
 com\irestaurant\iPortalAPI\dto\PerformanceHeatmapDTO.class
@@ -42,6 +43,7 @@ com\irestaurant\iPortalAPI\service\EmailService.class
 com\irestaurant\iPortalAPI\service\OrderService.class
 com\irestaurant\iPortalAPI\objectbox\model\Category_$1.class
 com\irestaurant\iPortalAPI\objectbox\model\User_$1.class
+com\irestaurant\iPortalAPI\dto\StandardComplianceMetricsRequest.class
 com\irestaurant\iPortalAPI\enumerators\Usecases.class
 com\irestaurant\iPortalAPI\enumerators\UserTypes.class
 com\irestaurant\iPortalAPI\objectbox\model\AccountCursor$Factory.class
@@ -62,6 +64,7 @@ com\irestaurant\iPortalAPI\objectbox\model\Setting.class
 com\irestaurant\iPortalAPI\objectbox\model\TableCursor$Factory.class
 com\irestaurant\iPortalAPI\dto\ForgotPasswordRequest.class
 com\irestaurant\iPortalAPI\exception\BaseException.class
+com\irestaurant\iPortalAPI\dto\StandardComplianceMetricsDTO.class
 com\irestaurant\iPortalAPI\objectbox\model\OrderEntry_.class
 com\irestaurant\iPortalAPI\controller\AccountController.class
 com\irestaurant\iPortalAPI\objectbox\model\Entry.class
@@ -164,6 +167,7 @@ com\irestaurant\iPortalAPI\objectbox\model\Invoice_$2.class
 com\irestaurant\iPortalAPI\objectbox\model\OrderEntryCursor.class
 com\irestaurant\iPortalAPI\objectbox\model\Product_$3.class
 com\irestaurant\iPortalAPI\objectbox\model\Notification_$2.class
+com\irestaurant\iPortalAPI\exception\GlobalWebSocketExceptionHandler.class
 com\irestaurant\iPortalAPI\objectbox\model\Category_.class
 com\irestaurant\iPortalAPI\objectbox\model\User.class
 com\irestaurant\iPortalAPI\dto\BranchComparisonRequest.class
@@ -199,6 +203,7 @@ com\irestaurant\iPortalAPI\objectbox\model\Kitchen.class
 com\irestaurant\iPortalAPI\repository\UserRepository.class
 com\irestaurant\iPortalAPI\objectbox\model\OrderEntry_$3.class
 com\irestaurant\iPortalAPI\service\AccountService.class
+com\irestaurant\iPortalAPI\dto\CentralizedMenuPerformanceRequest.class
 com\irestaurant\iPortalAPI\objectbox\model\DeliveryCursor.class
 com\irestaurant\iPortalAPI\objectbox\model\OrderItem_$1.class
 com\irestaurant\iPortalAPI\objectbox\model\User_$4.class

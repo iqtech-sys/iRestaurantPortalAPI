@@ -9,6 +9,10 @@ import com.irestaurant.iPortalAPI.dto.AuthResponse;
 import com.irestaurant.iPortalAPI.dto.BestPerformingBranchDTO;
 import com.irestaurant.iPortalAPI.dto.BestPerformingBranchRequest;
 import com.irestaurant.iPortalAPI.dto.BranchComparisonDTO;
+import com.irestaurant.iPortalAPI.dto.CentralizedMenuPerformanceDTO;
+import com.irestaurant.iPortalAPI.dto.CentralizedMenuPerformanceRequest;
+import com.irestaurant.iPortalAPI.dto.StandardComplianceMetricsDTO;
+import com.irestaurant.iPortalAPI.dto.StandardComplianceMetricsRequest;
 import com.irestaurant.iPortalAPI.dto.BranchComparisonRequest;
 import com.irestaurant.iPortalAPI.dto.DbRequest;
 import com.irestaurant.iPortalAPI.dto.RecentOrderDTO;
@@ -16,6 +20,7 @@ import com.irestaurant.iPortalAPI.dto.RecentOrdersRequest;
 import com.irestaurant.iPortalAPI.dto.TopItemDTO;
 import com.irestaurant.iPortalAPI.dto.TopItemsRequest;
 import com.irestaurant.iPortalAPI.security.RequireJwt;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import com.irestaurant.iPortalAPI.service.OrderService;
 import com.irestaurant.iPortalAPI.util.JwtUtil;
 import io.github.springwolf.core.asyncapi.annotations.AsyncPublisher;
@@ -52,6 +57,7 @@ public class OrderController {
      */
     @MessageMapping("/order.branches")
     @RequireJwt(role = "User")
+    @RateLimiter(name = "order")
     @Async(value = "backgroundTaskExecutor")
     @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/order-branches", description = "Response channel for unique branch IDs"))
     public void getUniqueBranchIds(@Valid @Payload DbRequest request, SimpMessageHeaderAccessor headerAccessor) {
@@ -94,8 +100,9 @@ public class OrderController {
      * @param request        the STOMP payload containing branchName and limit
      * @param headerAccessor provides the session ID and Authorization header
      */
-    @MessageMapping("/order.getRecentOrders")
+    @MessageMapping("/order.recentOrders")
     @RequireJwt(role = "User")
+    @RateLimiter(name = "order")
     @Async(value = "backgroundTaskExecutor")
     @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/recent-orders", description = "Response channel for recent orders"))
     public void getRecentOrders(@Valid @Payload RecentOrdersRequest request, SimpMessageHeaderAccessor headerAccessor) {
@@ -119,8 +126,9 @@ public class OrderController {
         }
     }
 
-    @MessageMapping("/order.getTopItems")
+    @MessageMapping("/order.topItems")
     @RequireJwt(role = "User")
+    @RateLimiter(name = "order")
     @Async(value = "backgroundTaskExecutor")
     @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/top-items", description = "Response channel for top items"))
     public void getTopItems(@Valid @Payload TopItemsRequest request, SimpMessageHeaderAccessor headerAccessor) {
@@ -146,6 +154,7 @@ public class OrderController {
 
     @MessageMapping("/order.getBranchComparison")
     @RequireJwt(role = "User")
+    @RateLimiter(name = "order")
     @Async(value = "backgroundTaskExecutor")
     @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/branch-comparison", description = "Response channel for branch comparison"))
     public void getBranchComparison(@Valid @Payload BranchComparisonRequest request, SimpMessageHeaderAccessor headerAccessor) {
@@ -167,8 +176,9 @@ public class OrderController {
         }
     }
 
-    @MessageMapping("/order.getBestPerformingBranch")
+    @MessageMapping("/order.bestPerformingBranch")
     @RequireJwt(role = "User")
+    @RateLimiter(name = "order")
     @Async(value = "backgroundTaskExecutor")
     @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/best-performing-branch", description = "Response channel for best performing branch"))
     public void getBestPerformingBranch(@Valid @Payload BestPerformingBranchRequest request, SimpMessageHeaderAccessor headerAccessor) {
@@ -186,6 +196,50 @@ public class OrderController {
                     request.getBranchName(), e.getMessage(), e);
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/best-performing-branch",
                                                    new AuthResponse<>("-1", null, "Error retrieving best performing branch", null, null));
+        }
+    }
+
+    @MessageMapping("/order.standardComplianceMetrics")
+    @RequireJwt(role = "User")
+    @RateLimiter(name = "order")
+    @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/standard-compliance-metrics", description = "Response channel for standard compliance metrics"))
+    public void getStandardComplianceMetrics(@Valid @Payload StandardComplianceMetricsRequest request, SimpMessageHeaderAccessor headerAccessor) {
+        String sessionId = headerAccessor.getSessionId();
+        try {
+            String token = headerAccessor.getFirstNativeHeader("Authorization");
+            String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));
+            List<StandardComplianceMetricsDTO> result = orderService.getStandardComplianceMetrics(email, request.getBranchName(), request.getStartDate(), request.getEndDate());
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/standard-compliance-metrics",
+                                                   new AuthResponse<>("1", null, "", null, result));
+
+        } catch (Exception e) {
+            logger.error("Error retrieving standard compliance metrics for branch '{}': {}",
+                    request.getBranchName(), e.getMessage(), e);
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/standard-compliance-metrics",
+                                                   new AuthResponse<>("-1", null, "Error retrieving standard compliance metrics", null, null));
+        }
+    }
+
+    @MessageMapping("/order.cetralizedMenuPerformance")
+    @RequireJwt(role = "User")
+    @RateLimiter(name = "order")
+    @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/centralized-menu-performance", description = "Response channel for centralized menu performance"))
+    public void getCetralizedMenuPerformance(@Valid @Payload CentralizedMenuPerformanceRequest request, SimpMessageHeaderAccessor headerAccessor) {
+        String sessionId = headerAccessor.getSessionId();
+        try {
+            String token = headerAccessor.getFirstNativeHeader("Authorization");
+            String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));
+            List<CentralizedMenuPerformanceDTO> result = orderService.getCetralizedMenuPerformance(email, request.getBranchName(), request.getStartDate(), request.getEndDate());
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/centralized-menu-performance",
+                                                   new AuthResponse<>("1", null, "", null, result));
+
+        } catch (Exception e) {
+            logger.error("Error retrieving centralized menu performance for branch '{}': {}",
+                    request.getBranchName(), e.getMessage(), e);
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/centralized-menu-performance",
+                                                   new AuthResponse<>("-1", null, "Error retrieving centralized menu performance", null, null));
         }
     }
 }

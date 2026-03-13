@@ -3,7 +3,6 @@ package com.irestaurant.iPortalAPI.service;
 import com.irestaurant.iPortalAPI.converter.OrderStatusesConverter;
 import com.irestaurant.iPortalAPI.dto.RecentOrderDTO;
 import com.irestaurant.iPortalAPI.dto.TopItemDTO;
-//import com.irestaurant.iPortalAPI.enumerators.OrderStatuses;
 import com.irestaurant.iPortalAPI.objectbox.model.Category;
 import com.irestaurant.iPortalAPI.objectbox.model.Order;
 import com.irestaurant.iPortalAPI.objectbox.model.Order_;
@@ -15,7 +14,6 @@ import com.irestaurant.iPortalAPI.util.SyncManager;
 import com.irestaurant.iPortalAPI.util.AccountUtil;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
-//import io.objectbox.query.OrderFlags;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
 import org.springframework.stereotype.Service;
@@ -30,6 +28,8 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 import com.irestaurant.iPortalAPI.dto.BranchComparisonDTO;
 import com.irestaurant.iPortalAPI.dto.BestPerformingBranchDTO;
+import com.irestaurant.iPortalAPI.dto.StandardComplianceMetricsDTO;
+import com.irestaurant.iPortalAPI.dto.CentralizedMenuPerformanceDTO;
 import com.irestaurant.iPortalAPI.objectbox.model.Invoice;
 import com.irestaurant.iPortalAPI.objectbox.model.Invoice_;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -420,6 +420,141 @@ public class OrderService {
 
         // Sort descending by highest profit
         result.sort((b1, b2) -> Double.compare(b2.getProfit(), b1.getProfit()));
+
+        return result;
+    }
+
+    public List<StandardComplianceMetricsDTO> getStandardComplianceMetrics(String email, String branchName, Date startDate, Date endDate) {
+        BoxStore store = SyncManager.init(email);
+        Box<Order> orderBox = store.boxFor(Order.class);
+
+        QueryBuilder<Order> orderQb = orderBox.query();
+        if (startDate != null && endDate != null) {
+            orderQb = orderQb.between(Order_.createdDate, startDate, endDate);
+        }
+        if (branchName != null && !branchName.isBlank()) {
+            orderQb = orderQb.equal(Order_.branchId, branchName, io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
+        }
+        List<Order> allOrders = orderQb.build().find();
+
+        Map<String, List<Order>> branchOrdersMap = allOrders.stream()
+                                                            .filter(o -> o.getBranchId() != null && !o.getBranchId().isBlank())
+                                                            .collect(Collectors.groupingBy(Order::getBranchId));
+
+        List<StandardComplianceMetricsDTO> result = new ArrayList<>();
+
+        for (Map.Entry<String, List<Order>> entry : branchOrdersMap.entrySet()) {
+            String bId = entry.getKey();
+            List<Order> bOrders = entry.getValue();
+
+            long totalPreparationTime = 0;
+            long totalDeliveryTime = 0;
+            int prepTimeCount = 0;
+            int deliveryTimeCount = 0;
+
+            for (Order o : bOrders) {
+                // Average orders time (Preparation time mapping, converted appropriately to milliseconds if needed)
+                if (o.getPreparationTime() > 0) {
+                    totalPreparationTime += o.getPreparationTime();
+                    prepTimeCount++;
+                }
+
+                if (o.getCreatedDate() != null && o.getDeliveredDate() != null) {
+                    long deliveryDuration = o.getDeliveredDate().getTime() - o.getCreatedDate().getTime();
+                    if (deliveryDuration > 0) {
+                        totalDeliveryTime += deliveryDuration;
+                        deliveryTimeCount++;
+                    }
+                }
+            }
+
+            long avgPreparationTime = prepTimeCount > 0 ? (totalPreparationTime / prepTimeCount) : 0;
+            long avgDeliveryTime = deliveryTimeCount > 0 ? (totalDeliveryTime / deliveryTimeCount) : 0;
+
+            // Compliance means does the average orders deliveredDate were less or equals to the average orders time
+            // Compare millisecond scale or minute scale (Depends on preparationTime storage unit in DB). 
+            // Assuming preparationTime is in milliseconds like Date time. If not, multiply by 60000.
+            // Adjusting based on standard milliseconds assumption. Adjust if preparationTime is stored in minutes.
+            boolean compliance = false;
+            
+            // Assuming getPreparationTime is in Minutes because it's a typical configuration property
+            long avgPreparationTimeMs = avgPreparationTime * 60000L;
+
+            // Alternatively, strictly translating the user's logic: 
+            // "average orders deliveredDate were less or equals to the average orders time"
+            // Let's compare directly avgDeliveryTime <= avgPreparationTimeMs
+            if (avgPreparationTime > 0 && avgDeliveryTime > 0) {
+                 if (avgDeliveryTime <= avgPreparationTimeMs) {
+                     compliance = true;
+                 }
+            }
+
+            result.add(new StandardComplianceMetricsDTO(bId, avgPreparationTime, compliance));
+        }
+
+        return result;
+    }
+
+    public List<CentralizedMenuPerformanceDTO> getCetralizedMenuPerformance(String email, String branchName, Date startDate, Date endDate) {
+        BoxStore store = SyncManager.init(email);
+        Box<OrderItem> orderItemBox = store.boxFor(OrderItem.class);
+
+        QueryBuilder<OrderItem> itemQb = orderItemBox.query();
+        QueryBuilder<Order> orderQb = itemQb.link(OrderItem_.order);
+
+        if (branchName != null && !branchName.isBlank()) {
+            orderQb.equal(Order_.branchId, branchName, io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
+        }
+        if (startDate != null && endDate != null) {
+            orderQb.between(Order_.createdDate, startDate, endDate);
+        }
+        
+        List<OrderItem> allItems = itemQb.build().find();
+        
+        // Group by product title
+        Map<String, List<OrderItem>> groupedByTitle = allItems.stream()
+                                                              .filter(item -> item.getSnapshot_title() != null && !item.getSnapshot_title().isBlank())
+                                                              .collect(Collectors.groupingBy(OrderItem::getSnapshot_title));
+
+        List<CentralizedMenuPerformanceDTO> result = new ArrayList<>();
+
+        for (Map.Entry<String, List<OrderItem>> titleEntry : groupedByTitle.entrySet()) {
+            String menuItem = titleEntry.getKey();
+            List<OrderItem> titleItems = titleEntry.getValue();
+            
+            Map<String, List<OrderItem>> itemsByBranch = titleItems.stream()
+                                                                   .filter(i -> i.getBranchId() != null && !i.getBranchId().isBlank())
+                                                                   .collect(Collectors.groupingBy(OrderItem::getBranchId));
+
+            double overallTotalSales = 0.0;
+            String bestBranch = "N/A";
+            String worstBranch = "N/A";
+            double maxSales = -1.0;
+            double minSales = Double.MAX_VALUE;
+
+            for (Map.Entry<String, List<OrderItem>> branchEntry : itemsByBranch.entrySet()) {
+                 String bId = branchEntry.getKey();
+                 
+                 double branchSales = calculateSubtotal(branchEntry.getValue());
+                 double taxR = branchEntry.getValue().isEmpty() ? 0.0 : branchEntry.getValue().get(0).getSnapshot_taxRate();
+                 double bTax = AccountUtil.calculateTax(branchSales, taxR);
+                 double bTotal = AccountUtil.calculateTotal(branchSales, bTax);
+                 
+                 overallTotalSales += bTotal;
+                 
+                 if (bTotal > maxSales) { maxSales = bTotal; bestBranch = bId; }
+                 if (bTotal < minSales) { minSales = bTotal; worstBranch = bId; }
+            }
+            
+            if (minSales == Double.MAX_VALUE) {
+                minSales = 0.0;
+            }
+
+            result.add(new CentralizedMenuPerformanceDTO(menuItem, overallTotalSales, bestBranch, worstBranch));
+        }
+
+        // Sort by total sales descending
+        result.sort((a, b) -> Double.compare(b.getTotalSales(), a.getTotalSales()));
 
         return result;
     }
