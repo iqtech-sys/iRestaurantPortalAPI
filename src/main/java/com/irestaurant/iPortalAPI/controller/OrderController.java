@@ -152,7 +152,7 @@ public class OrderController {
         }
     }
 
-    @MessageMapping("/order.getBranchComparison")
+    @MessageMapping("/order.branchComparison")
     @RequireJwt(role = "User")
     @RateLimiter(name = "order")
     @Async(value = "backgroundTaskExecutor")
@@ -163,16 +163,15 @@ public class OrderController {
             // Extract email from the JWT "email" claim
             String token = headerAccessor.getFirstNativeHeader("Authorization");
             String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));
-            List<BranchComparisonDTO> comparison = orderService.getBranchComparison(email, request.getBranchName(),
-                    request.getStartDate(), request.getEndDate());
+            List<BranchComparisonDTO> comparison = orderService.getBranchComparison(email, request.getBranchName(), request.getStartDate(), request.getEndDate());
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/branch-comparison",
-                    new AuthResponse<>("1", null, "", null, comparison));
+                                                   new AuthResponse<>("1", null, "", null, comparison));
 
         } catch (Exception e) {
             logger.error("Error retrieving branch comparison for branch '{}': {}",
                     request.getBranchName(), e.getMessage(), e);
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/branch-comparison",
-                    new AuthResponse<>("-1", null, "Error retrieving branch comparison", null, null));
+                                                   new AuthResponse<>("-1", null, "Error retrieving branch comparison", null, null));
         }
     }
 

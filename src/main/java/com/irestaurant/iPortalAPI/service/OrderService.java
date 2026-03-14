@@ -206,8 +206,7 @@ public class OrderService {
         return result;
     }
 
-    public List<BranchComparisonDTO> getBranchComparison(String email, String branchName, Date startDate,
-            Date endDate) {
+    public List<BranchComparisonDTO> getBranchComparison(String email, String branchName, Date startDate, Date endDate) {
         BoxStore store = SyncManager.init(email);
         Box<Order> orderBox = store.boxFor(Order.class);
         Box<Invoice> invoiceBox = store.boxFor(Invoice.class);
@@ -373,8 +372,7 @@ public class OrderService {
             Date prevStartDate = new Date(startDate.getTime() - durationPlusDay);
             Date prevEndDate = new Date(startDate.getTime() - 1000L); // 1 sec before
 
-            QueryBuilder<Invoice> prevInvoiceQb = invoiceBox.query().between(Invoice_.createdDate, prevStartDate,
-                    prevEndDate);
+            QueryBuilder<Invoice> prevInvoiceQb = invoiceBox.query().between(Invoice_.createdDate, prevStartDate, prevEndDate);
             if (branchName != null && !branchName.isBlank()) {
                 prevInvoiceQb = prevInvoiceQb.equal(Invoice_.branchId, branchName,
                         io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
