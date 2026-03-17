@@ -1,13 +1,10 @@
 package com.irestaurant.iPortalAPI.objectbox.model;
 
-import com.irestaurant.iPortalAPI.converter.LocalDateTimeConverter;
 import com.irestaurant.iPortalAPI.enumerators.OrderTypes;
-import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.annotation.Sync;
 import io.objectbox.relation.ToOne;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Sync
