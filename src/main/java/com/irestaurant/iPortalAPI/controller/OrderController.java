@@ -69,8 +69,8 @@ public class OrderController {
             String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));// strip "Bearer "
             //
             List<String> branchIds = orderService.getUniqueBranchIds(email);
-            messagingTemplate.convertAndSendToUser(sessionId, "/queue/order-branches",
-                    new AuthResponse<List<String>>("1", null, "", null, branchIds));
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/order-branches", 
+                                                   new AuthResponse<List<String>>("1", null, "", null, branchIds));
         } catch (Exception e) {
             logger.error("Error retrieving the unique branches: {}", e.getMessage(), e);
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/order-branches",
@@ -112,17 +112,16 @@ public class OrderController {
             String token = headerAccessor.getFirstNativeHeader("Authorization");
             String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));// strip "Bearer "
             //
-            List<RecentOrderDTO> recentOrders = orderService.getRecentOrders(email, request.getBranchName(),
-                    request.getLimit());
+            List<RecentOrderDTO> recentOrders = orderService.getRecentOrders(email, request.getBranchName(), request.getLimit());
             //
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/recent-orders",
-                    new AuthResponse<>("1", null, "", null, recentOrders));
+                                                   new AuthResponse<>("1", null, "", null, recentOrders));
 
         } catch (Exception e) {
             logger.error("Error retrieving recent orders for branch '{}': {}",
                     request.getBranchName(), e.getMessage(), e);
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/recent-orders",
-                    new AuthResponse<>("-1", null, "Error retrieving recent orders", null, null));
+                                                   new AuthResponse<>("-1", null, "Error retrieving recent orders", null, null));
         }
     }
 
@@ -139,16 +138,16 @@ public class OrderController {
             String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));
 
             List<TopItemDTO> topItems = orderService.getTopItems(email, request.getBranchName(), request.getStartDate(),
-                    request.getEndDate(), request.getTopX());
+                                                                 request.getEndDate(), request.getTopX());
 
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/top-items",
-                    new AuthResponse<>("1", null, "", null, topItems));
+                                                   new AuthResponse<>("1", null, "", null, topItems));
 
         } catch (Exception e) {
             logger.error("Error retrieving top items for branch '{}': {}",
                     request.getBranchName(), e.getMessage(), e);
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/top-items",
-                    new AuthResponse<>("-1", null, "Error retrieving top items", null, null));
+                                                   new AuthResponse<>("-1", null, "Error retrieving top items", null, null));
         }
     }
 

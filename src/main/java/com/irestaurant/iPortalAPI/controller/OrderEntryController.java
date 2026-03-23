@@ -79,8 +79,8 @@ public class OrderEntryController {
 
         } catch (Exception e) {
             logger.error("Error retrieving top performing waiters for branch '{}': {}", request.getBranchName(), e.getMessage(), e);
-            messagingTemplate.convertAndSendToUser(sessionId, "/queue/top-performing-waiters",
-                    new AuthResponse<>("-1", null, "Error retrieving top performing waiters", null, null));
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/top-performing-waiters", 
+                                                   new AuthResponse<>("-1", null, "Error retrieving top performing waiters", null, null));
         }
     }
     
@@ -98,13 +98,12 @@ public class OrderEntryController {
             List<TimeConsumedOrderDTO> result = orderEntryService.getTopMostTimeConsumedOrders(
                     email, request.getBranchName(), request.getStartDate(), request.getEndDate(), request.getTopX());
 
-            messagingTemplate.convertAndSendToUser(sessionId, "/queue/top-most-time-consumed-orders",
-                    new AuthResponse<>("1", null, "", null, result));
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/top-most-time-consumed-orders", new AuthResponse<>("1", null, "", null, result));
 
         } catch (Exception e) {
             logger.error("Error retrieving top most time consumed orders for branch '{}': {}", request.getBranchName(), e.getMessage(), e);
-            messagingTemplate.convertAndSendToUser(sessionId, "/queue/top-most-time-consumed-orders",
-                    new AuthResponse<>("-1", null, "Error retrieving top most time consumed orders", null, null));
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/top-most-time-consumed-orders", 
+                                                   new AuthResponse<>("-1", null, "Error retrieving top most time consumed orders", null, null));
         }
     }
 }
