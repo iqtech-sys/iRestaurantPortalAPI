@@ -28,6 +28,7 @@ public final class ProductCursor extends Cursor<Product> {
 
     private final static int __ID_title = Product_.title.id;
     private final static int __ID_price = Product_.price.id;
+    private final static int __ID_costPrice = Product_.costPrice.id;
     private final static int __ID_rating = Product_.rating.id;
     private final static int __ID_image = Product_.image.id;
     private final static int __ID_description = Product_.description.id;
@@ -67,27 +68,27 @@ public final class ProductCursor extends Cursor<Product> {
         String title = entity.title;
         int __id1 = title != null ? __ID_title : 0;
         String description = entity.description;
-        int __id5 = description != null ? __ID_description : 0;
+        int __id6 = description != null ? __ID_description : 0;
         String branchId = entity.branchId;
-        int __id9 = branchId != null ? __ID_branchId : 0;
+        int __id10 = branchId != null ? __ID_branchId : 0;
         byte[] image = entity.image;
-        int __id4 = image != null ? __ID_image : 0;
+        int __id5 = image != null ? __ID_image : 0;
         java.util.Date createdDate = entity.createdDate;
-        int __id10 = createdDate != null ? __ID_createdDate : 0;
+        int __id11 = createdDate != null ? __ID_createdDate : 0;
 
         collect313311(cursor, 0, PUT_FLAG_FIRST,
-                __id1, title, __id5, description,
-                __id9, branchId, __id4, image,
+                __id1, title, __id6, description,
+                __id10, branchId, __id5, image,
                 __ID_preparationTime, entity.preparationTime, __ID_categoryId, entity.category.getTargetId(),
-                __id10, __id10 != 0 ? createdDate.getTime() : 0, __ID_isAvailable, entity.isAvailable ? 1 : 0,
+                __id11, __id11 != 0 ? createdDate.getTime() : 0, __ID_isAvailable, entity.isAvailable ? 1 : 0,
                 0, 0, 0, 0,
                 0, 0, __ID_price, entity.price);
 
         long __assignedId = collect002033(cursor, entity.id, PUT_FLAG_COMPLETE,
                 0, 0, 0, 0,
                 0, 0, 0, 0,
-                0, 0, __ID_rating, entity.rating,
-                __ID_calories, entity.calories, 0, 0);
+                0, 0, __ID_costPrice, entity.costPrice,
+                __ID_rating, entity.rating, __ID_calories, entity.calories);
 
         entity.id = __assignedId;
 

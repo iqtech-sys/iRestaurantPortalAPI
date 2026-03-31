@@ -33,6 +33,7 @@ public final class OrderItemCursor extends Cursor<OrderItem> {
     private final static int __ID_snapshot_id = OrderItem_.snapshot_id.id;
     private final static int __ID_snapshot_title = OrderItem_.snapshot_title.id;
     private final static int __ID_snapshot_price = OrderItem_.snapshot_price.id;
+    private final static int __ID_snapshot_costPrice = OrderItem_.snapshot_costPrice.id;
     private final static int __ID_snapshot_currency = OrderItem_.snapshot_currency.id;
     private final static int __ID_snapshot_discount = OrderItem_.snapshot_discount.id;
     private final static int __ID_snapshot_taxRate = OrderItem_.snapshot_taxRate.id;
@@ -91,26 +92,26 @@ public final class OrderItemCursor extends Cursor<OrderItem> {
         String snapshot_title = entity.snapshot_title;
         int __id7 = snapshot_title != null ? __ID_snapshot_title : 0;
         String snapshot_currency = entity.snapshot_currency;
-        int __id9 = snapshot_currency != null ? __ID_snapshot_currency : 0;
+        int __id10 = snapshot_currency != null ? __ID_snapshot_currency : 0;
         byte[] snapshot_image = entity.snapshot_image;
-        int __id14 = snapshot_image != null ? __ID_snapshot_image : 0;
+        int __id15 = snapshot_image != null ? __ID_snapshot_image : 0;
 
         collect430000(cursor, 0, PUT_FLAG_FIRST,
                 __id3, notes, __id5, branchId,
-                __id7, snapshot_title, __id9, snapshot_currency,
-                __id14, snapshot_image, 0, null,
+                __id7, snapshot_title, __id10, snapshot_currency,
+                __id15, snapshot_image, 0, null,
                 0, null);
 
         String snapshot_description = entity.snapshot_description;
-        int __id15 = snapshot_description != null ? __ID_snapshot_description : 0;
+        int __id16 = snapshot_description != null ? __ID_snapshot_description : 0;
         String snapshot_notes = entity.snapshot_notes;
-        int __id19 = snapshot_notes != null ? __ID_snapshot_notes : 0;
+        int __id20 = snapshot_notes != null ? __ID_snapshot_notes : 0;
         String snapshot_branchId = entity.snapshot_branchId;
-        int __id20 = snapshot_branchId != null ? __ID_snapshot_branchId : 0;
+        int __id21 = snapshot_branchId != null ? __ID_snapshot_branchId : 0;
 
         collect313311(cursor, 0, 0,
-                __id15, snapshot_description, __id19, snapshot_notes,
-                __id20, snapshot_branchId, 0, null,
+                __id16, snapshot_description, __id20, snapshot_notes,
+                __id21, snapshot_branchId, 0, null,
                 __ID_quantity, entity.quantity, __ID_snapshot_id, entity.snapshot_id,
                 __ID_snapshot_quantity, entity.snapshot_quantity, __ID_isDone, entity.isDone ? 1 : 0,
                 __ID_snapshot_isAvailable, entity.snapshot_isAvailable ? 1 : 0, __ID_snapshot_isDone, entity.snapshot_isDone ? 1 : 0,
@@ -120,13 +121,13 @@ public final class OrderItemCursor extends Cursor<OrderItem> {
                 __ID_snapshot_preparationTime, entity.snapshot_preparationTime, __ID_productId, entity.product.getTargetId(),
                 0, 0, 0, 0,
                 0, 0, __ID_snapshot_price, entity.snapshot_price,
-                __ID_snapshot_discount, entity.snapshot_discount, __ID_snapshot_taxRate, entity.snapshot_taxRate);
+                __ID_snapshot_costPrice, entity.snapshot_costPrice, __ID_snapshot_discount, entity.snapshot_discount);
 
         long __assignedId = collect002033(cursor, entity.id, PUT_FLAG_COMPLETE,
                 __ID_orderId, entity.order.getTargetId(), 0, 0,
                 0, 0, 0, 0,
-                0, 0, __ID_snapshot_rating, entity.snapshot_rating,
-                __ID_snapshot_calories, entity.snapshot_calories, 0, 0);
+                0, 0, __ID_snapshot_taxRate, entity.snapshot_taxRate,
+                __ID_snapshot_rating, entity.snapshot_rating, __ID_snapshot_calories, entity.snapshot_calories);
 
         entity.id = __assignedId;
 

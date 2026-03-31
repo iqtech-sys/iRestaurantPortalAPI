@@ -61,50 +61,53 @@ public final class OrderItem_ implements EntityInfo<OrderItem> {
     public final static io.objectbox.Property<OrderItem> snapshot_price =
         new io.objectbox.Property<>(__INSTANCE, 8, 9, double.class, "snapshot_price");
 
+    public final static io.objectbox.Property<OrderItem> snapshot_costPrice =
+        new io.objectbox.Property<>(__INSTANCE, 9, 25, double.class, "snapshot_costPrice");
+
     public final static io.objectbox.Property<OrderItem> snapshot_currency =
-        new io.objectbox.Property<>(__INSTANCE, 9, 10, String.class, "snapshot_currency");
+        new io.objectbox.Property<>(__INSTANCE, 10, 10, String.class, "snapshot_currency");
 
     public final static io.objectbox.Property<OrderItem> snapshot_discount =
-        new io.objectbox.Property<>(__INSTANCE, 10, 11, double.class, "snapshot_discount");
+        new io.objectbox.Property<>(__INSTANCE, 11, 11, double.class, "snapshot_discount");
 
     public final static io.objectbox.Property<OrderItem> snapshot_taxRate =
-        new io.objectbox.Property<>(__INSTANCE, 11, 12, double.class, "snapshot_taxRate");
+        new io.objectbox.Property<>(__INSTANCE, 12, 12, double.class, "snapshot_taxRate");
 
     public final static io.objectbox.Property<OrderItem> snapshot_quantity =
-        new io.objectbox.Property<>(__INSTANCE, 12, 13, long.class, "snapshot_quantity");
+        new io.objectbox.Property<>(__INSTANCE, 13, 13, long.class, "snapshot_quantity");
 
     public final static io.objectbox.Property<OrderItem> snapshot_rating =
-        new io.objectbox.Property<>(__INSTANCE, 13, 14, double.class, "snapshot_rating");
+        new io.objectbox.Property<>(__INSTANCE, 14, 14, double.class, "snapshot_rating");
 
     public final static io.objectbox.Property<OrderItem> snapshot_image =
-        new io.objectbox.Property<>(__INSTANCE, 14, 15, byte[].class, "snapshot_image");
+        new io.objectbox.Property<>(__INSTANCE, 15, 15, byte[].class, "snapshot_image");
 
     public final static io.objectbox.Property<OrderItem> snapshot_description =
-        new io.objectbox.Property<>(__INSTANCE, 15, 16, String.class, "snapshot_description");
+        new io.objectbox.Property<>(__INSTANCE, 16, 16, String.class, "snapshot_description");
 
     public final static io.objectbox.Property<OrderItem> snapshot_calories =
-        new io.objectbox.Property<>(__INSTANCE, 16, 17, double.class, "snapshot_calories");
+        new io.objectbox.Property<>(__INSTANCE, 17, 17, double.class, "snapshot_calories");
 
     public final static io.objectbox.Property<OrderItem> snapshot_preparationTime =
-        new io.objectbox.Property<>(__INSTANCE, 17, 18, long.class, "snapshot_preparationTime");
+        new io.objectbox.Property<>(__INSTANCE, 18, 18, long.class, "snapshot_preparationTime");
 
     public final static io.objectbox.Property<OrderItem> snapshot_isAvailable =
-        new io.objectbox.Property<>(__INSTANCE, 18, 19, boolean.class, "snapshot_isAvailable");
+        new io.objectbox.Property<>(__INSTANCE, 19, 19, boolean.class, "snapshot_isAvailable");
 
     public final static io.objectbox.Property<OrderItem> snapshot_notes =
-        new io.objectbox.Property<>(__INSTANCE, 19, 20, String.class, "snapshot_notes");
+        new io.objectbox.Property<>(__INSTANCE, 20, 20, String.class, "snapshot_notes");
 
     public final static io.objectbox.Property<OrderItem> snapshot_branchId =
-        new io.objectbox.Property<>(__INSTANCE, 20, 21, String.class, "snapshot_branchId");
+        new io.objectbox.Property<>(__INSTANCE, 21, 21, String.class, "snapshot_branchId");
 
     public final static io.objectbox.Property<OrderItem> snapshot_isDone =
-        new io.objectbox.Property<>(__INSTANCE, 21, 22, boolean.class, "snapshot_isDone");
+        new io.objectbox.Property<>(__INSTANCE, 22, 22, boolean.class, "snapshot_isDone");
 
     public final static io.objectbox.Property<OrderItem> productId =
-        new io.objectbox.Property<>(__INSTANCE, 22, 23, long.class, "productId", true);
+        new io.objectbox.Property<>(__INSTANCE, 23, 23, long.class, "productId", true);
 
     public final static io.objectbox.Property<OrderItem> orderId =
-        new io.objectbox.Property<>(__INSTANCE, 23, 24, long.class, "orderId", true);
+        new io.objectbox.Property<>(__INSTANCE, 24, 24, long.class, "orderId", true);
 
     @SuppressWarnings("unchecked")
     public final static io.objectbox.Property<OrderItem>[] __ALL_PROPERTIES = new io.objectbox.Property[]{
@@ -117,6 +120,7 @@ public final class OrderItem_ implements EntityInfo<OrderItem> {
         snapshot_id,
         snapshot_title,
         snapshot_price,
+        snapshot_costPrice,
         snapshot_currency,
         snapshot_discount,
         snapshot_taxRate,

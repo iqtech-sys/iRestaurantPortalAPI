@@ -24,6 +24,7 @@ public class Product {
     String title;
 
     double price;
+    double costPrice; // purchase / cost price per unit (used for COGS)
     double rating;
     byte[] image;
     String description;
@@ -71,6 +72,14 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public double getCostPrice() {
+        return costPrice;
+    }
+
+    public void setCostPrice(double costPrice) {
+        this.costPrice = costPrice;
     }
 
     public double getRating() {

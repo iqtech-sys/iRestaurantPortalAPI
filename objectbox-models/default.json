@@ -764,7 +764,7 @@
     },
     {
       "id": "13:6452217764204403033",
-      "lastPropertyId": "24:175135974760947115",
+      "lastPropertyId": "25:6643371715779958335",
       "name": "OrderItem",
       "flags": 2,
       "properties": [
@@ -894,13 +894,18 @@
           "type": 11,
           "flags": 520,
           "relationTarget": "Order"
+        },
+        {
+          "id": "25:6643371715779958335",
+          "name": "snapshot_costPrice",
+          "type": 8
         }
       ],
       "relations": []
     },
     {
       "id": "14:7034931720389230159",
-      "lastPropertyId": "12:7424373692857941373",
+      "lastPropertyId": "13:336267579065322335",
       "name": "Product",
       "flags": 2,
       "properties": [
@@ -969,6 +974,11 @@
           "type": 11,
           "flags": 520,
           "relationTarget": "Category"
+        },
+        {
+          "id": "13:336267579065322335",
+          "name": "costPrice",
+          "type": 8
         }
       ],
       "relations": [

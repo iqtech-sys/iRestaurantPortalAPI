@@ -1,6 +1,8 @@
 package com.irestaurant.iPortalAPI.service;
 
 import com.irestaurant.iPortalAPI.converter.OrderStatusesConverter;
+import com.irestaurant.iPortalAPI.dto.SalesByOrderTypeDTO;
+import com.irestaurant.iPortalAPI.enumerators.OrderTypes;
 import com.irestaurant.iPortalAPI.dto.RecentOrderDTO;
 import com.irestaurant.iPortalAPI.dto.TopItemDTO;
 import com.irestaurant.iPortalAPI.objectbox.model.Category;
@@ -17,7 +19,6 @@ import io.objectbox.BoxStore;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,12 +31,8 @@ import com.irestaurant.iPortalAPI.dto.BranchComparisonDTO;
 import com.irestaurant.iPortalAPI.dto.BestPerformingBranchDTO;
 import com.irestaurant.iPortalAPI.dto.StandardComplianceMetricsDTO;
 import com.irestaurant.iPortalAPI.dto.CentralizedMenuPerformanceDTO;
-import com.irestaurant.iPortalAPI.dto.MostDeliveriesDTO;
 import com.irestaurant.iPortalAPI.objectbox.model.Invoice;
 import com.irestaurant.iPortalAPI.objectbox.model.Invoice_;
-import com.irestaurant.iPortalAPI.objectbox.model.OrderEntry;
-import com.irestaurant.iPortalAPI.objectbox.model.OrderEntry_;
-import com.irestaurant.iPortalAPI.objectbox.model.Delivery;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
@@ -204,6 +201,70 @@ public class OrderService {
             return new TopItemDTO(name, categoryName, price, qtySold, revenueSubTotal, totalAmount);
         })
                 .sorted((a, b) -> Long.compare(b.getQtySold(), a.getQtySold()))
+                .limit(topX)
+                .collect(Collectors.toList());
+
+        return result;
+    }
+
+    public List<TopItemDTO> getLowItems(String email, String branch, Date startDate, Date endDate, int topX) {
+        BoxStore store = SyncManager.init(email);
+        Box<OrderItem> orderItemBox = store.boxFor(OrderItem.class);
+        Box<Product> productBox = store.boxFor(Product.class);
+        Box<Category> categoryBox = store.boxFor(Category.class);
+
+        // Extract filtered items based on linked matched Order conditions directly in DB!
+        QueryBuilder<OrderItem> itemQb = orderItemBox.query().order(OrderItem_.quantity, 0); // 0 = ASCENDING default
+        QueryBuilder<Order> orderQb = itemQb.link(OrderItem_.order);
+
+        if (branch != null && !branch.isBlank()) {
+            orderQb.equal(Order_.branchId, branch, io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
+        }
+        if (startDate != null && endDate != null) {
+            orderQb.between(Order_.createdDate, startDate, endDate);
+        }
+
+        List<OrderItem> allItems = itemQb.build().find(0, topX);
+        Map<String, List<OrderItem>> groupedItems = allItems.stream()
+                .filter(item -> item.getSnapshot_title() != null && !item.getSnapshot_title().isBlank())
+                .collect(Collectors.groupingBy(OrderItem::getSnapshot_title));
+
+        List<TopItemDTO> result = groupedItems.entrySet().stream().map(entry -> {
+            String name = entry.getKey();
+            List<OrderItem> items = entry.getValue();
+
+            long qtySold = items.stream().mapToLong(OrderItem::getSnapshot_quantity).sum();
+
+            double taxRate = items.isEmpty() ? 0.0 : items.get(0).getSnapshot_taxRate();
+            double revenueSubTotal = calculateSubtotal(items);
+            double tax = AccountUtil.calculateTax(revenueSubTotal, taxRate);
+            double totalAmount = AccountUtil.calculateTotal(revenueSubTotal, tax);
+
+            String categoryName = "N/A";
+            double price = 0.0;
+
+            if (!items.isEmpty()) {
+                OrderItem firstItem = items.get(0);
+                price = firstItem.getSnapshot_price(); 
+
+                long productId = firstItem.getProduct().getTargetId();
+                if (productId > 0) {
+                    Product product = productBox.get(productId);
+                    if (product != null) {
+                        long categoryId = product.getCategory().getTargetId();
+                        if (categoryId > 0) {
+                            Category category = categoryBox.get(categoryId);
+                            if (category != null && category.getTitle() != null) {
+                                categoryName = category.getTitle();
+                            }
+                        }
+                    }
+                }
+            }
+
+            return new TopItemDTO(name, categoryName, price, qtySold, revenueSubTotal, totalAmount);
+        })
+                .sorted((a, b) -> Long.compare(a.getQtySold(), b.getQtySold())) // Sort ASCENDING for low items
                 .limit(topX)
                 .collect(Collectors.toList());
 
@@ -559,5 +620,175 @@ public class OrderService {
         result.sort((a, b) -> Double.compare(b.getTotalSales(), a.getTotalSales()));
 
         return result;
+    }
+
+    /**
+     * Returns sales grouped by order type (DineIn, TakeAway, Delivery, …),
+     * sorted by gross revenue descending, limited to topX entries.
+     *
+     * @param email      authenticated user email
+     * @param branchName optional branch filter (null/blank = all branches)
+     * @param startDate  optional start of date range
+     * @param endDate    optional end of date range
+     * @param topX       maximum number of order-type rows to return
+     * @return 
+     */
+    public List<SalesByOrderTypeDTO> getSalesByOrderType(String email, String branchName,
+                                                         Date startDate, Date endDate, int topX) {
+        BoxStore store = SyncManager.init(email);
+        Box<Order>     orderBox     = store.boxFor(Order.class);
+        Box<OrderItem> orderItemBox = store.boxFor(OrderItem.class);
+
+        // Build filtered Order query
+        QueryBuilder<Order> orderQb = orderBox.query();
+        if (branchName != null && !branchName.isBlank()) {
+            orderQb = orderQb.equal(Order_.branchId, branchName,
+                    io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
+        }
+        if (startDate != null && endDate != null) {
+            orderQb = orderQb.between(Order_.createdDate, startDate, endDate);
+        }
+        List<Order> orders = orderQb.build().find();
+
+        // Accumulate per-type stats — key is the OrderTypes ordinal (long)
+        Map<Long, Long>   countMap   = new HashMap<>();
+        Map<Long, Double> revenueMap = new HashMap<>();
+
+        for (Order order : orders) {
+            long typeOrdinal = order.getOrderType();
+
+            // Fetch all items for this order
+            List<OrderItem> items = orderItemBox
+                    .query(OrderItem_.orderId.equal(order.getId()))
+                    .build().find();
+
+            double orderRevenue = calculateSubtotal(items);
+
+            countMap.merge(typeOrdinal, 1L, Long::sum);
+            revenueMap.merge(typeOrdinal, orderRevenue, Double::sum);
+        }
+
+        // Grand total revenue for percentage calculation
+        double totalRevenue = revenueMap.values().stream().mapToDouble(Double::doubleValue).sum();
+
+        // Resolve ordinal → readable label using the OrderTypes enum
+        OrderTypes[] types = OrderTypes.values();
+        List<SalesByOrderTypeDTO> result = new ArrayList<>();
+
+        for (Map.Entry<Long, Long> entry : countMap.entrySet()) {
+            long   ordinal   = entry.getKey();
+            long   count     = entry.getValue();
+            double revenue   = AccountUtil.round(revenueMap.getOrDefault(ordinal, 0.0));
+            double aov       = (count > 0) ? AccountUtil.round(revenue / count) : 0.0;
+            double pct       = (totalRevenue > 0) ? Math.round((revenue / totalRevenue) * 10000.0) / 100.0 : 0.0;
+
+            // Map the stored ordinal back to the enum label; fall back to "Unknown"
+            String label = (ordinal >= 0 && ordinal < types.length) ? types[(int) ordinal].name() : "Unknown";
+
+            result.add(new SalesByOrderTypeDTO(label, count, revenue, aov, pct));
+        }
+
+        // Sort by gross revenue descending, limit to topX
+        result.sort((a, b) -> Double.compare(b.getGrossRevenue(), a.getGrossRevenue()));
+        return result.stream().limit(topX).collect(Collectors.toList());
+    }
+
+    public List<com.irestaurant.iPortalAPI.dto.RefundOrdersDTO> getRefundOrders(String email, String branchName, Date startDate, Date endDate, int topX) {
+        BoxStore store = SyncManager.init(email);
+        Box<Order> orderBox = store.boxFor(Order.class);
+        Box<OrderItem> orderItemBox = store.boxFor(OrderItem.class);
+        Box<Product> productBox = store.boxFor(Product.class);
+        Box<Category> categoryBox = store.boxFor(Category.class);
+
+        // Fetch all orders in filters to calculate the global refund rate
+        QueryBuilder<Order> qb = orderBox.query();
+        if (startDate != null && endDate != null) {
+            qb = qb.between(Order_.createdDate, startDate, endDate);
+        }
+        if (branchName != null && !branchName.isBlank()) {
+            qb = qb.equal(Order_.branchId, branchName, io.objectbox.query.QueryBuilder.StringOrder.CASE_INSENSITIVE);
+        }
+        List<Order> allOrders = qb.build().find();
+        long overallTotalOrders = allOrders.size();
+
+        // 1. Filter only cancelled orders
+        List<Order> cancelledOrders = allOrders.stream()
+                .filter(o -> o.getOrderStatus() == com.irestaurant.iPortalAPI.enumerators.OrderStatuses.Cancelled.ordinal())
+                .collect(Collectors.toList());
+
+        // 2. Map orders by ID for fast lookup
+        Map<Long, Order> cancelledOrderIdMap = cancelledOrders.stream().collect(Collectors.toMap(Order::getId, o -> o));
+
+        // 3. Fetch all OrderItems linked to those cancelled orders
+        List<OrderItem> cancelledItems = new ArrayList<>();
+        for (Order o : cancelledOrders) {
+            cancelledItems.addAll(orderItemBox.query(OrderItem_.orderId.equal(o.getId())).build().find());
+        }
+
+        // 4. Group by: ItemTitle ||| BranchName ||| StopNote
+        Map<String, List<OrderItem>> grouped = cancelledItems.stream()
+                .filter(item -> item.getSnapshot_title() != null && !item.getSnapshot_title().isBlank())
+                .collect(Collectors.groupingBy(item -> {
+                    long oId = item.getOrder().getTargetId();
+                    Order o = cancelledOrderIdMap.get(oId);
+                    String b = (o != null && o.getBranchId() != null && !o.getBranchId().isBlank()) ? o.getBranchId() : "Unknown";
+                    String n = (o != null && o.getStopNote() != null && !o.getStopNote().isBlank()) ? o.getStopNote().trim() : "No Reason Supplied";
+                    return item.getSnapshot_title() + "|||" + b + "|||" + n;
+                }));
+
+        List<com.irestaurant.iPortalAPI.dto.RefundOrdersDTO> result = new ArrayList<>();
+
+        for (Map.Entry<String, List<OrderItem>> entry : grouped.entrySet()) {
+            String[] parts = entry.getKey().split("\\|\\|\\|");
+            String bId = parts.length > 1 ? parts[1] : "Unknown";
+            String note = parts.length > 2 ? parts[2] : "No Reason Supplied";
+            List<OrderItem> items = entry.getValue();
+
+            // Item-Level statistics (from TopItem)
+            long qtySold = items.stream().mapToLong(OrderItem::getSnapshot_quantity).sum();
+            double taxRate = items.isEmpty() ? 0.0 : items.get(0).getSnapshot_taxRate();
+            double revenueSubTotal = calculateSubtotal(items);
+            double tax = AccountUtil.calculateTax(revenueSubTotal, taxRate);
+            double totalAmount = AccountUtil.calculateTotal(revenueSubTotal, tax);
+
+            String categoryName = "N/A";
+            double price = 0.0;
+            if (!items.isEmpty()) {
+                OrderItem firstItem = items.get(0);
+                price = firstItem.getSnapshot_price(); 
+
+                long productId = firstItem.getProduct().getTargetId();
+                if (productId > 0) {
+                    Product product = productBox.get(productId);
+                    if (product != null) {
+                        long categoryId = product.getCategory().getTargetId();
+                        if (categoryId > 0) {
+                            Category category = categoryBox.get(categoryId);
+                            if (category != null && category.getTitle() != null) {
+                                categoryName = category.getTitle();
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Order-Level statistics (Refund Order logic)
+            long totalOrdersLocal = items.stream().map(i -> i.getOrder().getTargetId()).distinct().count();
+            double lostRevenue = totalAmount; // For the specific item and specific StopNote
+
+            double refundRatePercent = 0.0;
+            if (overallTotalOrders > 0) {
+                // Percentage of uniquely affected orders relative to global store orders
+                refundRatePercent = Math.round((totalOrdersLocal * 10000.0) / overallTotalOrders) / 100.0;
+            }
+
+            result.add(new com.irestaurant.iPortalAPI.dto.RefundOrdersDTO(categoryName, price, qtySold, AccountUtil.round(revenueSubTotal), AccountUtil.round(totalAmount),
+                                                                          bId, totalOrdersLocal, AccountUtil.round(lostRevenue), refundRatePercent, note));
+        }
+
+        // Sort descending by highest lost revenue quantity
+        result.sort((a, b) -> Double.compare(b.getLostRevenue(), a.getLostRevenue()));
+
+        return result.stream().limit(topX).collect(Collectors.toList());
     }
 }

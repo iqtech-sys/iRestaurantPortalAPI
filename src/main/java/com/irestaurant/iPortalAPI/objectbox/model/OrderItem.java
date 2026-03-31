@@ -25,6 +25,7 @@ public class OrderItem {
     long snapshot_id = 0;
     String snapshot_title = "";
     double snapshot_price = 0;
+    double snapshot_costPrice = 0; // snapshot of the product's cost price (COGS basis)
     String snapshot_currency = "";
     double snapshot_discount = 0;
     double snapshot_taxRate = 0;
@@ -131,6 +132,14 @@ public class OrderItem {
 
     public void setSnapshot_price(double snapshot_price) {
         this.snapshot_price = snapshot_price;
+    }
+
+    public double getSnapshot_costPrice() {
+        return snapshot_costPrice;
+    }
+
+    public void setSnapshot_costPrice(double snapshot_costPrice) {
+        this.snapshot_costPrice = snapshot_costPrice;
     }
 
     public String getSnapshot_currency() {

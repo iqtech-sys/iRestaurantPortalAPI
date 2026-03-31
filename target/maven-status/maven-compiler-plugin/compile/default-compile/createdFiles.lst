@@ -25,6 +25,7 @@ com\irestaurant\iPortalAPI\objectbox\model\NotificationCursor.class
 com\irestaurant\iPortalAPI\config\SecurityConfig$1.class
 com\irestaurant\iPortalAPI\util\JwtUtil.class
 com\irestaurant\iPortalAPI\objectbox\model\Account_$3.class
+com\irestaurant\iPortalAPI\dto\RefundOrdersRequest.class
 com\irestaurant\iPortalAPI\objectbox\model\Customer_.class
 com\irestaurant\iPortalAPI\dto\TopPerformingWaiterDTO.class
 com\irestaurant\iPortalAPI\objectbox\model\Delivery_$1.class
@@ -72,6 +73,7 @@ com\irestaurant\iPortalAPI\dto\StandardComplianceMetricsDTO.class
 com\irestaurant\iPortalAPI\objectbox\model\OrderEntry_.class
 com\irestaurant\iPortalAPI\controller\AccountController.class
 com\irestaurant\iPortalAPI\objectbox\model\Entry.class
+com\irestaurant\iPortalAPI\service\CategoryService.class
 com\irestaurant\iPortalAPI\objectbox\model\User_$10.class
 com\irestaurant\iPortalAPI\objectbox\model\Customer_$CustomerIdGetter.class
 com\irestaurant\iPortalAPI\objectbox\model\Order_$6.class
@@ -92,6 +94,7 @@ com\irestaurant\iPortalAPI\repository\RoleRepository.class
 com\irestaurant\iPortalAPI\objectbox\model\LogEvent_$1.class
 com\irestaurant\iPortalAPI\objectbox\model\Kitchen_$3.class
 com\irestaurant\iPortalAPI\objectbox\model\OrderItem_$OrderItemIdGetter.class
+com\irestaurant\iPortalAPI\dto\RefundOrdersDTO.class
 com\irestaurant\iPortalAPI\exception\InvalidCredentials_1101.class
 com\irestaurant\iPortalAPI\objectbox\model\Invoice_.class
 com\irestaurant\iPortalAPI\exception\InvalidToken_1201.class
@@ -110,11 +113,13 @@ com\irestaurant\iPortalAPI\enumerators\LogEvents.class
 com\irestaurant\iPortalAPI\objectbox\model\Kitchen_.class
 com\irestaurant\iPortalAPI\service\EmailServiceImpl.class
 com\irestaurant\iPortalAPI\dto\AuthResponse.class
+com\irestaurant\iPortalAPI\dto\SalesByOrderTypeRequest.class
 com\irestaurant\iPortalAPI\objectbox\model\Table_$TableIdGetter.class
 com\irestaurant\iPortalAPI\objectbox\model\AccountCursor.class
 com\irestaurant\iPortalAPI\dto\MostDeliveriesRequest.class
 com\irestaurant\iPortalAPI\objectbox\model\Delivery_$3.class
 com\irestaurant\iPortalAPI\objectbox\model\EntryCursor$Factory.class
+com\irestaurant\iPortalAPI\dto\SalesByCategoryRequest.class
 com\irestaurant\iPortalAPI\dto\TopItemDTO.class
 com\irestaurant\iPortalAPI\config\StompFrameFixer.class
 com\irestaurant\iPortalAPI\objectbox\model\Kitchen_$1.class
@@ -131,8 +136,10 @@ com\irestaurant\iPortalAPI\util\SyncManager.class
 com\irestaurant\iPortalAPI\objectbox\model\Notification.class
 com\irestaurant\iPortalAPI\objectbox\model\Account_$AccountIdGetter.class
 com\irestaurant\iPortalAPI\objectbox\model\User_$9.class
+com\irestaurant\iPortalAPI\controller\CategoryController.class
 com\irestaurant\iPortalAPI\objectbox\model\DeliveryCursor$Factory.class
 com\irestaurant\iPortalAPI\dto\TopTimeConsumedRequest.class
+com\irestaurant\iPortalAPI\dto\SalesByOrderTypeDTO.class
 com\irestaurant\iPortalAPI\objectbox\model\OrderItem.class
 com\irestaurant\iPortalAPI\objectbox\model\Waiter_.class
 com\irestaurant\iPortalAPI\objectbox\model\InvoiceCursor.class
@@ -179,6 +186,7 @@ com\irestaurant\iPortalAPI\objectbox\model\Category_.class
 com\irestaurant\iPortalAPI\objectbox\model\User.class
 com\irestaurant\iPortalAPI\dto\BranchComparisonRequest.class
 com\irestaurant\iPortalAPI\objectbox\model\Order_$2.class
+com\irestaurant\iPortalAPI\dto\SalesByCategoryDTO.class
 com\irestaurant\iPortalAPI\objectbox\model\Entry_$2.class
 com\irestaurant\iPortalAPI\objectbox\model\Waiter_$WaiterIdGetter.class
 com\irestaurant\iPortalAPI\dto\TopPerformingWaitersRequest.class

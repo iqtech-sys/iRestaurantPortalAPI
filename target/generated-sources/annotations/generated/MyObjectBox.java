@@ -521,7 +521,7 @@ public class MyObjectBox {
 
     private static void buildEntityOrderItem(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("OrderItem");
-        entityBuilder.id(13, 6452217764204403033L).lastPropertyId(24, 175135974760947115L);
+        entityBuilder.id(13, 6452217764204403033L).lastPropertyId(25, 6643371715779958335L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
         entityBuilder.property("id", PropertyType.Long)
@@ -543,6 +543,8 @@ public class MyObjectBox {
                 .id(8, 1352895708943488300L);
         entityBuilder.property("snapshot_price", PropertyType.Double)
                 .id(9, 1728106372026294776L);
+        entityBuilder.property("snapshot_costPrice", PropertyType.Double)
+                .id(25, 6643371715779958335L);
         entityBuilder.property("snapshot_currency", PropertyType.String)
                 .id(10, 719307822070809234L);
         entityBuilder.property("snapshot_discount", PropertyType.Double)
@@ -583,7 +585,7 @@ public class MyObjectBox {
 
     private static void buildEntityProduct(ModelBuilder modelBuilder) {
         EntityBuilder entityBuilder = modelBuilder.entity("Product");
-        entityBuilder.id(14, 7034931720389230159L).lastPropertyId(12, 7424373692857941373L);
+        entityBuilder.id(14, 7034931720389230159L).lastPropertyId(13, 336267579065322335L);
         entityBuilder.flags(io.objectbox.model.EntityFlags.USE_NO_ARG_CONSTRUCTOR | io.objectbox.model.EntityFlags.SYNC_ENABLED);
 
         entityBuilder.property("id", PropertyType.Long)
@@ -595,6 +597,8 @@ public class MyObjectBox {
                 .indexId(26, 9013051837487132902L);
         entityBuilder.property("price", PropertyType.Double)
                 .id(3, 1766952195373934047L);
+        entityBuilder.property("costPrice", PropertyType.Double)
+                .id(13, 336267579065322335L);
         entityBuilder.property("rating", PropertyType.Double)
                 .id(4, 5535787272213055380L);
         entityBuilder.property("image", PropertyType.ByteVector)

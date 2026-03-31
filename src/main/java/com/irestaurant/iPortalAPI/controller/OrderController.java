@@ -17,15 +17,17 @@ import com.irestaurant.iPortalAPI.dto.BranchComparisonRequest;
 import com.irestaurant.iPortalAPI.dto.DbRequest;
 import com.irestaurant.iPortalAPI.dto.RecentOrderDTO;
 import com.irestaurant.iPortalAPI.dto.RecentOrdersRequest;
+import com.irestaurant.iPortalAPI.dto.RefundOrdersRequest;
 import com.irestaurant.iPortalAPI.dto.TopItemDTO;
 import com.irestaurant.iPortalAPI.dto.TopItemsRequest;
+import com.irestaurant.iPortalAPI.dto.SalesByOrderTypeDTO;
+import com.irestaurant.iPortalAPI.dto.SalesByOrderTypeRequest;
 import com.irestaurant.iPortalAPI.security.RequireJwt;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import com.irestaurant.iPortalAPI.service.OrderService;
 import com.irestaurant.iPortalAPI.util.JwtUtil;
 import io.github.springwolf.core.asyncapi.annotations.AsyncPublisher;
 import io.github.springwolf.core.asyncapi.annotations.AsyncOperation;
-
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,6 +153,57 @@ public class OrderController {
         }
     }
 
+    @MessageMapping("/order.lowItems")
+    @RequireJwt(role = "User")
+    @RateLimiter(name = "order")
+    @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/low-items", description = "Response channel for low items"))
+    public void getLowItems(@Valid @Payload TopItemsRequest request, SimpMessageHeaderAccessor headerAccessor) {
+        String sessionId = headerAccessor.getSessionId();
+        try {
+            // Extract email from the JWT "email" claim
+            String token = headerAccessor.getFirstNativeHeader("Authorization");
+            String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));
+
+            List<TopItemDTO> lowItems = orderService.getLowItems(email, request.getBranchName(), request.getStartDate(),
+                                                                 request.getEndDate(), request.getTopX());
+
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/low-items",
+                                                   new AuthResponse<>("1", null, "", null, lowItems));
+
+        } catch (Exception e) {
+            logger.error("Error retrieving low items for branch '{}': {}",
+                    request.getBranchName(), e.getMessage(), e);
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/low-items",
+                                                   new AuthResponse<>("-1", null, "Error retrieving low items", null, null));
+        }
+    }
+
+    @MessageMapping("/order.refundOrders")
+    @RequireJwt(role = "User")
+    @RateLimiter(name = "order")
+    @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/refund-orders", description = "Response channel for refund orders"))
+    public void getRefundOrders(@Valid @Payload RefundOrdersRequest request, SimpMessageHeaderAccessor headerAccessor) {
+        String sessionId = headerAccessor.getSessionId();
+        try {
+            String token = headerAccessor.getFirstNativeHeader("Authorization");
+            String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));
+
+            List<com.irestaurant.iPortalAPI.dto.RefundOrdersDTO> result = orderService.getRefundOrders(
+                    email, request.getBranchName(), request.getStartDate(), request.getEndDate(), request.getTopX());
+
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/refund-orders",
+                                                   new AuthResponse<>("1", null, "", null, result));
+
+        } catch (Exception e) {
+            logger.error("Error retrieving refund orders for branch '{}': {}",
+                    request.getBranchName(), e.getMessage(), e);
+            messagingTemplate.convertAndSendToUser(sessionId, "/queue/refund-orders",
+                                                   new AuthResponse<>("-1", null, "Error retrieving refund orders", null, null));
+        }
+    }
+
     @MessageMapping("/order.branchComparison")
     @RequireJwt(role = "User")
     @RateLimiter(name = "order")
@@ -238,6 +291,42 @@ public class OrderController {
                     request.getBranchName(), e.getMessage(), e);
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/centralized-menu-performance",
                                                    new AuthResponse<>("-1", null, "Error retrieving centralized menu performance", null, null));
+        }
+    }
+    
+    @MessageMapping("/order.salesByOrderType")
+    @RequireJwt(role = "User")
+    @RateLimiter(name = "order")
+    @Async(value = "backgroundTaskExecutor")
+    @AsyncPublisher(operation = @AsyncOperation(channelName = "/user/queue/sales-by-order-type", description = "Response channel for sales by order type"))
+    public void getSalesByOrderType(@Valid @Payload SalesByOrderTypeRequest request, SimpMessageHeaderAccessor headerAccessor) {
+        String sessionId = headerAccessor.getSessionId();
+        try {
+            String token = headerAccessor.getFirstNativeHeader("Authorization");
+            String email = jwtUtil.extractEmail(jwtUtil.pureJWT(token));
+
+            List<SalesByOrderTypeDTO> result = orderService.getSalesByOrderType(
+                    email,
+                    request.getBranchName(),
+                    request.getStartDate(),
+                    request.getEndDate(),
+                    request.getTopX()
+            );
+
+            messagingTemplate.convertAndSendToUser(
+                    sessionId,
+                    "/queue/sales-by-order-type",
+                    new AuthResponse<>("1", null, "", null, result)
+            );
+
+        } catch (Exception e) {
+            logger.error("Error retrieving sales by order type for branch '{}': {}",
+                    request.getBranchName(), e.getMessage(), e);
+            messagingTemplate.convertAndSendToUser(
+                    sessionId,
+                    "/queue/sales-by-order-type",
+                    new AuthResponse<>("-1", null, "Error retrieving sales by order type", null, null)
+            );
         }
     }
 }

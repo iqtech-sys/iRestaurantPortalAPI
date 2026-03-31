@@ -45,38 +45,42 @@ public final class Product_ implements EntityInfo<Product> {
     public final static io.objectbox.Property<Product> price =
         new io.objectbox.Property<>(__INSTANCE, 2, 3, double.class, "price");
 
+    public final static io.objectbox.Property<Product> costPrice =
+        new io.objectbox.Property<>(__INSTANCE, 3, 13, double.class, "costPrice");
+
     public final static io.objectbox.Property<Product> rating =
-        new io.objectbox.Property<>(__INSTANCE, 3, 4, double.class, "rating");
+        new io.objectbox.Property<>(__INSTANCE, 4, 4, double.class, "rating");
 
     public final static io.objectbox.Property<Product> image =
-        new io.objectbox.Property<>(__INSTANCE, 4, 5, byte[].class, "image");
+        new io.objectbox.Property<>(__INSTANCE, 5, 5, byte[].class, "image");
 
     public final static io.objectbox.Property<Product> description =
-        new io.objectbox.Property<>(__INSTANCE, 5, 6, String.class, "description");
+        new io.objectbox.Property<>(__INSTANCE, 6, 6, String.class, "description");
 
     public final static io.objectbox.Property<Product> calories =
-        new io.objectbox.Property<>(__INSTANCE, 6, 7, double.class, "calories");
+        new io.objectbox.Property<>(__INSTANCE, 7, 7, double.class, "calories");
 
     public final static io.objectbox.Property<Product> preparationTime =
-        new io.objectbox.Property<>(__INSTANCE, 7, 8, long.class, "preparationTime");
+        new io.objectbox.Property<>(__INSTANCE, 8, 8, long.class, "preparationTime");
 
     public final static io.objectbox.Property<Product> isAvailable =
-        new io.objectbox.Property<>(__INSTANCE, 8, 9, boolean.class, "isAvailable");
+        new io.objectbox.Property<>(__INSTANCE, 9, 9, boolean.class, "isAvailable");
 
     public final static io.objectbox.Property<Product> branchId =
-        new io.objectbox.Property<>(__INSTANCE, 9, 10, String.class, "branchId");
+        new io.objectbox.Property<>(__INSTANCE, 10, 10, String.class, "branchId");
 
     public final static io.objectbox.Property<Product> createdDate =
-        new io.objectbox.Property<>(__INSTANCE, 10, 11, java.util.Date.class, "createdDate");
+        new io.objectbox.Property<>(__INSTANCE, 11, 11, java.util.Date.class, "createdDate");
 
     public final static io.objectbox.Property<Product> categoryId =
-        new io.objectbox.Property<>(__INSTANCE, 11, 12, long.class, "categoryId", true);
+        new io.objectbox.Property<>(__INSTANCE, 12, 12, long.class, "categoryId", true);
 
     @SuppressWarnings("unchecked")
     public final static io.objectbox.Property<Product>[] __ALL_PROPERTIES = new io.objectbox.Property[]{
         id,
         title,
         price,
+        costPrice,
         rating,
         image,
         description,

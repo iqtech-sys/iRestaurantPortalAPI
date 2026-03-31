@@ -3,6 +3,8 @@ package com.irestaurant.iPortalAPI.security;
 import com.irestaurant.iPortalAPI.dto.AuthResponse;
 import com.irestaurant.iPortalAPI.service.UserService;
 import com.irestaurant.iPortalAPI.util.JwtUtil;
+import io.github.springwolf.core.asyncapi.annotations.AsyncOperation;
+import io.github.springwolf.core.asyncapi.annotations.AsyncPublisher;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
