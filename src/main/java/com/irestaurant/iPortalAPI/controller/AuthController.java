@@ -98,8 +98,8 @@ public class AuthController {
             var authorities = userService.loadUserByEmail(request.getEmail())
                     .getAuthorities();
             Set<String> roleNames = authorities.stream()
-                    .map(auth -> auth.getAuthority())
-                    .collect(Collectors.toSet());
+                                               .map(auth -> auth.getAuthority())
+                                               .collect(Collectors.toSet());
             messagingTemplate.convertAndSendToUser(sessionId, "/queue/login", // "/topic/auth",
                     new AuthResponse("1", token, "Login successful", roleNames, null));
 
